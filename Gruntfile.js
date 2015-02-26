@@ -269,6 +269,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'express:dev',
       'wait',
       'open',
       'watch'
