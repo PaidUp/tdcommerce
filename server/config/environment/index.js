@@ -41,6 +41,65 @@ var all = {
     }
   },
 
+  // Commerce settings
+  commerce: {
+    adapter: path.normalize(__dirname + '/../../..') + '/server/api/adapters/magento.adapter',
+    magento: {
+      host: 'develop.convenienceselect.com',
+      port: 8888,
+      path: '/api/xmlrpc/',
+      login: 'magento',
+      pass: 'Sv38SJVR'
+    },
+    category: {
+      teams: 3,
+      merchandise: 4
+    },
+    products: {
+      fee: {
+        id: 9,
+        sku: "fee"
+      },
+      interest: {
+        id: 10,
+        sku: "interest"
+      }
+    },
+    testing: {
+      teamId: 2
+    },
+    defaultAddress:
+      [
+        {
+          mode: "billing",
+          firstName: "Customer First Name",
+          lastName: "Customer Last Name",
+          address1: "801 east 11th st",
+          address2: "801 east 11th st",
+          city: "Austin",
+          state: "TX",
+          zipCode: "78702",
+          country: "US",
+          telephone: "+1 320123245"
+        },
+        {
+          mode: "shipping",
+          firstName: "Customer First Name",
+          lastName: "Customer Last Name",
+          address1: "801 east 11th st",
+          address2: "801 east 11th st",
+          city: "Austin",
+          state: "TX",
+          zipCode: "78702",
+          country: "US",
+          telephone: "+1 320123245"
+        }
+      ],
+    shippingMethod: 'freeshipping_freeshipping',
+    paymentMethod: 'purchaseorder'
+  }
+
+
 };
 
 // Export the config object based on the NODE_ENV
