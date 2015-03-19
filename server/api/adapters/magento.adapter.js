@@ -107,12 +107,12 @@ exports.cartCreate = function(res){
   });
 }
 
-exports.cartAdd = function(shoppingCartProductEntity,res){
+exports.cartAdd = function(cartId, productsArray, res){
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCartProduct.add({
-      quoteId: shoppingCartProductEntity.cartId,
-      products:  snakeize(shoppingCartProductEntity.products)//Array []
+      quoteId: cartId,
+      products:  snakeize(productsArray)
     }, function (err, resChkCartProduct) {
       if(err) return res(err);
       return res(null,camelize(resChkCartProduct));
@@ -120,12 +120,12 @@ exports.cartAdd = function(shoppingCartProductEntity,res){
   });
 }
 
-exports.cartRemove = function(shoppingCartProductEntity,res){
+exports.cartRemove = function(cartId, productsArray, res){
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCartProduct.remove({
-      quoteId: snakeize(shoppingCartProductEntity.cartId),
-      productsData: snakeize(shoppingCartProductEntity.products)//Array []
+      quoteId: snakeize(cartId),
+      productsData: snakeize(products)//Array []
     }, function (err, resChkCartProduct) {
       if(err) return res(err);
       return res(null,camelize(resChkCartProduct));
@@ -231,12 +231,12 @@ exports.cartTotals = function(quoteId,res){
 //end Cart
 
 //Checkout
-exports.setShipping = function(cartId, res){
+exports.setShipping = function(cartId, shippingMethod, res){
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCartShipping.method({
       quoteId: cartId,
-      shippingMethod: config.commerce.shippingMethod
+      shippingMethod: shippingMethod
     }, function (err, resSetShipping) {
       if(err) return res(err);
       return res(null,resSetShipping);
@@ -244,15 +244,12 @@ exports.setShipping = function(cartId, res){
   });
 }
 
-exports.setPayment = function(cartId, poNumber, res){
+exports.setPayment = function(cartId, paymentData, res){
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCartPayment.method({
       quoteId: cartId,
-      paymentData: {
-        method: config.commerce.paymentMethod,
-        po_number: poNumber
-      }
+      paymentData: paymentData
     }, function (err, resSetPayment) {
       if(err) return res(err);
       return res(null,camelize(resSetPayment));

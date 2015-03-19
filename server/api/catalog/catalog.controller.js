@@ -3,15 +3,14 @@
 var _ = require('lodash');
 var catalogService = require('./catalog.service.js');
 
-// Creates a new user in the DB.
-exports.catalogList = function(req, res) {
+exports.categoryProducts = function(req, res) {
   catalogService.catalogList(req.body.categoryId, function(err, dataService){
     if(err) return handleError(res, err);
     res.json(200, dataService);
   });
 }
 
-exports.catalogInfo = function(req, res) {
+exports.productView = function(req, res) {
   if(!req.params && !req.params.id) {
     return res.json(400, {
       "code": "ValidationError",

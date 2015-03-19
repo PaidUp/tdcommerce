@@ -8,9 +8,7 @@ var logger = require('../../config/logger');
 // Creates a new cart in the DB.
 exports.create = function(req, res) {
   cartService.cartCreate(function(err, cartId){
-    cartService.addFee(cartId, function(err, data) {
-      res.json(200, {cartId: cartId});
-    })
+    res.json(200, {cartId: cartId});
   });
 }
 
@@ -21,7 +19,7 @@ exports.add = function(req, res) {
       "message": "Cart Id and products are required"
     });
   }
-  cartService.cartAdd(req.body,function(err, cartAdd){
+  cartService.cartAdd(req.body.cartId, req.body.products, function(err, cartAdd){
     if(err) return handleError(res, err);
     res.json(200, cartAdd);
   });
@@ -34,7 +32,7 @@ exports.remove = function(req, res) {
       "message": "cartId or products is required"
     });
   }
-  cartService.cartRemove(req.body,function(err, cartRemove){
+  cartService.cartRemove(req.body.cartId, req.body.products,function(err, cartRemove){
     if(err) return handleError(res, err);
     res.json(200, cartRemove);
   });
@@ -54,9 +52,44 @@ exports.list = function(req, res) {
 }
 
 exports.address = function(req, res) {
-  cartService.cartAddress(req.body,function(err, cartAddress){
+  cartService.cartAddress(req.body.cartId, req.body.shoppingCartAddressEntity,function(err, cartAddress){
     if(err) return handleError(res, err);
     res.json(200, cartAddress);
+  });
+}
+
+exports.updatePrice = function(req, res) {
+  cartService.updatePrice(req.body.cartId, req.body.productId, req.body.amount,function(err, data){
+    if(err) return handleError(res, err);
+    res.json(200, data);
+  });
+}
+
+exports.customer = function(req, res) {
+  cartService.customer(req.body.cartId, req.body.customer, function(err, data){
+    if(err) return handleError(res, err);
+    res.json(200, data);
+  });
+}
+
+exports.shipping = function(req, res) {
+  cartService.shipping(req.body.cartId, req.body.shippingMethod, function(err, data){
+    if(err) return handleError(res, err);
+    res.json(200, data);
+  });
+}
+
+exports.payment = function(req, res) {
+  cartService.payment(req.body.cartId, req.body.paymentData, function(err, data){
+    if(err) return handleError(res, err);
+    res.json(200, data);
+  });
+}
+
+exports.place = function(req, res) {
+  cartService.place(req.body.cartId, function(err, data){
+    if(err) return handleError(res, err);
+    res.json(200, data);
   });
 }
 

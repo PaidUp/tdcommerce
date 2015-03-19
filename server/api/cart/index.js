@@ -6,9 +6,15 @@ var controller = require('./cart.controller.js');
 var router = express.Router();
 
 router.get('/create', controller.create);
-router.post('/address', controller.address);
-router.get('/list/:id', controller.list);
 router.post('/add', controller.add);
+router.post('/remove', controller.remove);
+router.get('/list/:id', controller.list);
+router.post('/address', controller.address);
+router.post('/update/price', controller.updatePrice);
+router.post('/customer', controller.customer);
+router.post('/shipping', controller.shipping);
+router.post('/payment', controller.payment);
+router.get('/place', controller.place);
 router.get('/view/:id', controller.view);
 router.get('/totals/:id', controller.totals);
 

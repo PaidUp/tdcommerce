@@ -24,7 +24,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Commerce"
+                    "Cart"
                 ],
                 "responses": {
                     "200": {
@@ -61,7 +61,44 @@
                     }
                 ],
                 "tags": [
-                    "Commerce"
+                    "Cart"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful create cart",
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartAddResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/cart/remove": {
+            "post": {
+                "operationId": "postCommerceCartAdd",
+                "summary": "Return true.",
+                "description": "Return true, if product was removed successful.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "commerce",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartAdd"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Cart"
                 ],
                 "responses": {
                     "200": {
@@ -97,7 +134,7 @@
                     }
                 ],
                 "tags": [
-                    "Commerce"
+                    "Cart"
                 ],
                 "responses": {
                     "200": {
@@ -134,13 +171,195 @@
                     }
                 ],
                 "tags": [
-                    "Commerce"
+                    "Cart"
                 ],
                 "responses": {
                     "200": {
                         "description": "Successful aggregate address to cart",
                         "schema": {
                             "$ref": "#/definitions/postCommerceCartAddressResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/cart/update/price": {
+            "post": {
+                "operationId": "postCommerceCartUpdatePrice",
+                "summary": "Return true.",
+                "description": "Return true, if the product price in the cart was changed.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "commerce",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartUpdatePrice"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful aggregate address to cart",
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartAddressResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/cart/customer": {
+            "post": {
+                "operationId": "postCommerceCartCustomer",
+                "summary": "Return true.",
+                "description": "Return true, if the customer was succesfully linked to the cart.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "commerce",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartUpdatePrice"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful aggregate address to cart",
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartAddressResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/cart/shipping": {
+            "post": {
+                "operationId": "postCommerceCartShipping",
+                "summary": "Return true.",
+                "description": "Return true, if the shipping method was set.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "commerce",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartShipping"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartAddressResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/cart/payment": {
+            "post": {
+                "operationId": "postCommerceCartPayment",
+                "summary": "Return true.",
+                "description": "Return true, if the payment method was set.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "commerce",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartPayment"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/postCommerceCartAddressResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/cart/place/{cartId}": {
+            "get": {
+                "operationId": "postCommerceCartPlace",
+                "summary": "Return true.",
+                "description": "Return order id if the cart was succesfully placed into an order.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "cartId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/postCartPlaceResponse"
                         }
                     },
                     "400": {
@@ -170,7 +389,7 @@
                     }
                 ],
                 "tags": [
-                    "Commerce"
+                    "Cart"
                 ],
                 "responses": {
                     "200": {
@@ -206,7 +425,7 @@
                     }
                 ],
                 "tags": [
-                    "Commerce"
+                    "Cart"
                 ],
                 "responses": {
                     "200": {
@@ -224,7 +443,7 @@
                 }
             }
         },
-        "/commerce/catalog/category/teams": {
+        "/commerce/catalog/category/{categoryId}": {
             "get": {
                 "operationId": "getCommerceCatalogCategoryTeams",
                 "summary": "Return a list teams.",
@@ -233,14 +452,11 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Commerce"
+                    "Catalog"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful cart totals",
-                        "schema": {
-                            "$ref": "#/definitions/getCommerceCatalogCategoryTeamsResponse"
-                        }
+                        "description": "Successful cart totals"
                     },
                     "400": {
                         "description": "Validation field error",
@@ -251,11 +467,11 @@
                 }
             }
         },
-        "/commerce/cart/catalog/product/{productId}": {
+        "/commerce/catalog/product/{productId}": {
             "get": {
-                "operationId": "getCommerceCartTotals",
+                "operationId": "getCatalogProductInfo",
                 "summary": "Return a product info.",
-                "description": "Return an Object of product info, is need send token in the body.",
+                "description": "Return an Object of product info.",
                 "produces": [
                     "application/json"
                 ],
@@ -269,14 +485,12 @@
                     }
                 ],
                 "tags": [
-                    "Commerce"
+                    "Catalog"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful cart totals",
-                        "schema": {
-                            "$ref": "#/definitions/getCommerceCatalogProduct"
-                        }
+                        "description": "Product data",
+                        "schema": null
                     },
                     "400": {
                         "description": "Validation field error",
@@ -287,34 +501,223 @@
                 }
             }
         },
-        "/commerce/checkout": {
-            "post": {
-                "operationId": "postCommerceCheckout",
-                "summary": "Return orderId.",
-                "description": "Return orderId. Send to body the addresses, cartId, poNumber, cardid and userId. Is need send token in the body.",
+        "/commerce/order/load/{orderId}": {
+            "get": {
+                "summary": "Return order information.",
+                "description": "Return order information and line details.",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "name": "commerceCheckout",
-                        "in": "body",
-                        "description": "commerce checkout",
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "order id",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCheckout"
-                        }
+                        "type": "string"
                     }
                 ],
                 "tags": [
-                    "Commerce"
+                    "Order"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful checkout commerce",
+                        "description": "Order data"
+                    },
+                    "400": {
+                        "description": "Validation field error",
                         "schema": {
-                            "$ref": "#/definitions/postCommerceCheckoutResponse"
+                            "$ref": "ValidationError"
                         }
+                    }
+                }
+            }
+        },
+        "/commerce/order/list": {
+            "post": {
+                "summary": "Return order list.",
+                "description": "Return order list, applying the filter.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "in": "body",
+                        "description": "JSON object with filters.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of order list"
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/order/comment/create": {
+            "post": {
+                "summary": "Return order list.",
+                "description": "Return order list, applying the filter.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "body",
+                        "description": "Order id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "comment",
+                        "in": "body",
+                        "description": "String of the comment to add.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "body",
+                        "description": "If status of the order needs to be changed.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result message"
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/order/{orderId}/status/{status}": {
+            "get": {
+                "summary": "Change the status of an order.",
+                "description": "Change the status of an order. It depends of the order work flow of the commerce platform.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "Order id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "path",
+                        "description": "status of the order",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result Message"
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/transaction/create": {
+            "post": {
+                "summary": "Create a transaction to an order",
+                "description": "Create an order transaction.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "body",
+                        "description": "Order id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "transactionId",
+                        "in": "body",
+                        "description": "It must be unique.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "details",
+                        "in": "body",
+                        "description": "JSON object with transaction details.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result message"
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
+        },
+        "/commerce/transaction/list/order/{orderId}": {
+            "get": {
+                "summary": "Get the list of transactions of an order",
+                "description": "Get the list of transactions of an order.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "Order id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result Message"
                     },
                     "400": {
                         "description": "Validation field error",
@@ -327,372 +730,6 @@
         }
     },
     "definitions": {
-        "postUser": {
-            "required": [
-                "firstName",
-                "lastName"
-            ],
-            "properties": {
-                "firstName": {
-                    "type": "string",
-                    "description": "First name of the User",
-                    "maximum": 128
-                },
-                "lastName": {
-                    "type": "string",
-                    "description": "Last name of the User",
-                    "maximum": 128
-                },
-                "birthDate": {
-                    "type": "string",
-                    "description": "Date of birth, date format yyyy-mm-dd"
-                },
-                "gender": {
-                    "type": "string",
-                    "description": "Gender of user, enum[male, female]",
-                    "enum": [
-                        "male",
-                        "female"
-                    ]
-                },
-                "height": {
-                    "type": "integer",
-                    "description": "User height in inches",
-                    "format": "int",
-                    "minimum": 0
-                },
-                "weight": {
-                    "type": "integer",
-                    "description": "User weight in pounds",
-                    "format": "int",
-                    "minimum": 0
-                }
-            }
-        },
-        "postUserResponse": {
-            "required": [
-                "userId"
-            ],
-            "properties": {
-                "userId": {
-                    "type": "string",
-                    "description": "Unique identifier of User. Alphanum id"
-                }
-            }
-        },
-        "postUserContact": {
-            "required": [
-                "label",
-                "type",
-                "value"
-            ],
-            "properties": {
-                "label": {
-                    "type": "string",
-                    "description": "User free text labeling",
-                    "maximum": 128
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Type of contact, enum[email, telephone]",
-                    "enum": [
-                        "email",
-                        "telephone"
-                    ]
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Value of the contact.",
-                    "format": "string"
-                }
-            }
-        },
-        "postUserLoanContact": {
-            "required": [
-                "userId",
-                "label",
-                "type",
-                "value"
-            ],
-            "properties": {
-                "userId": {
-                    "type": "string",
-                    "description": "userloanId to add contact info",
-                    "maximum": 128
-                },
-                "label": {
-                    "type": "string",
-                    "description": "User free text labeling",
-                    "maximum": 128
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Type of contact, enum[email, telephone]",
-                    "enum": [
-                        "email",
-                        "telephone"
-                    ]
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Value of the contact.",
-                    "format": "string"
-                }
-            }
-        },
-        "postUserContactList": {
-            "properties": {
-                "contactId": {
-                    "type": "string",
-                    "description": "Type of contact, enum[email, telephone]",
-                    "enum": [
-                        "email",
-                        "telephone"
-                    ]
-                },
-                "type": {
-                    "type": "string",
-                    "description": "AlfaNum User Contact unique id"
-                }
-            }
-        },
-        "postUserContactResponse": {
-            "required": [
-                "contactId"
-            ],
-            "properties": {
-                "contactId": {
-                    "type": "string",
-                    "description": "Unique identifier of User Contact. Alphanum id"
-                }
-            }
-        },
-        "postUserLoanContactResponse": {
-            "required": [
-                "contactId"
-            ],
-            "properties": {
-                "contactId": {
-                    "type": "string",
-                    "description": "Unique identifier of User Contact. Alphanum id"
-                }
-            }
-        },
-        "getUserResponse": {
-            "required": [
-                "firstName",
-                "lastName"
-            ],
-            "properties": {
-                "userId": {
-                    "type": "string",
-                    "description": "AlfaNum User unique id"
-                },
-                "firstName": {
-                    "type": "string",
-                    "description": "First name of the User"
-                },
-                "lastName": {
-                    "type": "string",
-                    "description": "Last name of the User"
-                },
-                "birthDate": {
-                    "type": "string",
-                    "description": "Date of birth, date format yyyy-mm-dd",
-                    "format": "date"
-                },
-                "gender": {
-                    "type": "string",
-                    "description": "Gender of user, enum[male, female]",
-                    "enum": [
-                        "male",
-                        "female"
-                    ]
-                },
-                "height": {
-                    "type": "number",
-                    "description": "User height in inches",
-                    "format": "int",
-                    "minimum": 0
-                },
-                "weight": {
-                    "type": "number",
-                    "description": "User weight in pounds",
-                    "format": "int",
-                    "minimum": 0
-                }
-            }
-        },
-        "postUserRelation": {
-            "required": [
-                "sourceUserId",
-                "targetUserId",
-                "type"
-            ],
-            "properties": {
-                "sourceUserId": {
-                    "type": "string",
-                    "description": "AlfaNum User unique id"
-                },
-                "targetUserId": {
-                    "type": "string",
-                    "description": "AlfaNum User unique id"
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Type of relation, enum[child]",
-                    "enum": [
-                        "child"
-                    ]
-                }
-            }
-        },
-        "postAuthCredential": {
-            "required": [
-                "userId",
-                "email",
-                "password"
-            ],
-            "properties": {
-                "userId": {
-                    "type": "string",
-                    "description": "AlfaNum User unique id"
-                },
-                "email": {
-                    "type": "string",
-                    "description": "User email to sign up"
-                },
-                "password": {
-                    "type": "string",
-                    "description": "User Passwocrd"
-                },
-                "rememberMe": {
-                    "type": "boolean",
-                    "description": "Remember me login expire unlimited"
-                }
-            }
-        },
-        "postAuthLogin": {
-            "required": [
-                "email",
-                "password",
-                "rememberMe"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "description": "User email to login"
-                },
-                "password": {
-                    "type": "string",
-                    "description": "User password"
-                },
-                "rememberMe": {
-                    "type": "boolean",
-                    "description": "Remember me login expire unlimited"
-                }
-            }
-        },
-        "postAuthLogout": {
-            "properties": {
-                "token": {
-                    "type": "string",
-                    "description": "token user"
-                }
-            }
-        },
-        "postAuthResponse": {
-            "required": [
-                "token"
-            ],
-            "properties": {
-                "token": {
-                    "type": "string",
-                    "description": "AlfaNum token unique id"
-                }
-            }
-        },
-        "postAuthFacebook": {
-            "required": [
-                "facebookToken"
-            ],
-            "properties": {
-                "facebookToken": {
-                    "type": "string",
-                    "description": "AlfaNum Facebook token unique id"
-                }
-            }
-        },
-        "postAuthVerify": {
-            "required": [
-                "verifyToken"
-            ],
-            "properties": {
-                "verifyToken": {
-                    "type": "string",
-                    "description": "AlfaNum token to verify user"
-                }
-            }
-        },
-        "postSendAuthVerify": {
-            "required": [
-                "userId"
-            ],
-            "properties": {
-                "verifyToken": {
-                    "type": "string",
-                    "description": "AlfaNum User unique id"
-                }
-            }
-        },
-        "postAuthVerifyResponse": {
-            "required": [
-                "userId"
-            ],
-            "properties": {
-                "userId": {
-                    "type": "string",
-                    "description": "User id was successful verified in the system"
-                }
-            }
-        },
-        "postAuthPasswordResetRequest": {
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "description": "User email to send the email with token"
-                }
-            }
-        },
-        "postAuthPasswordReset": {
-            "required": [
-                "verifyToken",
-                "password"
-            ],
-            "properties": {
-                "verifyToken": {
-                    "type": "string",
-                    "description": "User email to send the email with token"
-                },
-                "password": {
-                    "type": "string",
-                    "description": "User email to send the email with token"
-                }
-            }
-        },
-        "Auth": {
-            "required": [
-                "token"
-            ],
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
         "ValidationError": {
             "properties": {
                 "code": {
@@ -708,137 +745,6 @@
                     "type": "string",
                     "description": "Optional detail of errors",
                     "default": "Optional array with detail of errors"
-                }
-            }
-        },
-        "AuthCredentialExists": {
-            "properties": {
-                "code": {
-                    "type": "string",
-                    "default": "AuthCredentialExists"
-                },
-                "message": {
-                    "type": "string",
-                    "description": "Error description",
-                    "default": "Credential of user already exists"
-                }
-            }
-        },
-        "AuthCredentialNotExists": {
-            "properties": {
-                "code": {
-                    "type": "string",
-                    "default": "AuthCredentialNotExists"
-                },
-                "message": {
-                    "type": "string",
-                    "description": "Error description",
-                    "default": "User Id does not exists"
-                }
-            }
-        },
-        "AuthCredentialPermission": {
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string",
-                    "description": "Error description",
-                    "default": "You don't have permission for this operation"
-                }
-            }
-        },
-        "postEmailUpdate": {
-            "required": [
-                "userId",
-                "email"
-            ],
-            "properties": {
-                "userId": {
-                    "type": "string",
-                    "description": "UserId user to update",
-                    "maximum": 128
-                },
-                "email": {
-                    "type": "string",
-                    "description": "user email to update",
-                    "enum": [
-                        "email",
-                        "telephone"
-                    ]
-                }
-            }
-        },
-        "postEmailUpdateResponse": {
-            "properties": {
-                "res": {
-                    "type": "boolean",
-                    "description": "Identifier if email was update seccesful"
-                }
-            }
-        },
-        "postPasswordUpdate": {
-            "required": [
-                "newPassword",
-                "currentPassword"
-            ],
-            "properties": {
-                "newPassword": {
-                    "type": "string",
-                    "description": "user new password to update"
-                },
-                "currentPassword": {
-                    "type": "string",
-                    "description": "user current password to update"
-                }
-            }
-        },
-        "postPasswordUpdateResponse": {
-            "properties": {
-                "res": {
-                    "type": "boolean",
-                    "description": "Identifier if password was update seccesful"
-                }
-            }
-        },
-        "postApplicationContact": {
-            "required": [
-                "email",
-                "subject",
-                "content"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "description": "email user want to contact CS."
-                },
-                "subject": {
-                    "type": "string",
-                    "description": "subject message to email"
-                },
-                "content": {
-                    "type": "string",
-                    "description": "content message to email"
-                }
-            }
-        },
-        "postApplicationContactResponse": {
-            "properties": {
-                "res": {
-                    "type": "boolean",
-                    "description": "Identifier if email is sent"
-                }
-            }
-        },
-        "getApplicationConfigResponse": {
-            "required": [
-                "marketplace"
-            ],
-            "properties": {
-                "marketplace": {
-                    "type": "string",
-                    "description": "info of marketplace"
                 }
             }
         },
@@ -964,412 +870,6 @@
                 }
             }
         },
-        "postLoanSimulate": {
-            "required": [
-                "amount",
-                "numberPayments"
-            ],
-            "properties": {
-                "amount": {
-                    "type": "number",
-                    "description": "amount of loan solicited."
-                },
-                "numberPayments": {
-                    "type": "number",
-                    "description": "number of payments of loan solicited."
-                }
-            }
-        },
-        "postLoanSimulateResponse": {
-            "required": [
-                "payments"
-            ],
-            "properties": {
-                "payments": {
-                    "type": "object",
-                    "description": "state of application loan."
-                }
-            }
-        },
-        "postLoanCreate": {
-            "required": [
-                "installments",
-                "amount",
-                "interestSum",
-                "capitalSum",
-                "sum",
-                "applicationId"
-            ],
-            "properties": {
-                "schedule": {
-                    "type": "Array",
-                    "description": "installments of loan."
-                },
-                "amount": {
-                    "type": "number",
-                    "description": "amount of loan."
-                },
-                "interestSum": {
-                    "type": "number",
-                    "description": "interest sum of loan."
-                },
-                "capitalSum": {
-                    "type": "number",
-                    "description": "capital sum of loan."
-                },
-                "sum": {
-                    "type": "number",
-                    "description": "total sum of loan."
-                },
-                "applicationId": {
-                    "type": "string",
-                    "description": "application Id"
-                }
-            }
-        },
-        "postLoanCreateResponse": {
-            "required": [
-                "LoanId"
-            ],
-            "properties": {
-                "LoanId": {
-                    "type": "string",
-                    "description": "Loan Id."
-                }
-            }
-        },
-        "getLoan": {
-            "required": [
-                "LoanId"
-            ],
-            "properties": {
-                "LoanId": {
-                    "type": "string",
-                    "description": "Loan Id."
-                }
-            }
-        },
-        "getLoanResponse": {
-            "required": [
-                "installments",
-                "amount",
-                "interestSum",
-                "capitalSum",
-                "sum",
-                "applicationId"
-            ],
-            "properties": {
-                "schedule": {
-                    "type": "Array",
-                    "description": "installments of loan."
-                },
-                "amount": {
-                    "type": "number",
-                    "description": "amount of loan."
-                },
-                "interestSum": {
-                    "type": "number",
-                    "description": "interest sum of loan."
-                },
-                "capitalSum": {
-                    "type": "number",
-                    "description": "capital sum of loan."
-                },
-                "sum": {
-                    "type": "number",
-                    "description": "total sum of loan."
-                },
-                "applicationId": {
-                    "type": "string",
-                    "description": "application Id"
-                }
-            }
-        },
-        "getApplication": {
-            "required": [
-                "applicationId"
-            ],
-            "properties": {
-                "applicationId": {
-                    "type": "string",
-                    "description": "applicaation Id."
-                }
-            }
-        },
-        "postLoanApplicationCreate": {
-            "required": [
-                "incomeType",
-                "monthlyGrossIncome",
-                "meta",
-                "amount"
-            ],
-            "properties": {
-                "incomeType": {
-                    "type": "string",
-                    "description": "income type of user loan solicited."
-                },
-                "monthlyGrossIncome": {
-                    "type": "number",
-                    "description": "number monthly of payments user of loan solicited."
-                },
-                "meta": {
-                    "type": "object",
-                    "description": "Object return when userLoan was created."
-                },
-                "amount": {
-                    "type": "number",
-                    "description": "amount to application loan"
-                }
-            }
-        },
-        "postLoanApplicationCreateResponse": {
-            "required": [
-                "applicationId"
-            ],
-            "properties": {
-                "applicationId": {
-                    "type": "string",
-                    "description": "applicationId of loan."
-                }
-            }
-        },
-        "postLoanApplicationUserCreate": {
-            "required": [
-                "firstName",
-                "lastName",
-                "ssn"
-            ],
-            "properties": {
-                "firstName": {
-                    "type": "string",
-                    "description": "firstName of userLoan."
-                },
-                "lastName": {
-                    "type": "string",
-                    "description": "firstName of userLoan."
-                },
-                "ssn": {
-                    "type": "string",
-                    "description": "firstName of userLoan."
-                }
-            }
-        },
-        "postLoanApplicationUserCreateResponse": {
-            "required": [
-                "userId"
-            ],
-            "properties": {
-                "userId": {
-                    "type": "string",
-                    "description": "userId of userLoan."
-                }
-            }
-        },
-        "postLoanApplicationUserAddressCreate": {
-            "required": [
-                "userId",
-                "label",
-                "address1",
-                "address2",
-                "city",
-                "state",
-                "country",
-                "zipCode"
-            ],
-            "properties": {
-                "userId": {
-                    "type": "string",
-                    "description": "userId of userLoan to add address."
-                },
-                "label": {
-                    "type": "string",
-                    "description": "label of address userLoan."
-                },
-                "address1": {
-                    "type": "string",
-                    "description": "address1 of address userLoan."
-                },
-                "address2": {
-                    "type": "string",
-                    "description": "address2 of address userLoan."
-                },
-                "city": {
-                    "type": "string",
-                    "description": "city of address userLoan."
-                },
-                "state": {
-                    "type": "string",
-                    "description": "state of address userLoan."
-                },
-                "country": {
-                    "type": "string",
-                    "description": "country of address userLoan."
-                },
-                "zipCode": {
-                    "type": "string",
-                    "description": "zipCode of address userLoan."
-                }
-            }
-        },
-        "postLoanApplicationUserAddressCreateResponse": {
-            "required": [
-                "addressId"
-            ],
-            "properties": {
-                "addressId": {
-                    "type": "string",
-                    "description": "addressId of address userLoan."
-                }
-            }
-        },
-        "postLoanApplicationState": {
-            "required": [
-                "applicationId",
-                "state"
-            ],
-            "properties": {
-                "applicationId": {
-                    "type": "string",
-                    "description": "applicationId loan to change state."
-                },
-                "state": {
-                    "type": "string",
-                    "description": "state to change."
-                }
-            }
-        },
-        "postLoanApplicationStateResponse": {
-            "required": [
-                "return"
-            ],
-            "properties": {
-                "return": {
-                    "type": "boolean",
-                    "description": "true if state change successful."
-                }
-            }
-        },
-        "postLoanApplicationSign": {
-            "required": [
-                "applicationId",
-                "firstName",
-                "lastName",
-                "ssn"
-            ],
-            "properties": {
-                "applicationId": {
-                    "type": "string",
-                    "description": "applicationId loan to sign."
-                },
-                "firstName": {
-                    "type": "string",
-                    "description": "firstName of the sign."
-                },
-                "lastName": {
-                    "type": "string",
-                    "description": "lastName of the sign."
-                },
-                "ssn": {
-                    "type": "string",
-                    "description": "ssn to user."
-                }
-            }
-        },
-        "postLoanApplicationSignResponse": {
-            "required": [
-                "return"
-            ],
-            "properties": {
-                "return": {
-                    "type": "boolean",
-                    "description": "true if sign loan successful."
-                }
-            }
-        },
-        "postLoanApplicationPayment": {
-            "required": [
-                "applicationId",
-                "aba",
-                "dda"
-            ],
-            "properties": {
-                "applicationId": {
-                    "type": "string",
-                    "description": "applicationId loan to payment."
-                },
-                "aba": {
-                    "type": "string",
-                    "description": "aba of the payment."
-                },
-                "dda": {
-                    "type": "string",
-                    "description": "dda of the payment."
-                }
-            }
-        },
-        "postLoanApplicationPaymentResponse": {
-            "required": [
-                "return"
-            ],
-            "properties": {
-                "return": {
-                    "type": "boolean",
-                    "description": "true if payment loan successful."
-                }
-            }
-        },
-        "postLoanApplicationSimulate": {
-            "required": [
-                "applicationId",
-                "amount",
-                "numberPayments"
-            ],
-            "properties": {
-                "applicationId": {
-                    "type": "string",
-                    "description": "applicationId of loan solicited."
-                },
-                "amount": {
-                    "type": "number",
-                    "description": "amount of loan solicited."
-                },
-                "numberPayments": {
-                    "type": "number",
-                    "description": "number payments of loan solicited."
-                }
-            }
-        },
-        "postLoanApplicationSimulateResponse": {
-            "required": [
-                "installments",
-                "amount",
-                "interestSum",
-                "capitalSum",
-                "sum"
-            ],
-            "properties": {
-                "installments": {
-                    "type": "Array",
-                    "description": "installments of loan."
-                },
-                "amount": {
-                    "type": "number",
-                    "description": "amount of loan."
-                },
-                "interestSum": {
-                    "type": "number",
-                    "description": "interest sum of loan."
-                },
-                "capitalSum": {
-                    "type": "number",
-                    "description": "capital sum of loan."
-                },
-                "sum": {
-                    "type": "number",
-                    "description": "total sum of loan."
-                }
-            }
-        },
         "postCommerceCheckout": {
             "required": [
                 "addresses",
@@ -1409,6 +909,98 @@
                 "orderId": {
                     "type": "string",
                     "description": "orderId of checkout."
+                }
+            }
+        },
+        "postCommerceCartUpdatePrice": {
+            "required": [
+                "cartId",
+                "productId",
+                "amount"
+            ],
+            "properties": {
+                "cartId": {
+                    "type": "string",
+                    "description": "cartId of checkout."
+                },
+                "productId": {
+                    "type": "string",
+                    "description": "productId of the product in the cart"
+                },
+                "amount": {
+                    "type": "string",
+                    "description": "new price of the product"
+                }
+            }
+        },
+        "postCommerceCartCustomer": {
+            "required": [
+                "cartId",
+                "firstName",
+                "lastName",
+                "email"
+            ],
+            "properties": {
+                "cartId": {
+                    "type": "string",
+                    "description": "cartId of checkout."
+                },
+                "productId": {
+                    "type": "string",
+                    "description": "productId of the product in the cart"
+                },
+                "firstName": {
+                    "type": "string",
+                    "description": "first name of the customer"
+                },
+                "lastName": {
+                    "type": "string",
+                    "description": "last name of the customer"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "email of the customer"
+                }
+            }
+        },
+        "postCommerceCartShipping": {
+            "required": [
+                "cartId",
+                "shippingMethod"
+            ],
+            "properties": {
+                "cartId": {
+                    "type": "string",
+                    "description": null
+                },
+                "shippingMethod": {
+                    "type": "string",
+                    "description": "shipping method allowed by the commerce"
+                }
+            }
+        },
+        "postCommerceCartPayment": {
+            "required": [
+                "cartId",
+                "paymentData"
+            ],
+            "properties": {
+                "cartId": {
+                    "type": "string"
+                },
+                "paymentMethod": {
+                    "type": "string",
+                    "description": "payment method allowd by the commerce"
+                }
+            }
+        },
+        "postCartPlaceResponse": {
+            "required": [
+                "orderId"
+            ],
+            "properties": {
+                "orderId": {
+                    "type": "string"
                 }
             }
         }
