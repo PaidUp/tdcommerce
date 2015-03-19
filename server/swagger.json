@@ -19,7 +19,7 @@
             "get": {
                 "operationId": "getCommerceCreate",
                 "summary": "Return a cartId.",
-                "description": "Return a cartId, is need send token in the body.",
+                "description": "Return a cartId.",
                 "produces": [
                     "application/json"
                 ],
@@ -46,7 +46,7 @@
             "post": {
                 "operationId": "postCommerceCartAdd",
                 "summary": "Return true.",
-                "description": "Return true, if product is aggregate successful, is need send token in the body.",
+                "description": "Return true, if product is aggregate successful.",
                 "produces": [
                     "application/json"
                 ],
@@ -120,7 +120,7 @@
             "get": {
                 "operationId": "getCommerceCartList",
                 "summary": "Return an Array of products.",
-                "description": "Return an Array of products, is need send token in the body.",
+                "description": "Return an Array of products, is need send  in the body.",
                 "produces": [
                     "application/json"
                 ],
@@ -156,7 +156,7 @@
             "post": {
                 "operationId": "postCommerceCartAddress",
                 "summary": "Return true.",
-                "description": "Return true, if address is aggregate successful, is need send token in the body.",
+                "description": "Return true, if address is aggregate successful, is need send  in the body.",
                 "produces": [
                     "application/json"
                 ],
@@ -375,7 +375,7 @@
             "get": {
                 "operationId": "getCommerceCartView",
                 "summary": "Return a cart.",
-                "description": "Return an Object of Cart, is need send token in the body.",
+                "description": "Return an Object of Cart, is need send  in the body.",
                 "produces": [
                     "application/json"
                 ],
@@ -411,7 +411,7 @@
             "get": {
                 "operationId": "getCommerceCartTotals",
                 "summary": "Return a cart totals.",
-                "description": "Return an Object of Cart totals, is need send token in the body.",
+                "description": "Return an Object of Cart totals, is need send  in the body.",
                 "produces": [
                     "application/json"
                 ],
@@ -446,8 +446,8 @@
         "/commerce/catalog/category/{categoryId}": {
             "get": {
                 "operationId": "getCommerceCatalogCategoryTeams",
-                "summary": "Return a list teams.",
-                "description": "Return an list of teams, is need send token in the body.",
+                "summary": "Return a list products.",
+                "description": "Return a list of products.",
                 "produces": [
                     "application/json"
                 ],

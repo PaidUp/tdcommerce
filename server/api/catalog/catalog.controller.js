@@ -4,20 +4,20 @@ var _ = require('lodash');
 var catalogService = require('./catalog.service.js');
 
 exports.categoryProducts = function(req, res) {
-  catalogService.catalogList(req.body.categoryId, function(err, dataService){
+  catalogService.catalogList(req.params.categoryId, function(err, dataService){
     if(err) return handleError(res, err);
     res.json(200, dataService);
   });
 }
 
 exports.productView = function(req, res) {
-  if(!req.params && !req.params.id) {
+  if(!req.params && !req.params.productId) {
     return res.json(400, {
       "code": "ValidationError",
       "message": "Product Id is required"
     });
   }
-  catalogService.catalogProductInfo(req.params.id, function(err, dataService){
+  catalogService.catalogProductInfo(req.params.productId, function(err, dataService){
     if(err) return handleError(res, err);
     res.json(200, dataService);
   });
