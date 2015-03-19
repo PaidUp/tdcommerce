@@ -97,8 +97,12 @@ var all = {
       ],
     shippingMethod: 'freeshipping_freeshipping',
     paymentMethod: 'purchaseorder'
+  },
+  nodePass: {
+    me:{
+      token : 'TDCommerceToken-CHANGE-ME!'
+    }
   }
-
 
 };
 
