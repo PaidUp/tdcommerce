@@ -25,7 +25,7 @@ function catalogProductInfo(productId, cb) {
         data.customOptions = [];
         async.eachSeries(resCustomOption, function (obj, callback) {
           if(obj.type === 'drop_down'  || obj.type === 'radio'){
-            TDCommerceService.catalogProductCustomOptionValue(obj.optionId, function (err, resCustomOptionValue) {
+            commerceAdapter.catalogProductCustomOptionValue(obj.optionId, function (err, resCustomOptionValue) {
               if(!err) {
                 obj.values = resCustomOptionValue;
                 data.customOptions.push(obj);
