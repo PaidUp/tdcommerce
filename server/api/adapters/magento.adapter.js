@@ -125,7 +125,7 @@ exports.cartRemove = function(cartId, productsArray, res){
     if(err) return res(err);
     magento.checkoutCartProduct.remove({
       quoteId: snakeize(cartId),
-      productsData: snakeize(products)//Array []
+      productsData: snakeize(productsArray) //Array []
     }, function (err, resChkCartProduct) {
       if(err) return res(err);
       return res(null,camelize(resChkCartProduct));

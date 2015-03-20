@@ -5,7 +5,7 @@ var commerceAdapter = require(config.commerce.adapter);
 var Q = require('q');
 
 function orderList(filter, cb) {
-  commerceAdapter.orderList(filter, function (err, orderss) {
+  commerceAdapter.orderList(filter, function (err, orders) {
     if (err) {
       return cb(err);
     }
@@ -45,7 +45,7 @@ function fnAddTransaccions(order, user) {
   return deferred.promise;
 };
 
-function orderLoad(user, orderId, cb) {
+function orderLoad(orderId, cb) {
   commerceAdapter.orderLoad(orderId, function (err, magentoOrder) {
     if (err) return cb(err);
     return cb(null, magentoOrder);
@@ -61,6 +61,39 @@ function transactionList(filter, cb) {
   });
 }
 
+function orderUpdateStatus(orderId, status, cb) {
+  if(status == "hold") {
+    commerceAdapter.orderHold(orderId, function (err, data) {
+      if (err) return cb(err);
+      return cb(null, data);
+    });
+  }
+  else {
+    return cb({name: "StatusNotImplemented"});
+  }
+}
+
+function orderCommentCreate(orderId, comment, status, cb) {
+  commerceAdapter.addCommentToOrder(orderId, comment, status, function (err, data) {
+    if (err) {
+      return cb(err);
+    }
+    return cb(null, data);
+  });
+}
+
+function transactionCreate(orderId, transactionId, addInfo, cb) {
+  commerceAdapter.addTransactionToOrder(orderId, transactionId, addInfo, function (err, data) {
+    if (err) {
+      return cb(err);
+    }
+    return cb(null, data);
+  });
+}
+
+exports.orderUpdateStatus = orderUpdateStatus;
 exports.orderList = orderList;
 exports.orderLoad = orderLoad;
 exports.transactionList = transactionList;
+exports.orderCommentCreate = orderCommentCreate;
+exports.transactionCreate = transactionCreate;

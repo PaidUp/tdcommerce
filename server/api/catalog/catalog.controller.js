@@ -25,7 +25,6 @@ exports.productView = function(req, res) {
 
 function handleError(res, err) {
   var httpErrorCode = 500;
-  var errors = [];
 
   if(err.name === "ValidationError") {
     httpErrorCode = 400;

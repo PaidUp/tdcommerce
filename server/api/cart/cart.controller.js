@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var cartService = require('./cart.service.js');
-var logger = require('../../config/environment');
 var logger = require('../../config/logger');
 
 // Creates a new cart in the DB.
@@ -66,7 +65,7 @@ exports.updatePrice = function(req, res) {
 }
 
 exports.customer = function(req, res) {
-  cartService.customer(req.body.cartId, req.body.customer, function(err, data){
+  cartService.updateCustomer(req.body.cartId, req.body.customer, function(err, data){
     if(err) return handleError(res, err);
     res.json(200, data);
   });
@@ -87,7 +86,7 @@ exports.payment = function(req, res) {
 }
 
 exports.place = function(req, res) {
-  cartService.place(req.body.cartId, function(err, data){
+  cartService.place(req.params.cartId, function(err, data){
     if(err) return handleError(res, err);
     res.json(200, data);
   });
@@ -122,7 +121,6 @@ exports.totals = function(req, res) {
 function handleError(res, err) {
   logger.info(err, err);
   var httpErrorCode = 500;
-  var errors = [];
 
   if(err.name === "ValidationError") {
     httpErrorCode = 400;
