@@ -6,6 +6,6 @@ var controller = require('./catalog.controller.js');
 var router = express.Router();
 
 router.get('/category/:categoryId', controller.categoryProducts);
-router.get('/product/:id', controller.productView);
+router.get('/product/:productId', controller.productView);
 
 module.exports = router;

@@ -193,7 +193,7 @@ describe("Commerce methods", function() {
         links: {}
       };
       // use magento
-      magento.checkoutCartProduct.add(modelSpec.quoteId,[ shoppingCartProductEntityArray ], function (err, res) {
+      magento.checkoutCartProduct.add({quoteId: modelSpec.quoteId, products:[shoppingCartProductEntityArray]}, function (err, res) {
         if(err) return cb(err);
         return cb(null, res);
       });
@@ -203,7 +203,7 @@ describe("Commerce methods", function() {
   it('cart add', function (done) {
     cartAdd(function(err, data){
       if(err) done(err);
-      done();
+      else done();
     });
   });
 
@@ -383,7 +383,7 @@ describe("Commerce methods", function() {
             logger.info(err, err);
             done(err);
           }
-          magento.checkoutCartProduct.remove(modelSpec.quoteId, {sku: "TIGERS", qty: "1", options: {"2" : "7", "1" : "3"}}, function (err, res) {
+          magento.checkoutCartProduct.remove({quoteId:modelSpec.quoteId, productsData:{sku: "TIGERS", qty: "1", options: {"2" : "7", "1" : "3"}}}, function (err, res) {
             assert.equal(res, true);
             done();
           });
