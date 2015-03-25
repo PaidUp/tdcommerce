@@ -91,9 +91,19 @@ function transactionCreate(orderId, transactionId, addInfo, cb) {
   });
 }
 
+function customerCreate(user, cb) {
+  commerceAdapter.createCustomer(user, function (err, data) {
+    if (err) {
+      return cb(err);
+    }
+    return cb(null, data);
+  });
+}
+
 exports.orderUpdateStatus = orderUpdateStatus;
 exports.orderList = orderList;
 exports.orderLoad = orderLoad;
 exports.transactionList = transactionList;
 exports.orderCommentCreate = orderCommentCreate;
 exports.transactionCreate = transactionCreate;
+exports.customerCreate = customerCreate;
