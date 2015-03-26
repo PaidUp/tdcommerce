@@ -14,7 +14,7 @@ router.post('/update/price', controller.updatePrice);
 router.post('/customer', controller.customer);
 router.post('/shipping', controller.shipping);
 router.post('/payment', controller.payment);
-router.get('/place/:id', controller.place);
+router.get('/place/:cartId', controller.place);
 router.get('/view/:id', controller.view);
 router.get('/totals/:id', controller.totals);
 
