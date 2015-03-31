@@ -101,7 +101,6 @@ exports.cartCreate = function(res){
   login(function(err) {
     if (err) return res(err);
     magento.checkoutCart.create(function (err, resCartCreate) {
-      console.log('0 cartCreate', resCartCreate);
       if (err) return res(err);
       return res(null, camelize(resCartCreate));
     });
@@ -109,16 +108,12 @@ exports.cartCreate = function(res){
 }
 
 exports.cartAdd = function(cartId, productsArray, res){
-  //console.log('0 cartAdd cartId',cartId);
-  //console.log('1 cartAdd productsArray',productsArray);
-  //console.log('2 cartAdd snakeize(productsArray)',snakeize(productsArray));
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCartProduct.add({
       quoteId: cartId,
       products:  snakeize(productsArray)
     }, function (err, resChkCartProduct) {
-      //console.log('3 cartAdd resChkCartProduct',resChkCartProduct);
       if(err) return res(err);
       return res(null,camelize(resChkCartProduct));
     });
@@ -130,7 +125,7 @@ exports.cartRemove = function(cartId, productsArray, res){
     if(err) return res(err);
     magento.checkoutCartProduct.remove({
       quoteId: snakeize(cartId),
-      productsData: snakeize(productsArray) //Array []
+      productsData: snakeize(productsArray)
     }, function (err, resChkCartProduct) {
       if(err) return res(err);
       return res(null,camelize(resChkCartProduct));
@@ -139,13 +134,11 @@ exports.cartRemove = function(cartId, productsArray, res){
 }
 
 exports.cartList = function(cartId,res){
-  //console.log('0 cartList cartId', cartId);
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCartProduct.list({
       quoteId: cartId
     }, function (err, resChkCartProductList) {
-      //console.log('1 cartList resChkCartProductList', resChkCartProductList);
       if(err) return res(err);
       return res(null,camelize(resChkCartProductList));
     });
@@ -213,13 +206,11 @@ createCustomerAddress = exports.createCustomerAddress = function(mageCustomerId,
 
 
 exports.cartView = function(quoteId,res){
-  console.log('0 cartView quoteId',quoteId);
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCart.info({
       quoteId: quoteId
     }, function (err, resChkCartView) {
-      console.log('1 cartView',resChkCartView);
       if(err) return res(err);
       return res(null,camelize(resChkCartView));
     });
@@ -227,13 +218,11 @@ exports.cartView = function(quoteId,res){
 }
 
 exports.cartTotals = function(quoteId,res){
-  console.log('0 cartTotals quoteId',quoteId);
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCart.totals({
       quoteId: quoteId
     }, function (err, resChkCartTotals) {
-      console.log('1 cartTotals resChkCartTotals',resChkCartTotals);
       if(err) return res(err);
       return res(null,camelize(resChkCartTotals));
     });
