@@ -1,0 +1,469 @@
+'use strict';
+
+var app = require('../../app');
+var should = require('should');
+var request = require('supertest');
+var assert = require('chai').assert;
+var config = require('../../config/environment/index');
+var logger = require('../../config/logger');
+var commerceAdapter = require(config.commerce.adapter);
+var modelSpec = require('./commerce.model.spec.js');
+var faker = require('faker');
+
+// Testing vars
+modelSpec.quoteId;
+modelSpec.orderId;
+
+var MagentoAPI = require('magento');
+var magento = new MagentoAPI(config.commerce.magento);
+
+describe("Commerce methods", function() {
+  this.timeout(5000);
+
+  it('category tree', function (done) {
+    this.timeout(5000);
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.catalogCategory.tree({}, function (err, res) {
+        assert.equal(res.category_id, '1');
+        assert.equal(res.name, 'Root Catalog');
+        assert.operator(res.children[0].children.length, '>', 0);
+        done();
+      });
+    });
+  });
+
+  it('category product list', function (done) {
+    this.timeout(5000);
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.catalogCategory.assignedProducts({
+        categoryId: config.commerce.category.teams
+      }, function (err, res) {
+        assert.operator(res.length, '>', 0);
+        done();
+      });
+    });
+  });
+
+  it('product view', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.catalogProduct.info({
+        id: config.commerce.testing.teamId
+      }, function (err, res) {
+        magento.catalogProductAttributeMedia.list({
+          product: config.commerce.testing.teamId
+          }, function (err, resimg) {
+            res.images = resimg;
+            assert.notEqual(res.length, 0);
+            assert.equal(res.images[0].file, "/s/c/screen_shot_2014-11-25_at_8.50.53_am.png");
+            done();
+        });
+      });
+    });
+  });
+
+  it('product view images', function (done) {
+    this.timeout(5000);
+      magento.login(function (err, sessId) {
+        if (err) {
+          logger.info(err, err);
+          done(err);
+        }
+        // use magento
+        magento.catalogProductAttributeMedia.list({
+          product: config.commerce.testing.teamId//3
+        }, function (err, res) {
+          assert.notEqual(res.length, 0);
+          assert.equal(res[0].file, "/s/c/screen_shot_2014-11-25_at_8.50.53_am.png");
+          done();
+        });
+      });
+  });
+
+  it('product view attributes required', function (done) {
+    this.timeout(5000);
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.catalogProductCustomOption.list({
+      productId: config.commerce.testing.teamId
+      }, function (err, res) {
+        assert.operator(res.length, '>', 0);
+        assert.equal(res[0].title, 'Season');
+        assert.equal(res[0].type, 'drop_down');
+        assert.equal(res[1].title, 'Years');
+        done();
+      });
+    });
+  });
+
+  it('product view attribute options', function (done) {
+    this.timeout(5000);
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.catalogProductCustomOptionValue.list({
+        optionId: 2
+      }, function (err, res) {
+        assert.notEqual(res.length, 0);
+        assert.equal(res[0].value_id, '7');
+        assert.equal(res[0].title, 'Winter 2014-15');
+        assert.equal(res[0].price_type, 'fixed');
+        done();
+      });
+    });
+  });
+
+  it('category product related list link', function (done) {
+    this.timeout(5000);
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.catalogProductLink.list({
+        product: config.commerce.testing.teamId,
+        type:'related'
+      }, function (err, res) {
+        assert.operator(res.length,'>',0);
+        done();
+      });
+    });
+  });
+
+  function cartCreate(cb) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        return cb(err);
+      }
+      // use magento
+      magento.checkoutCart.create(function (err, res) {
+        if(err) return cb(err);
+        //return idCart
+        assert.notEqual(res, 0);
+        modelSpec.quoteId = res;
+        return cb(null, res);
+      });
+    });
+  }
+
+  it('cart create', function (done) {
+    cartCreate(function(err, data) {
+      if(err) done(err);
+      done();
+    });
+  });
+
+  // cart add
+  function cartAdd(cb) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        if(err) return cb(err);
+        return cb(null, res);
+      }
+      var shoppingCartProductEntityArray = {
+        product_id: 2,
+        sku: "TIGERS",
+        qty: 1,
+        options: {"2" : "7", "1" : "3"},
+        bundle_option: [],
+        bundle_option_qty: [],
+        links: {}
+      };
+      // use magento
+      magento.checkoutCartProduct.add({quoteId: modelSpec.quoteId, products:[shoppingCartProductEntityArray]}, function (err, res) {
+        if(err) return cb(err);
+        return cb(null, res);
+      });
+    });
+  }
+
+  it('cart add', function (done) {
+    cartAdd(function(err, data){
+      if(err) done(err);
+      else done();
+    });
+  });
+
+  it('cart addresses', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCartCustomer.addresses({
+        quoteId: modelSpec.quoteId,
+        customerAddressData:[
+          {
+            mode: "billing",
+            firstname: "Ignacio",
+            lastname: "Pascual",
+            street: "801 east 11th st",
+            address2: "801 east 11th st",
+            city: "Austin",
+            region: "TX",
+            postcode: "78702",
+            country_id: "US",
+            telephone: "+1 320123245"
+          },
+          {
+            mode: "shipping",
+            firstname: "Ignacio",
+            lastname: "Pascual",
+            street: "801 east 11th st",
+            address2: "801 east 11th st",
+            city: "Austin",
+            region: "TX",
+            postcode: "78702",
+            country_id: "US",
+            telephone: "+1 320123245"
+          }
+        ]
+      }, function (err, res) {
+        assert.equal(res, true);
+        done();
+      });
+    });
+  });
+
+  it('cart totals', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCart.totals({
+        quoteId: modelSpec.quoteId,
+      }, function (err, res) {
+        assert.operator(res.length, '>', 0);
+        done();
+      });
+    });
+  });
+
+  it('checkout set shipping method', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCartShipping.method({
+        quoteId: modelSpec.quoteId,
+        shippingMethod: "freeshipping_freeshipping"
+      }, function (err, res) {
+        if(err) done(err);
+        else done();
+        assert.equal(res, true);
+      });
+    });
+  });
+
+  it('checkout set payment method', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCartPayment.method({
+        quoteId: modelSpec.quoteId,
+        paymentData: {
+          po_number: "Order: BP-order-1111111 / Customer: BP-customer-1111112",
+          method: "purchaseorder"
+        }
+      }, function (err, res) {
+        if(err) done(err);
+        assert.equal(res, true);
+        done();
+      });
+    });
+  });
+
+  it('checkout place order', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCart.order({
+        quoteId: modelSpec.quoteId
+      }, function (err, orderId) {
+        if(err) {
+          done(err);
+        }
+        else {
+          assert.operator(orderId, ">", 0);
+          modelSpec.orderId = orderId;
+          done();
+        }
+      });
+    });
+  });
+
+  it('checkout add comment to order', function (done) {
+    var myComment = {data: 123123123, name: "BalancedPayments"};
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      magento.salesOrder.addComment({
+        orderIncrementId: modelSpec.orderId,
+        status: "pending",
+        comment: JSON.stringify(myComment)
+      }, function (err, res) {
+        if(err) {
+          done(err);
+        }
+        else {
+          assert.isNotNull(res);
+          done();
+        }
+      });
+    });
+  });
+
+  it('create order transaction', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.bighippoSales.createTransaction(
+          { orderId: modelSpec.orderId,
+            transactionId: faker.helpers.randomNumber(9999999999999),
+            addInfo: {amount:123, test:345}
+          }, function (err, res) {
+        if(err) {
+          done(err);
+        }
+        else {
+          assert.isNull(err);
+          assert.isNotNull(res);
+          assert.isNotNull(res.transactionId);
+          done();
+        }
+      });
+    });
+  });
+
+  it('cart remove', function (done) {
+    cartCreate(function(err, data){
+      cartAdd(function(err, data){
+        if(err) done(err);
+        magento.login(function (err, sessId) {
+          if (err) {
+            logger.info(err, err);
+            done(err);
+          }
+          magento.checkoutCartProduct.remove({quoteId:modelSpec.quoteId, productsData:{sku: "TIGERS", qty: "1", options: {"2" : "7", "1" : "3"}}}, function (err, res) {
+            assert.equal(res, true);
+            done();
+          });
+        });
+      });
+    });
+  });
+
+    it('order load', function (done) {
+      var orderId = modelSpec.orderId;
+      commerceAdapter.orderLoad(orderId, function(err, data){
+        assert.isNull(err);
+        assert.isNotNull(data);
+        assert.isNotNull(data.sku);
+        assert.isNotNull(data.productId);
+        assert.isNotNull(data.paymentMethod);
+        assert.isNotNull(data.athleteId);
+        done();
+      });
+    });
+
+    it('order list commerce', function (done) {
+      this.timeout(5000);
+      commerceAdapter.orderList({status: "pending"}, function(err, data){
+        assert.isNull(err);
+        assert.isNotNull(data);
+        done();
+      });
+    });
+
+    it('create customer', function(done) {
+      var user = {
+        firstName: modelSpec.firstName,
+        lastName: modelSpec.lastName,
+        email: modelSpec.email,
+        gender: modelSpec.gender
+      };
+      commerceAdapter.createCustomer(user, function(err, data){
+        if(err) return done(err);
+        assert.isNotNull(data);
+        modelSpec.customerId = data;
+        done();
+      });
+    });
+
+    it('create customer address', function(done) {
+      var address = {mode: 'billing-shipping', "firstName":"Ignacio","lastName":"Pascual","address1":"my address my address2","city":"Austin","state":"TX","zipCode":11111,"country":"US","telephone":"1234444555"};
+
+      commerceAdapter.createCustomerAddress(modelSpec.customerId, address, function(err, data){
+        if(err) return done(err);
+        assert.isNotNull(data);
+        modelSpec.customerAddressId = data;
+        done();
+      });
+    });
+
+    it('delete all customer addresses', function(done) {
+      //TODO
+      // magento.customerAddress.list
+      // magento.customerAddress.delete
+      done();
+    })
+
+    it('merge all customer addresses', function(done) {
+      //TODO
+      // delete all address
+      // create user address on Magento
+      done();
+    })
+
+    it('list order transactions', function (done) {
+      this.timeout(25000);
+
+      commerceAdapter.transactionList(19, function(err,data){
+        if(err) return done(err);
+        assert.equal(0, data.length)
+        assert.isNotNull(data);
+        done();
+      });
+    });
+
+});
+
