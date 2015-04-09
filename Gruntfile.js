@@ -212,7 +212,7 @@ module.exports = function (grunt) {
 
     mochaTest: {
       options: {
-        reporter: 'mocha-jenkins-reporter'
+        reporter: 'spec'
       },
       src: ['server/**/*.spec.js']
     },
@@ -232,26 +232,41 @@ module.exports = function (grunt) {
 
       }
     },
-/*
-    qunit: {
-      src: ['qunit.html'],
-      options: {
-          coverage: {
-            src: ['server/ ** / *.spec.js'],
-            instrumentedFiles: 'temp/',
-            htmlReport: 'report/coverage',
-            coberturaReport: 'report/',
-            linesThresholdPct: 20
-          }
+
+    mochacov: {
+      default: {
+        src: ['server/**/*.spec.js'],
+        options: {
+          reporter: 'spec'
         }
       },
+      jenkins: {
+        src: ['server/**/*.spec.js'],
+        options: {
+          reporter: 'xunit',
+          output: 'build/test-result.xml'
+        }
+      },
+      cobertura: {
+        options: {
+          reporter: 'mocha-cobertura-reporter',
+          require: ['chai'],
+          output: 'build/cobertura.xml',
+          coverage: true
+        },
+        src: ['server/**/*.spec.js']
+      },
+      coveragehtml: {
+        options: {
+          reporter: 'html-cov',
+          require: ['chai'],
+          output: 'build/coverage.html'
 
-    qunit_junit: {
-      options: {
-        dest: 'report/'
+        },
+        src: ['server/**/*.spec.js']
       }
-  }
-*/
+    }
+
   });
 
   // Used for delaying livereload until after server has restarted
@@ -300,11 +315,11 @@ module.exports = function (grunt) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve']);
   });
-/*
-  grunt.loadNpmTasks('grunt-contrib-qunit');
-  grunt.loadNpmTasks('grunt-qunit-istanbul');
-  grunt.loadNpmTasks('grunt-qunit-junit');
-*/
+
+  grunt.loadNpmTasks('grunt-mocha-cov');
+  grunt.loadNpmTasks('grunt-blanket-mocha');
+  grunt.registerTask('jenkins', ['env:test', 'mochacov:jenkins', 'mochacov:cobertura', 'mochacov:coveragehtml']);
+
   grunt.registerTask('test', function(target) {
     if (target === 'server') {
       return grunt.task.run([
@@ -324,9 +339,9 @@ module.exports = function (grunt) {
 
 
     else grunt.task.run([
-      'test:server',
-      'test:client'
-    ]);
+        'test:server',
+        'test:client'
+      ]);
   });
 
   grunt.registerTask('build', [
