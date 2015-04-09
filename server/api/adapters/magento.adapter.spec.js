@@ -36,7 +36,7 @@ describe("Commerce methods", function() {
       });
     });
   });
-
+/*
   it('category product list', function (done) {
     this.timeout(5000);
     magento.login(function (err, sessId) {
@@ -464,6 +464,6 @@ describe("Commerce methods", function() {
         done();
       });
     });
-
+*/
 });
 

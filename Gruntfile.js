@@ -47,7 +47,7 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      
+
       mochaTest: {
         files: ['server/**/*.spec.js'],
         tasks: ['env:test', 'mochaTest']
@@ -212,7 +212,7 @@ module.exports = function (grunt) {
 
     mochaTest: {
       options: {
-        reporter: 'spec'
+        reporter: 'mocha-jenkins-reporter'
       },
       src: ['server/**/*.spec.js']
     },
@@ -232,6 +232,26 @@ module.exports = function (grunt) {
 
       }
     },
+/*
+    qunit: {
+      src: ['qunit.html'],
+      options: {
+          coverage: {
+            src: ['server/ ** / *.spec.js'],
+            instrumentedFiles: 'temp/',
+            htmlReport: 'report/coverage',
+            coberturaReport: 'report/',
+            linesThresholdPct: 20
+          }
+        }
+      },
+
+    qunit_junit: {
+      options: {
+        dest: 'report/'
+      }
+  }
+*/
   });
 
   // Used for delaying livereload until after server has restarted
@@ -280,7 +300,11 @@ module.exports = function (grunt) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve']);
   });
-
+/*
+  grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-qunit-istanbul');
+  grunt.loadNpmTasks('grunt-qunit-junit');
+*/
   grunt.registerTask('test', function(target) {
     if (target === 'server') {
       return grunt.task.run([
