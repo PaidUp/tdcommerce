@@ -281,6 +281,17 @@ exports.orderHold = function(orderId, res){
   });
 }
 
+exports.orderCancel = function(orderId, res){
+  login(function(err) {
+    if(err) return res(err);
+    magento.salesOrder.cancel({
+      orderIncrementId: orderId
+    }, function (err, resOrderId) {
+      if(err) return res(err);
+      return res(null,resOrderId);
+    });
+  });
+}
 
 exports.mapMagentoAddresses = function (address){
   arrAddress = [];

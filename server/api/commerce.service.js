@@ -67,6 +67,11 @@ function orderUpdateStatus(orderId, status, cb) {
       if (err) return cb(err);
       return cb(null, data);
     });
+  }else if(status == "cancel"){
+    commerceAdapter.orderCancel(orderId, function (err, data) {
+      if (err) return cb(err);
+      return cb(null, data);
+    });
   }
   else {
     return cb({name: "StatusNotImplemented"});
