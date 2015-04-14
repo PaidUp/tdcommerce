@@ -47,7 +47,7 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      
+
       mochaTest: {
         files: ['server/**/*.spec.js'],
         tasks: ['env:test', 'mochaTest']
@@ -232,6 +232,41 @@ module.exports = function (grunt) {
 
       }
     },
+
+    mochacov: {
+      default: {
+        src: ['server/**/*.spec.js'],
+        options: {
+          reporter: 'spec'
+        }
+      },
+      jenkins: {
+        src: ['server/**/*.spec.js'],
+        options: {
+          reporter: 'xunit',
+          output: 'build/test-result.xml'
+        }
+      },
+      cobertura: {
+        options: {
+          reporter: 'mocha-cobertura-reporter',
+          require: ['chai'],
+          output: 'build/cobertura.xml',
+          coverage: true
+        },
+        src: ['server/**/*.spec.js']
+      },
+      coveragehtml: {
+        options: {
+          reporter: 'html-cov',
+          require: ['chai'],
+          output: 'build/coverage.html'
+
+        },
+        src: ['server/**/*.spec.js']
+      }
+    }
+
   });
 
   // Used for delaying livereload until after server has restarted
@@ -281,6 +316,10 @@ module.exports = function (grunt) {
     grunt.task.run(['serve']);
   });
 
+  grunt.loadNpmTasks('grunt-mocha-cov');
+  grunt.loadNpmTasks('grunt-blanket-mocha');
+  grunt.registerTask('jenkins', ['env:test', 'mochacov:jenkins', 'mochacov:cobertura', 'mochacov:coveragehtml']);
+
   grunt.registerTask('test', function(target) {
     if (target === 'server') {
       return grunt.task.run([
@@ -300,9 +339,9 @@ module.exports = function (grunt) {
 
 
     else grunt.task.run([
-      'test:server',
-      'test:client'
-    ]);
+        'test:server',
+        'test:client'
+      ]);
   });
 
   grunt.registerTask('build', [

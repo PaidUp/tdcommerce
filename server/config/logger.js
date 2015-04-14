@@ -4,8 +4,6 @@ var config = require('./environment');
 var winston = require('winston');
 winston.emitErrs = true;
 
-console.log(config.root);
-
 var logger = new winston.Logger({
   transports: [
     new winston.transports.File({
