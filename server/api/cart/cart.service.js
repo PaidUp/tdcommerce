@@ -5,9 +5,6 @@ var commerceAdapter = require(config.commerce.adapter);
 exports.cartCreate = function(cb) {
   commerceAdapter.cartCreate(function(err, cartId) {
     if(err) {return cb(err);}
-    commerceAdapter.cartAddress(cartId, config.commerce.defaultAddress,function(err, dataAdress) {
-    	if(err) {return cb(err);}
-  	});
     return cb(null, cartId);
   });
 }
