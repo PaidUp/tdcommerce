@@ -296,7 +296,7 @@ module.exports = function (grunt) {
         'clean:server',
         'env:all',
         'concurrent:server',
-        'injector',
+        'innkinsctor',
         'wiredep',
         'autoprefixer',
         'concurrent:debug'
