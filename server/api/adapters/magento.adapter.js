@@ -160,7 +160,7 @@ exports.cartAddress = function(cartId, customerAddressData,res){
 }
 
 exports.cartCustomer = function(cartId, customer, res){
-  var customerData = {customer_id: customer.mageCustomerId, mode:"customer", firstname: customer.firstName, lastname: customer.lastName, email: customer.email};
+  var customerData = {customer_id: customer.meta.TDCommerceId, mode:"customer", firstname: customer.firstName, lastname: customer.lastName, email: customer.email};
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCartCustomer.set({
@@ -190,12 +190,12 @@ createCustomer = exports.createCustomer = function(user, cb) {
   });
 };
 
-createCustomerAddress = exports.createCustomerAddress = function(mageCustomerId, address, cb) {
+createCustomerAddress = exports.createCustomerAddress = function(TDCommerceId, address, cb) {
   var mageAddress = mapMagentoAddress(address);
   login(function(err) {
     if(err) return res(err);
     magento.customerAddress.create({
-      customerId: mageCustomerId,
+      customerId: TDCommerceId,
       addressData: mageAddress
     }, function(err, addressId){
       if(err) return cb(err);
