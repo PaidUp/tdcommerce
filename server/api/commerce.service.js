@@ -98,8 +98,8 @@ function transactionCreate(orderId, transactionId, addInfo, cb) {
 
 function customerCreate(user, cb) {
   //Validate if email user exist in magento.
-  if(user.mageCustomerId){
-    return cb(null, user.mageCustomerId);
+  if(user.meta.TDCommerceId){
+    return cb(null, user.meta.TDCommerceId);
   };
   commerceAdapter.createCustomer(user, function (err, data) {
     if (err) {
