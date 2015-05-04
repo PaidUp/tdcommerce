@@ -52,12 +52,13 @@ function orderLoad(orderId, cb) {
   });
 }
 
-function transactionList(filter, cb) {
+function transactionList(filter, user, cb) {
   commerceAdapter.orderList(filter, function (err, magentoOrders) {
     if (err) {
       return cb(err);
     }
-    mapOrders(magentoOrders, fnAddTransaccions, cb, user);
+    return cb(null,magentoOrders);
+    //mapOrders(magentoOrders, fnAddTransaccions, cb, user);
   });
 }
 
