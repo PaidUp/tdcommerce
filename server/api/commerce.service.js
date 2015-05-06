@@ -52,12 +52,13 @@ function orderLoad(orderId, cb) {
   });
 }
 
-function transactionList(filter, cb) {
+function transactionList(filter, user, cb) {
   commerceAdapter.orderList(filter, function (err, magentoOrders) {
     if (err) {
       return cb(err);
     }
-    mapOrders(magentoOrders, fnAddTransaccions, cb, user);
+    return cb(null,magentoOrders);
+    //mapOrders(magentoOrders, fnAddTransaccions, cb, user);
   });
 }
 
@@ -98,8 +99,8 @@ function transactionCreate(orderId, transactionId, addInfo, cb) {
 
 function customerCreate(user, cb) {
   //Validate if email user exist in magento.
-  if(user.mageCustomerId){
-    return cb(null, user.mageCustomerId);
+  if(user.meta.TDCommerceId){
+    return cb(null, user.meta.TDCommerceId);
   };
   commerceAdapter.createCustomer(user, function (err, data) {
     if (err) {

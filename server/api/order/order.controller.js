@@ -18,7 +18,7 @@ exports.load = function(req, res) {
 }
 
 exports.list = function(req, res) {
-  commerceService.orderList(req.body.filter, function(err, dataService){
+  commerceService.orderList(req.body, function(err, dataService){
     if(err) return handleError(res, err);
     return res.json(200, dataService);
   });
