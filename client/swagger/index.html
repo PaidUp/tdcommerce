@@ -25,7 +25,6 @@
   <script type="text/javascript">
     $(function () {
       $.getJSON("options.json", function( option ) {
-        console.log('option' , option);
         var url = window.location.search.match(/url=([^&]+)/);
         if (url && url.length > 1) {
           url = decodeURIComponent(url[1]);
