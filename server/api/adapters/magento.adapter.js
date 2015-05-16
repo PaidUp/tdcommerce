@@ -93,6 +93,20 @@ exports.catalogProductLink = function(teamId, res){
     });
   });
 }
+
+exports.create = function(teamData, res){
+  /*login(function(err) {
+    if(err) return res(err);
+    magento.catalog.create({
+      product: teamId,
+      type:'related'
+    }, function (err, team) {
+      if(err) return res(err);
+      return res(null,camelize(team));
+    });
+  });*/
+  return res(null,'productId');
+}
 //end Catalog
 
 
