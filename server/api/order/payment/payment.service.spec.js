@@ -15,16 +15,13 @@ describe('flow payment schedule', function(){
         feeNumber : modelSpec.feeNumber
       });
       assert.equal(totalFee , 60);
+      done();
     });
   });
 
   describe('dummy', function(){
     it('dummy' , function(done){
-      var totalFee = paymentService.calculateTotalFee({
-        feePrice : modelSpec.feePrice,
-        feeNumber : modelSpec.feeNumber
-      });
-      assert.equal(totalFee , 60);
+      done();
     });
   });
 
