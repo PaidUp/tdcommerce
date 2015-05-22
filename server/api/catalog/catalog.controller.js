@@ -23,6 +23,19 @@ exports.productView = function(req, res) {
   });
 }
 
+exports.create = function(req, res) {
+  if(!req.body && !req.body.teamName) {
+    return res.json(400, {
+      "code": "ValidationError",
+      "message": "Product name is required"
+    });
+  }
+  catalogService.create(req.body, function(err, productId){
+    if(err) return handleError(res, err);
+    res.json(200, productId);
+  });
+}
+
 function handleError(res, err) {
   var httpErrorCode = 500;
 
