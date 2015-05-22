@@ -4,7 +4,7 @@ var faker = require('faker');
 var moment = require('moment');
 
 var paymentTwo = {
-    name: "Austin Boom",
+    name: faker.name.firstName,
     price: 1860,
     basePrice: 1800,
     intervalNumber: 2,
