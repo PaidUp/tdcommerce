@@ -6,7 +6,7 @@
 
 describe('flow payment schedule', function(){
   describe('calculate prices', function(){
-    
+
 
   });
 
