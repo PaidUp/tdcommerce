@@ -73,5 +73,15 @@ function findCatalogProductInfo(catalogProductInfo) {
   return deferred.promise;
 };
 
+function create(teamData, cb) {
+  commerceAdapter.create(teamData, function (err, data) {
+    if (err) {
+      return cb(err);
+    }
+    return cb(null,data);
+  });
+}
+
 exports.catalogList = catalogList;
 exports.catalogProductInfo = catalogProductInfo;
+exports.create = create;
