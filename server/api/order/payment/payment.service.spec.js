@@ -4,25 +4,31 @@
 'use strict';
 
 var paymentService = require('./payment.service');
-var modelSpec = require('../paymentModels/payment.service');
+var modelSpec = require('./paymentModels/paymentPlanOne.model.spec');
 var assert = require('chai').assert;
 
 describe('flow payment schedule', function(){
-  describe('calculate prices', function(){
+  describe('calculate fee', function(){
     it('total fee' , function(done){
       var totalFee = paymentService.calculateTotalFee({
         feePrice : modelSpec.feePrice,
         feeNumber : modelSpec.feeNumber
       });
-      assert.equal(totalFee , 60);
+      assert.equal(totalFee , modelSpec.totalFee);
+      modelSpec.totalFee = totalFee;
       done();
     });
   });
 
-  describe('dummy', function(){
-    it('dummy' , function(done){
-      done();
+  it('total price' , function(done){
+    console.log('modelSpec.totalFee',modelSpec.totalFee);
+    var totalPrice = paymentService.calculateTotalPrice({
+      basePrice : modelSpec.basePrice,
+      deposit : modelSpec.deposit,
+      totalFee : modelSpec.totalFee
     });
+    assert.equal(totalPrice , modelSpec.price);
+    done();
   });
 
 });

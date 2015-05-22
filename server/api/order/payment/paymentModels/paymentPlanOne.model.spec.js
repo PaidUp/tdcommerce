@@ -14,7 +14,9 @@ var model = {
   dateStart : moment("01-06-2015", "DD-MM-YYYY"),
   dateDeposit : null,
   dateInterval : 1,
-  dateFirstPayment : moment("01-06-2015", "DD-MM-YYYY")
+  dateFirstPayment : moment("01-06-2015", "DD-MM-YYYY"),
+
+  totalFee : 60
 }
 
 module.exports = model;
