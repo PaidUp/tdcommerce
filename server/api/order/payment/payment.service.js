@@ -48,6 +48,8 @@ function calculateSchedule(params){
   };
   var schedule = [params.dateStart];
   for(var i=0; i<params.intervalNumber-1;i++){
+    //TODO: add datePayment to array.
+    //if nextPayment < now then now + one day. else  nextPayment
     var nextPayment = moment(schedule[i]).add(1,'M').format();
     schedule.push(nextPayment);
   }
@@ -64,7 +66,7 @@ function calculatePaymentMonth(params){
   return params.price / params.intervalNumber;
 }
 
-function calculatePaymentFee(params){
+function calculatePaymentFee(params){//TDPayment
   if(!typeof params.paymentFee === 'number'){
     throw new Error('paymentFee is not a number');
   };
