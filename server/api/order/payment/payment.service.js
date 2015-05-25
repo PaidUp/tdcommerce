@@ -39,24 +39,63 @@ function calculateTotalPrice(params){
   return (params.basePrice + params.deposit + params.totalFee).toFixed(0);
 }
 
-function calculateSchedule(params){
+function calculateNextPaymentYet(nextPayment){
+  var np = nextPayment.clone();
+  if(np.isBefore(moment())){
+      np.add(1,'days');
+  }
+  return np;
+};
+
+/**
+ * Generate list objects next payments
+ * @param params object {
+ * intervalNumber : number
+ * intervalType : 'string'
+ * intervalElapsed : number
+ * dateStart : string 'DD-MM-YYYY'
+ * params.price : number
+ * destinationId : string
+ * }
+ * @returns [*{}]
+ */
+function generateSchedule(params){
+  var ret = [];
+
   if(!typeof params.intervalNumber === 'number'){
     throw new Error('intervalNumber is not a number');
   };
-  if(!typeof params.dateStart === 'object'){
-    throw new Error('dateStart is not a Date');
-  };
-  var schedule = [params.dateStart];
+  //if(!typeof params.dateStart === 'string'){
+  //  throw new Error('dateStart is not a Date');
+  //};
+  var price = paymentPeriod({
+    intervalNumber : params.intervalNumber,
+    price : params.price
+  });
+
+  var nextPayment;
+  var schedule = {destinationId : params.destinationId , schedulePeriods : []};
+
+  //TODO add deposit
+
   for(var i=0; i<params.intervalNumber-1;i++){
-    //TODO: add datePayment to array.
-    //if nextPayment < now then now + one day. else  nextPayment
-    var nextPayment = moment(schedule[i]).add(1,'M').format();
-    schedule.push(nextPayment);
+    var schedulePeriod = {};
+    if(i === 0) {
+      nextPayment = moment(params.dateStart, 'DD-MM-YYYY').format();
+    }else{
+      nextPayment.add(params.intervalElapsed , params.intervalType);
+    }
+
+    schedulePeriod.nextPayment = nextPayment.clone();
+    schedulePeriod.nextPaymentYet = calculateNextPaymentYet(nextPayment);
+    schedulePeriod.price = price;
+
+    schedule.schedulePeriods.push(schedulePeriod);
   }
   return schedule;
 }
 
-function calculatePaymentMonth(params){
+function paymentPeriod(params){
   if(!typeof params.intervalNumber === 'number' && params.intervalNumber != 0){
     throw new Error('intervalNumber is not a number');
   };
