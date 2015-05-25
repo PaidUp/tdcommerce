@@ -54,8 +54,19 @@ function calculateSchedule(params){
   return schedule;
 }
 
+function calculatePaymentMonth(params){
+  if(!typeof params.intervalNumber === 'number' && params.intervalNumber != 0){
+    throw new Error('intervalNumber is not a number');
+  };
+  if(!typeof params.price === 'number'){
+    throw new Error('price is not a number');
+  };
+  return params.price / params.intervalNumber;
+}
+
 module.exports = {
   calculateTotalFee:calculateTotalFee,
   calculateTotalPrice:calculateTotalPrice,
-  calculateSchedule:calculateSchedule
+  calculateSchedule:calculateSchedule,
+  calculatePaymentMonth:calculatePaymentMonth
 }

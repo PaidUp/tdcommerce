@@ -65,4 +65,13 @@ describe.only('Payment plan Two', function(){
       assert.equal(schedule[0] , modelSpecTwo.dateStart);
       done();
     });
+
+    it('calculate parent payment month' , function(done){
+      var paymentMonth = paymentService.calculatePaymentMonth({
+        intervalNumber : modelSpecTwo.intervalNumber,
+        price : modelSpecTwo.price
+      });
+      assert.equal(paymentMonth, modelSpecTwo.price / modelSpecTwo.intervalNumber);
+      done();
+    });
 });
