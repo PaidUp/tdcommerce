@@ -1,4 +1,5 @@
 'use strict';
+var moment = require('moment');
 
 /*
 params : {
@@ -26,7 +27,6 @@ function calculateTotalFee(params){
  }
  */
 function calculateTotalPrice(params){
-  console.log('params.basePrice',params.basePrice);
   if(!typeof params.basePrice === 'number'){
     throw new Error('basePrice is not a number');
   };
@@ -37,10 +37,25 @@ function calculateTotalPrice(params){
     throw new Error('totalFee is not a number');
   };
   return (params.basePrice + params.deposit + params.totalFee).toFixed(0);
+}
 
+function calculateSchedule(params){
+  if(!typeof params.intervalNumber === 'number'){
+    throw new Error('intervalNumber is not a number');
+  };
+  if(!typeof params.dateStart === 'object'){
+    throw new Error('dateStart is not a Date');
+  };
+  var schedule = [params.dateStart];
+  for(var i=0; i<params.intervalNumber-1;i++){
+    var nextPayment = moment(schedule[i]).add(1,'M').format();
+    schedule.push(nextPayment);
+  }
+  return schedule;
 }
 
 module.exports = {
   calculateTotalFee:calculateTotalFee,
-  calculateTotalPrice:calculateTotalPrice
+  calculateTotalPrice:calculateTotalPrice,
+  calculateSchedule:calculateSchedule
 }

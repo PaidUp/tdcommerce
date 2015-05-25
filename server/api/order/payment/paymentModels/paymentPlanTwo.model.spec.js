@@ -11,10 +11,10 @@ var paymentTwo = {
     deposit: 150,
     feePrice: 10,
     feeNumber: 6,
-    dateStart: "1-Jun-2015",
-    DateDeposit: "1-May-2015",
+    dateStart : moment("01-06-2015", "DD-MM-YYYY").format(),
+    DateDeposit: moment("01-05-2015", "DD-MM-YYYY").format(),
     DateInterval: 1,
-    DateFirstPayment: "1-Jun-2015"
+    dateFirstPayment : moment("01-06-2015", "DD-MM-YYYY").format(),
 }
 
 module.exports = paymentTwo;
