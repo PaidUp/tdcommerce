@@ -40,11 +40,11 @@ function calculateTotalPrice(params){
 }
 
 function calculateNextPaymentYet(nextPayment){
-  var np = nextPayment.clone();
+  var np = moment(nextPayment);
   if(np.isBefore(moment())){
-      np.add(1,'days');
+      np = moment().add(1,'days');
   }
-  return np;
+  return np.format();
 };
 
 /**
@@ -123,7 +123,8 @@ function calculatePaymentFee(params){//TDPayment
 module.exports = {
   calculateTotalFee:calculateTotalFee,
   calculateTotalPrice:calculateTotalPrice,
-  calculateSchedule:calculateSchedule,
-  calculatePaymentMonth:calculatePaymentMonth,
+  calculateNextPaymentYet:calculateNextPaymentYet,
+  generateSchedule:generateSchedule,
+  paymentPeriod:paymentPeriod,
   calculatePaymentFee:calculatePaymentFee
 }

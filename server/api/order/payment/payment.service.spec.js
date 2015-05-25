@@ -9,6 +9,7 @@ var modelSpecTwo = require('./paymentModels/paymentPlanTwo.model.spec');
 var modelSpecThree = require('./paymentModels/paymentPlanThree.model.spec');
 var modelSpecFour = require('./paymentModels/paymentPlanFour.model.spec');
 var assert = require('chai').assert;
+var moment = require('moment');
 
 describe('flow payment schedule One', function(){
   describe('calculate fee', function(){
@@ -56,18 +57,38 @@ describe.only('Payment plan Two', function(){
       done();
     });
 
-    it('calculate schedule' , function(done){
-      var schedule = paymentService.calculateSchedule({
-        intervalNumber : modelSpecTwo.intervalNumber,
-        dateStart : modelSpecTwo.dateStart
-      });
-      assert.equal(schedule.length , modelSpecTwo.intervalNumber);
-      assert.equal(schedule[0] , modelSpecTwo.dateStart);
+    it('calculate next payment Yet now' , function(done){
+      var np = paymentService.calculateNextPaymentYet(modelSpecTwo.dateStart);
+      assert.equal(np , modelSpecTwo.dateStart);
       done();
     });
 
-    it('calculate parent payment month' , function(done){
-      var paymentMonth = paymentService.calculatePaymentMonth({
+    it('calculate next payment Yet before' , function(done){
+
+      var test = moment(moment(), "DD-MM-YYYY").subtract(5,'days').format();
+      var np = paymentService.calculateNextPaymentYet(test);
+      assert.equal(np , moment(moment(), "DD-MM-YYYY").add(1,'days').format());
+      done();
+    });
+
+    it('calculate next payment Yet after' , function(done){
+      var test = moment(moment(), "DD-MM-YYYY").add(5,'days').format();
+      var np = paymentService.calculateNextPaymentYet(test);
+      assert.equal(np , test);
+      done();
+    });
+
+    it('Payment period' , function(done){
+      var pp = paymentService.paymentPeriod({
+        intervalNumber:modelSpecTwo.intervalNumber,
+        price : modelSpecTwo.price
+      });
+      assert.equal(pp, 335);//TODO: question aobut this result.
+      done();
+    });
+
+    it.skip('generate schedule' , function(done){
+      var paymentMonth = paymentService.generateSchedule({
         intervalNumber : modelSpecTwo.intervalNumber,
         price : modelSpecTwo.price
       });
@@ -76,7 +97,7 @@ describe.only('Payment plan Two', function(){
       done();
     });
 
-    it('calculate payment (stripe) fee' , function(done){
+    it.skip('calculate payment (stripe) fee' , function(done){
       var paymentFee = 0.029;
       var paymentFeeFixed = 0.3;
       var feeMonth = paymentService.calculatePaymentFee({
