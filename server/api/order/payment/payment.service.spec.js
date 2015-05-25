@@ -25,7 +25,6 @@ describe('flow payment schedule One', function(){
   });
 
   it('total price' , function(done){
-    console.log('modelSpec.totalFee',modelSpec.totalFee);
     var totalPrice = paymentService.calculateTotalPrice({
       basePrice : modelSpec.basePrice,
       deposit : modelSpec.deposit,
@@ -87,13 +86,29 @@ describe.only('Payment plan Two', function(){
       done();
     });
 
-    it.skip('generate schedule' , function(done){
-      var paymentMonth = paymentService.generateSchedule({
-        intervalNumber : modelSpecTwo.intervalNumber,
-        price : modelSpecTwo.price
+    it('generate schedule deposit' , function(done){
+      var ds = paymentService.generateScheduleDeposit({
+        deposit:modelSpecTwo.deposit,
+        dateDeposit : modelSpecTwo.dateDeposit
       });
-      modelSpecTwo.paymentMonth = paymentMonth;
-      assert.equal(paymentMonth, modelSpecTwo.price / modelSpecTwo.intervalNumber);
+      assert.equal(ds.nextPaymentYet, moment(moment(), "DD-MM-YYYY").add(1,'days').format());//TODO: question aobut this result.
+      done();
+    });
+
+    it('generate schedule' , function(done){
+      var data = {
+        intervalNumber : modelSpecTwo.intervalNumber,
+        intervalType : modelSpecTwo.intervalType,
+        intervalElapsed : modelSpecTwo.intervalElapsed,
+        dateStart : modelSpecTwo.dateStart,
+        price : modelSpecTwo.price,
+        destinationId : 'temp',
+        deposit : modelSpecTwo.deposit,
+        dateDeposit : modelSpecTwo.dateDeposit
+      }
+      var paymentPeriod = paymentService.generateSchedule(data);
+      assert(paymentPeriod.destinationId);
+      assert(paymentPeriod.schedulePeriods);
       done();
     });
 

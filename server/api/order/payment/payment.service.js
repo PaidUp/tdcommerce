@@ -54,8 +54,10 @@ function calculateNextPaymentYet(nextPayment){
  * intervalType : 'string'
  * intervalElapsed : number
  * dateStart : string 'DD-MM-YYYY'
- * params.price : number
+ * price : number
  * destinationId : string
+ * deposit : number
+ * dateDeposit : Date
  * }
  * @returns [*{}]
  */
@@ -65,9 +67,11 @@ function generateSchedule(params){
   if(!typeof params.intervalNumber === 'number'){
     throw new Error('intervalNumber is not a number');
   };
+  //TODO
   //if(!typeof params.dateStart === 'string'){
   //  throw new Error('dateStart is not a Date');
   //};
+  //price: 335
   var price = paymentPeriod({
     intervalNumber : params.intervalNumber,
     price : params.price
@@ -75,18 +79,18 @@ function generateSchedule(params){
 
   var nextPayment;
   var schedule = {destinationId : params.destinationId , schedulePeriods : []};
-
-  //TODO add deposit
-
+  if(params.deposit > 0){
+    schedule.schedulePeriods.push(generateScheduleDeposit(params))
+  }
+  
   for(var i=0; i<params.intervalNumber-1;i++){
     var schedulePeriod = {};
     if(i === 0) {
-      nextPayment = moment(params.dateStart, 'DD-MM-YYYY').format();
+      nextPayment = params.dateStart;
     }else{
-      nextPayment.add(params.intervalElapsed , params.intervalType);
+      nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
     }
-
-    schedulePeriod.nextPayment = nextPayment.clone();
+    schedulePeriod.nextPayment = nextPayment;
     schedulePeriod.nextPaymentYet = calculateNextPaymentYet(nextPayment);
     schedulePeriod.price = price;
 
@@ -115,9 +119,24 @@ function calculatePaymentFee(params){//TDPayment
   if(!typeof params.paymentMonth === 'number'){
     throw new Error('paymentMonth is not a number');
   };
-  console.log('params',params);
-  console.log('0',params.paymentMonth * params.paymentFee);
   return (params.paymentMonth * params.paymentFee) + params.paymentFeeFixed;
+}
+
+function generateScheduleDeposit(params){
+  if(!typeof params.deposit === 'number'){
+    throw new Error('deposit is not a number');
+  };
+
+  if(!typeof params.dateDeposit === 'object'){
+    throw new Error('DateDeposit is not a Date');
+  };
+  var depositSchedule = {
+    nextPayment : params.dateDeposit,
+    nextPaymentYet : calculateNextPaymentYet(params.dateDeposit),
+    price : params.deposit
+  }
+
+  return depositSchedule;
 }
 
 module.exports = {
@@ -126,5 +145,6 @@ module.exports = {
   calculateNextPaymentYet:calculateNextPaymentYet,
   generateSchedule:generateSchedule,
   paymentPeriod:paymentPeriod,
-  calculatePaymentFee:calculatePaymentFee
+  calculatePaymentFee:calculatePaymentFee,
+  generateScheduleDeposit:generateScheduleDeposit
 }

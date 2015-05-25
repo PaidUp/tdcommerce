@@ -12,8 +12,9 @@ var paymentTwo = {
     feePrice: 10,
     feeNumber: 6,
     dateStart : moment("01-06-2015", "DD-MM-YYYY").format(),
-    DateDeposit: moment("01-05-2015", "DD-MM-YYYY").format(),
-    DateInterval: 1,
+    dateDeposit: moment("01-05-2015", "DD-MM-YYYY").format(),
+    intervalElapsed: 1,
+    intervalType: 'month',
     dateFirstPayment : moment("01-06-2015", "DD-MM-YYYY").format(),
 
     paymentMonth:0
