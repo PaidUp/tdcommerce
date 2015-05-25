@@ -40,7 +40,7 @@ function calculateTotalPrice(params){
   return (params.basePrice + params.deposit + params.totalFee).toFixed(0);
 }
 
-function calculateNextPaymentYet(nextPayment){
+function calculateNextPaymentDue(nextPayment){
   var np = moment(nextPayment);
   if(np.isBefore(moment())){
       np = moment().add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType);
@@ -76,7 +76,7 @@ function generateSchedule(params){
     price : params.price
   });
 
-  var nextPayment;
+  var nextPayment = moment();
   var schedule = {destinationId : params.destinationId , schedulePeriods : []};
   if(params.deposit > 0){
     schedule.schedulePeriods.push(generateScheduleDeposit(params))
@@ -90,7 +90,8 @@ function generateSchedule(params){
       nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
     }
     schedulePeriod.nextPayment = nextPayment;
-    schedulePeriod.nextPaymentYet = calculateNextPaymentYet(nextPayment);
+    schedulePeriod.nextPaymentDue
+      = calculateNextPaymentDue(nextPayment);
     schedulePeriod.price = price;
     schedulePeriod.fee = fee;
 
@@ -132,7 +133,7 @@ function generateScheduleDeposit(params){
   };
   var depositSchedule = {
     nextPayment : params.dateDeposit,
-    nextPaymentYet : calculateNextPaymentYet(params.dateDeposit),
+    nextPaymentDue : calculateNextPaymentDue(params.dateDeposit),
     price : params.deposit,
     fee:0
   }
@@ -143,7 +144,7 @@ function generateScheduleDeposit(params){
 module.exports = {
   calculateTotalFee:calculateTotalFee,
   calculateTotalPrice:calculateTotalPrice,
-  calculateNextPaymentYet:calculateNextPaymentYet,
+  calculateNextPaymentDue:calculateNextPaymentDue,
   generateSchedule:generateSchedule,
   paymentPeriod:paymentPeriod,
   calculatePaymentFee:calculatePaymentFee,
