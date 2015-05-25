@@ -7,14 +7,17 @@ var model = {
   name : faker.name.firstName,
   price : 1860,
   basePrice : 1800,
-  intervalNumber : 6,
+  intervalNumber : 2,
   deposit : 0,
   feePrice : 10,
   feeNumber : 6,
-  dateStart : moment("01-06-2015", "DD-MM-YYYY"),
+  dateStart : moment("01-06-2015", "DD-MM-YYYY").format(),
   dateDeposit : null,
-  dateInterval : 1,
-  dateFirstPayment : moment("01-06-2015", "DD-MM-YYYY")
+  intervalElapsed: 1,
+  intervalType: 'month',
+  dateFirstPayment : moment("01-06-2015", "DD-MM-YYYY").format(),
+
+  paymentMonth:0
 }
 
 module.exports = model;

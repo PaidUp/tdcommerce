@@ -82,8 +82,8 @@ function generateSchedule(params){
   if(params.deposit > 0){
     schedule.schedulePeriods.push(generateScheduleDeposit(params))
   }
-  
-  for(var i=0; i<params.intervalNumber-1;i++){
+  var fee = calculateTotalFee(params) / params.intervalNumber;
+  for(var i=0; i<params.intervalNumber;i++){
     var schedulePeriod = {};
     if(i === 0) {
       nextPayment = params.dateStart;
@@ -93,6 +93,7 @@ function generateSchedule(params){
     schedulePeriod.nextPayment = nextPayment;
     schedulePeriod.nextPaymentYet = calculateNextPaymentYet(nextPayment);
     schedulePeriod.price = price;
+    schedulePeriod.fee = fee;
 
     schedule.schedulePeriods.push(schedulePeriod);
   }
@@ -133,7 +134,8 @@ function generateScheduleDeposit(params){
   var depositSchedule = {
     nextPayment : params.dateDeposit,
     nextPaymentYet : calculateNextPaymentYet(params.dateDeposit),
-    price : params.deposit
+    price : params.deposit,
+    fee:0
   }
 
   return depositSchedule;
