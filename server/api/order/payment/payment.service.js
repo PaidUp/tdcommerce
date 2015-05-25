@@ -1,5 +1,6 @@
 'use strict';
 var moment = require('moment');
+var config = require('../../../config/environment/index');
 
 /*
 params : {
@@ -42,7 +43,7 @@ function calculateTotalPrice(params){
 function calculateNextPaymentYet(nextPayment){
   var np = moment(nextPayment);
   if(np.isBefore(moment())){
-      np = moment().add(1,'days');
+      np = moment().add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType);
   }
   return np.format();
 };
@@ -67,11 +68,9 @@ function generateSchedule(params){
   if(!typeof params.intervalNumber === 'number'){
     throw new Error('intervalNumber is not a number');
   };
-  //TODO
-  //if(!typeof params.dateStart === 'string'){
-  //  throw new Error('dateStart is not a Date');
-  //};
-  //price: 335
+  if(!typeof params.dateStart === 'string'){
+    throw new Error('dateStart is not a Date');
+  };
   var price = paymentPeriod({
     intervalNumber : params.intervalNumber,
     price : params.price
