@@ -29,6 +29,7 @@ describe.only('Schedule general', function(){
         feeNumber : modelSpec.feeNumber
       }
       var paymentPeriod = paymentService.generateSchedule(data);
+      console.log('payment period' , paymentPeriod);
       assert(paymentPeriod.destinationId);
       assert(paymentPeriod.schedulePeriods);
       done();
@@ -50,6 +51,7 @@ describe.only('Schedule general', function(){
           feeNumber : modelSpecTwo.feeNumber
         }
         var paymentPeriod = paymentService.generateSchedule(data);
+        console.log('payment period' , paymentPeriod);
         assert(paymentPeriod.destinationId);
         assert(paymentPeriod.schedulePeriods);
         done();
@@ -71,6 +73,7 @@ describe.only('Schedule general', function(){
         feeNumber : modelSpecThree.feeNumber
       }
       var paymentPeriod = paymentService.generateSchedule(data);
+      console.log('payment period' , paymentPeriod);
       assert(paymentPeriod.destinationId);
       assert(paymentPeriod.schedulePeriods);
       done();
@@ -92,6 +95,7 @@ describe.only('Schedule general', function(){
         feeNumber : modelSpecFour.feeNumber
       }
       var paymentPeriod = paymentService.generateSchedule(data);
+      console.log('payment period' , paymentPeriod);
       assert(paymentPeriod.destinationId);
       assert(paymentPeriod.schedulePeriods);
       done();
@@ -120,7 +124,7 @@ describe.only('Schedule general', function(){
     });
 
     it('calculate next payment Yet now' , function(done){
-      var np = paymentService.calculateNextPaymentYet(modelSpecTwo.dateStart);
+      var np = paymentService.calculateNextPaymentDue(modelSpecTwo.dateStart);
       assert.equal(np , modelSpecTwo.dateStart);
       done();
     });
@@ -128,14 +132,14 @@ describe.only('Schedule general', function(){
     it('calculate next payment Yet before' , function(done){
 
       var test = moment(moment(), "DD-MM-YYYY").subtract(5,'days').format();
-      var np = paymentService.calculateNextPaymentYet(test);
+      var np = paymentService.calculateNextPaymentDue(test);
       assert.equal(np , moment(moment(), "DD-MM-YYYY").add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType).format());
       done();
     });
 
     it('calculate next payment Yet after' , function(done){
       var test = moment(moment(), "DD-MM-YYYY").add(5,'days').format();
-      var np = paymentService.calculateNextPaymentYet(test);
+      var np = paymentService.calculateNextPaymentDue(test);
       assert.equal(np , test);
       done();
     });
