@@ -64,9 +64,25 @@ function calculatePaymentMonth(params){
   return params.price / params.intervalNumber;
 }
 
+function calculatePaymentFee(params){
+  if(!typeof params.paymentFee === 'number'){
+    throw new Error('paymentFee is not a number');
+  };
+  if(!typeof params.paymentFeeFixed === 'number'){
+    throw new Error('paymentFeeFixed is not a number');
+  };
+  if(!typeof params.paymentMonth === 'number'){
+    throw new Error('paymentMonth is not a number');
+  };
+  console.log('params',params);
+  console.log('0',params.paymentMonth * params.paymentFee);
+  return (params.paymentMonth * params.paymentFee) + params.paymentFeeFixed;
+}
+
 module.exports = {
   calculateTotalFee:calculateTotalFee,
   calculateTotalPrice:calculateTotalPrice,
   calculateSchedule:calculateSchedule,
-  calculatePaymentMonth:calculatePaymentMonth
+  calculatePaymentMonth:calculatePaymentMonth,
+  calculatePaymentFee:calculatePaymentFee
 }

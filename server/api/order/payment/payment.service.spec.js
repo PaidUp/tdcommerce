@@ -71,7 +71,20 @@ describe.only('Payment plan Two', function(){
         intervalNumber : modelSpecTwo.intervalNumber,
         price : modelSpecTwo.price
       });
+      modelSpecTwo.paymentMonth = paymentMonth;
       assert.equal(paymentMonth, modelSpecTwo.price / modelSpecTwo.intervalNumber);
+      done();
+    });
+
+    it('calculate payment (stripe) fee' , function(done){
+      var paymentFee = 0.029;
+      var paymentFeeFixed = 0.3;
+      var feeMonth = paymentService.calculatePaymentFee({
+        paymentFee:paymentFee,
+        paymentFeeFixed : paymentFeeFixed,
+        paymentMonth : modelSpecTwo.paymentMonth
+      });
+      assert.equal(feeMonth, 10.015);//TODO: question aobut this result.
       done();
     });
 });

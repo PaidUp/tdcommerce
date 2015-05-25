@@ -15,6 +15,8 @@ var paymentTwo = {
     DateDeposit: moment("01-05-2015", "DD-MM-YYYY").format(),
     DateInterval: 1,
     dateFirstPayment : moment("01-06-2015", "DD-MM-YYYY").format(),
+
+    paymentMonth:0
 }
 
 module.exports = paymentTwo;
