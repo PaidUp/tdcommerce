@@ -15,7 +15,7 @@ var config = require('../../../config/environment/index');
 describe.only('Schedule general', function(){
 
   describe('flow Payment schedule One', function(){
-      it('generate schedule startDate before 30 days without deposit' , function(done){
+    it('generate schedule startDate before 30 days without deposit' , function(done){
         var data = {
           name : 'BOOOOOOM',
           price : 1860,
@@ -69,6 +69,116 @@ describe.only('Schedule general', function(){
         assert.equal(paymentPeriod.schedulePeriods[5].fee,10);
         done();
       });
+
+    it('generate schedule startDate before 15 days without deposit' , function(done){
+      var data = {
+        name : 'BOOOOOOM',
+        price : 1860,
+        basePrice : 1800,
+        intervalNumber : 6,
+        deposit : 0,
+        feePrice : 10,
+        feeNumber : 6,
+        dateStart : moment().subtract(15, 'days').format(),
+        dateDeposit : null,
+        intervalElapsed: 1,
+        intervalType: 'month',
+        dateFirstPayment : moment().subtract(15, 'days').format(),
+        destinationId : 'temp 2'
+      }
+      var paymentPeriod = paymentService.generateSchedule(data);
+      assert(paymentPeriod.destinationId);
+      assert(paymentPeriod.schedulePeriods);
+
+      assert(paymentPeriod.destinationId);
+      assert(paymentPeriod.schedulePeriods);
+      assert.lengthOf(paymentPeriod.schedulePeriods, 6, 'array has length of 6');
+      assert.equal(paymentPeriod.schedulePeriods[0].nextPayment, data.dateStart);
+      assert.equal(paymentPeriod.schedulePeriods[0].nextPaymentDue, moment().add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[0].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[0].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[1].nextPayment, moment(paymentPeriod.schedulePeriods[0].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[1].nextPaymentDue, moment(paymentPeriod.schedulePeriods[0].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[1].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[1].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[2].nextPayment, moment(paymentPeriod.schedulePeriods[1].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[2].nextPaymentDue, moment(paymentPeriod.schedulePeriods[1].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[2].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[2].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[3].nextPayment, moment(paymentPeriod.schedulePeriods[2].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[3].nextPaymentDue, moment(paymentPeriod.schedulePeriods[2].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[3].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[3].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[4].nextPayment, moment(paymentPeriod.schedulePeriods[3].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[4].nextPaymentDue, moment(paymentPeriod.schedulePeriods[3].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[4].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[4].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[5].nextPayment, moment(paymentPeriod.schedulePeriods[4].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[5].nextPaymentDue, moment(paymentPeriod.schedulePeriods[4].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[5].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[5].fee,10);
+      done();
+    });
+
+    it('generate schedule startDate after 15 days without deposit' , function(done){
+      var data = {
+        name : 'BOOOOOOM',
+        price : 1860,
+        basePrice : 1800,
+        intervalNumber : 6,
+        deposit : 0,
+        feePrice : 10,
+        feeNumber : 6,
+        dateStart : moment().add(15, 'days').format(),
+        dateDeposit : null,
+        intervalElapsed: 1,
+        intervalType: 'month',
+        dateFirstPayment : moment().add(15, 'days').format(),
+        destinationId : 'temp 2'
+      }
+      var paymentPeriod = paymentService.generateSchedule(data);
+      assert(paymentPeriod.destinationId);
+      assert(paymentPeriod.schedulePeriods);
+
+      assert(paymentPeriod.destinationId);
+      assert(paymentPeriod.schedulePeriods);
+      assert.lengthOf(paymentPeriod.schedulePeriods, 6, 'array has length of 6');
+      assert.equal(paymentPeriod.schedulePeriods[0].nextPayment, data.dateStart);
+      assert.equal(paymentPeriod.schedulePeriods[0].nextPaymentDue, data.dateStart);
+      assert.equal(paymentPeriod.schedulePeriods[0].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[0].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[1].nextPayment, moment(paymentPeriod.schedulePeriods[0].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[1].nextPaymentDue, moment(paymentPeriod.schedulePeriods[0].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[1].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[1].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[2].nextPayment, moment(paymentPeriod.schedulePeriods[1].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[2].nextPaymentDue, moment(paymentPeriod.schedulePeriods[1].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[2].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[2].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[3].nextPayment, moment(paymentPeriod.schedulePeriods[2].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[3].nextPaymentDue, moment(paymentPeriod.schedulePeriods[2].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[3].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[3].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[4].nextPayment, moment(paymentPeriod.schedulePeriods[3].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[4].nextPaymentDue, moment(paymentPeriod.schedulePeriods[3].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[4].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[4].fee,10);
+
+      assert.equal(paymentPeriod.schedulePeriods[5].nextPayment, moment(paymentPeriod.schedulePeriods[4].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[5].nextPaymentDue, moment(paymentPeriod.schedulePeriods[4].nextPayment).add(data.intervalElapsed,data.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[5].price, data.price / data.intervalNumber);
+      assert.equal(paymentPeriod.schedulePeriods[5].fee,10);
+      done();
+    });
   });
 
   describe('flow payment schedule Two', function(){
