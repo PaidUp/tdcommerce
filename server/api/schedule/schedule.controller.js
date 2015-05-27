@@ -5,11 +5,9 @@ var catalogService = require('../catalog/catalog.service.js');
 var logger = require('../../config/logger');
 
 exports.generate = function(req, res) {
-    var productId = req.params.productId;
-    catalogService.catalogProductInfo(productId, function(err, product){
+    catalogService.catalogProductInfo(req.params.productId, function(err, product){
         if(err){
             handleError(res, err);
-            //return res.json(400, {description:"product not exist" + err});
         }
         var params = {
             name:product.name,
