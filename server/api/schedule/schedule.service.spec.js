@@ -389,4 +389,8 @@ describe.only('Schedule general', function(){
 
   });
 
+  describe.skip('Schedule controller', function(){
+
+  });
+
 });

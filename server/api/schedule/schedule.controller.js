@@ -7,6 +7,10 @@ var logger = require('../../config/logger');
 exports.generate = function(req, res) {
     var productId = req.params.productId;
     catalogService.catalogProductInfo(productId, function(err, product){
+        if(err){
+            handleError(res, err);
+            //return res.json(400, {description:"product not exist" + err});
+        }
         var params = {
             name:product.name,
             price:product.price,
@@ -28,4 +32,15 @@ exports.generate = function(req, res) {
 
 exports.payments = function(req, res) {
     return res.json(200, {});
+}
+
+function handleError(res, err) {
+  var httpErrorCode = 500;
+
+  if(err.name === "ValidationError") {
+    httpErrorCode = 400;
+  }
+  logger.log('error', err);
+
+  return res.json(httpErrorCode, {code : err.name, message : err.message, errors : err.errors});
 }
