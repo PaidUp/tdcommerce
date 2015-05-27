@@ -3,14 +3,11 @@
  */
 'use strict';
 
-var paymentService = require('./payment.service');
-var modelSpec = require('./paymentModels/paymentPlanOne.model.spec');
-var modelSpecTwo = require('./paymentModels/paymentPlanTwo.model.spec');
-var modelSpecThree = require('./paymentModels/paymentPlanThree.model.spec');
-var modelSpecFour = require('./paymentModels/paymentPlanFour.model.spec');
+var paymentService = require('./schedule.service');
+var modelSpec = require('./scheduleModels/schedule.model.spec.js');
 var assert = require('chai').assert;
 var moment = require('moment');
-var config = require('../../../config/environment/index');
+var config = require('../../config/environment/index');
 
 describe.only('Schedule general', function(){
 
@@ -321,27 +318,27 @@ describe.only('Schedule general', function(){
   describe('Method services', function(){
     it('total fee' , function(done){
       var totalFee = paymentService.calculateTotalFee({
-        feePrice : modelSpecTwo.feePrice,
-        feeNumber : modelSpecTwo.feeNumber
+        feePrice : modelSpec.feePrice,
+        feeNumber : modelSpec.feeNumber
       });
       assert.equal(totalFee , 60);
-      modelSpecTwo.totalFee = Number(totalFee);
+      modelSpec.totalFee = Number(totalFee);
       done();
     });
 
     it('total price' , function(done){
       var totalPrice = paymentService.calculateTotalPrice({
-        basePrice : modelSpecTwo.basePrice,
-        deposit : modelSpecTwo.deposit,
-        totalFee : modelSpecTwo.totalFee
+        basePrice : modelSpec.basePrice,
+        deposit : modelSpec.deposit,
+        totalFee : modelSpec.totalFee
       });
-      assert.equal(totalPrice , modelSpecTwo.price);
+      assert.equal(totalPrice , modelSpec.price);
       done();
     });
 
     it('calculate next payment Due now' , function(done){
-      var np = paymentService.calculateNextPaymentDue(modelSpecTwo.dateStart);
-      assert.equal(np , modelSpecTwo.dateStart);
+      var np = paymentService.calculateNextPaymentDue(modelSpec.dateStart);
+      assert.equal(np , modelSpec.dateStart);
       done();
     });
 
@@ -362,8 +359,8 @@ describe.only('Schedule general', function(){
 
     it('Payment period' , function(done){
       var pp = paymentService.paymentPeriod({
-        intervalNumber:modelSpecTwo.intervalNumber,
-        price : modelSpecTwo.price
+        intervalNumber:modelSpec.intervalNumber,
+        price : modelSpec.price
       });
       assert.equal(pp, 335);//TODO: question aobut this result.
       done();
@@ -371,8 +368,8 @@ describe.only('Schedule general', function(){
 
     it('generate schedule deposit' , function(done){
       var ds = paymentService.generateScheduleDeposit({
-        deposit:modelSpecTwo.deposit,
-        dateDeposit : modelSpecTwo.dateDeposit
+        deposit:modelSpec.deposit,
+        dateDeposit : modelSpec.dateDeposit
       });
       assert.equal(ds.nextPaymentDue, moment(moment(), "DD-MM-YYYY").add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType).format());//TODO: question aobut this result.
       done();
@@ -384,7 +381,7 @@ describe.only('Schedule general', function(){
       var feeMonth = paymentService.calculatePaymentFee({
         paymentFee:paymentFee,
         paymentFeeFixed : paymentFeeFixed,
-        paymentMonth : modelSpecTwo.paymentMonth
+        paymentMonth : modelSpec.paymentMonth
       });
       assert.equal(feeMonth, 10.015);//TODO: question aobut this result.
       done();

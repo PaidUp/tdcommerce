@@ -1,6 +1,6 @@
 'use strict';
 var moment = require('moment');
-var config = require('../../../config/environment/index');
+var config = require('../../config/environment/index');
 
 /*
 params : {
