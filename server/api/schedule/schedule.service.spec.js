@@ -8,6 +8,9 @@ var modelSpec = require('./scheduleModels/schedule.model.spec.js');
 var assert = require('chai').assert;
 var moment = require('moment');
 var config = require('../../config/environment/index');
+var app = require('../../app');
+var request = require('supertest');
+var tokenTDCommerce = 'TDCommerceToken-CHANGE-ME!';
 
 describe.only('Schedule general', function(){
 
@@ -389,8 +392,26 @@ describe.only('Schedule general', function(){
 
   });
 
-  describe.skip('Schedule controller', function(){
-
+  describe('Schedule controller', function(){
+    it('/schedule/generate/product/9', function(done) {
+      this.timeout(5000);
+      request(app)
+        .get('/api/v1/commerce/schedule/generate/product/8')
+        .set('Authorization', tokenTDCommerce)
+        .expect(200)
+        .expect('Content-Type', 'application/json')
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.equal(res.body.destinationId,'acct_160HAZCnPkfEUUV4');
+          assert(res.body.schedulePeriods);
+          assert.lengthOf(res.body.schedulePeriods, 7, 'array has length of 7');
+          assert.equal(res.body.schedulePeriods[0].price,150);
+          assert.equal(res.body.schedulePeriods[0].fee,0);
+          assert.equal(res.body.schedulePeriods[1].price, 275);
+          assert.equal(res.body.schedulePeriods[1].fee,10);
+          done();
+        });
+    });
   });
 
 });
