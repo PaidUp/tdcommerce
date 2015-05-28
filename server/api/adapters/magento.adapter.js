@@ -468,6 +468,9 @@ function mapOrder(magentoOrder) {
           if (json.cardId) {
             orderDetails.cardId = json.cardId;
           }
+        };
+        if(json.schedulePeriods) {
+          orderDetails.schedulePeriods = json.schedulePeriods;
         }
       }
     } catch (e) {

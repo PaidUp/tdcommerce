@@ -417,14 +417,13 @@ describe.only('Schedule general', function(){
     it('/api/v1/commerce/schedule/payments/order/000001689', function(done) {
       this.timeout(15000);
       request(app)
-        .get('/api/v1/commerce/schedule/payments/order/000001675')///commecer/schedule/payments/{orderId/{status}
+        .get('/api/v1/commerce/schedule/payments/order/000001689')///commecer/schedule/payments/{orderId/{status}
         .set('Authorization', tokenTDCommerce)
-        //.expect(200)
-        //.expect('Content-Type', 'application/json')
+        .expect(200)
+        .expect('Content-Type', 'application/json')
         .end(function(err, res) {
           if (err) return done(err);
-          //console.log('req.body',res.body);
-          //assert.equal(res.body.destinationId,'acct_160HAZCnPkfEUUV4');
+          assert.operator(res.body.scheduled.length, '>', 0);
           done();
         });
     });

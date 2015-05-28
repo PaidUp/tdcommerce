@@ -36,9 +36,24 @@ exports.payments = function(req, res) {
         "message": "Order Id is required"
       });
     }
-    commerceService.transactionList(req.params.orderId, function(err, order){
+    commerceService.transactionList(req.params.orderId, function(err, transactions){
         if(err) return handleError(res, err);
-        return res.json(200, order);
+        //console.log('transactions',transactions);
+        commerceService.orderLoad(req.params.orderId, function(err, order){
+          if(err) return handleError(res, err);
+          //console.log('order.schedulePeriods',order.schedulePeriods);
+          order.schedulePeriods.forEach(function(element, index, array){
+            element.transactions = [];
+            if(transactions.length > 0){
+              transactions.forEach(function(elemTransaction, ind, arrayTransation){
+                if(elemTransaction.scheduleId === element.id ){
+                  element.transactions.push(elemTransaction);
+                }
+              });
+            }
+          });
+          return res.json(200, {scheduled:order.schedulePeriods});
+        });
     });
 }
 
