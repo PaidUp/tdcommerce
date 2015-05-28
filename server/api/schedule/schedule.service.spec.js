@@ -389,11 +389,10 @@ describe.only('Schedule general', function(){
       assert.equal(feeMonth, 10.015);//TODO: question aobut this result.
       done();
     });
-
   });
 
   describe('Schedule controller', function(){
-    it('/schedule/generate/product/9', function(done) {
+    it.skip('/schedule/generate/product/8', function(done) {
       this.timeout(5000);
       request(app)
         .get('/api/v1/commerce/schedule/generate/product/8')
@@ -412,6 +411,22 @@ describe.only('Schedule general', function(){
           done();
         });
     });
+
+    it('/api/v1/commerce/schedule/payments/order/000001684/status/pending', function(done) {
+      this.timeout(15000);
+      request(app)
+        .get('/api/v1/commerce/schedule/payments/order/000001684/status/pending')///commecer/schedule/payments/{orderId/{status}
+        .set('Authorization', tokenTDCommerce)
+        //.expect(200)
+        //.expect('Content-Type', 'application/json')
+        .end(function(err, res) {
+          if (err) return done(err);
+          console.log('req.body',res.body);
+          //assert.equal(res.body.destinationId,'acct_160HAZCnPkfEUUV4');
+          done();
+        });
+    });
+
   });
 
 });

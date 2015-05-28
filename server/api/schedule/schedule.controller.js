@@ -2,6 +2,7 @@
 
 var scheduleService = require('./schedule.service.js');
 var catalogService = require('../catalog/catalog.service.js');
+var commerceService = require('../commerce.service.js');
 var logger = require('../../config/logger');
 
 exports.generate = function(req, res) {
@@ -29,7 +30,18 @@ exports.generate = function(req, res) {
 }
 
 exports.payments = function(req, res) {
-    return res.json(200, {});
+    if(!req.params && !req.params.orderId) {
+      return res.json(400, {
+        "code": "ValidationError",
+        "message": "Order Id is required"
+      });
+    }
+    console.log('req.params.orderId',req.params.orderId);
+    commerceService.transactionList({order_id: req.params.orderId}, '', function(err, order){
+        if(err) return handleError(res, err);
+        console.log('transactionList',order);
+        return res.json(200, order);
+    });
 }
 
 function handleError(res, err) {
