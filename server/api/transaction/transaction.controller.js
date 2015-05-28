@@ -5,7 +5,7 @@ var config = require('../../config/environment');
 var logger = require('../../config/logger');
 
 exports.list = function (req, res) {
-  commerceService.transactionList(req.params.orderId}, function (err, transactions) {
+  commerceService.transactionList(req.params.orderId, function (err, transactions) {
     if (err) {
       return handleError(res, err);
     }
