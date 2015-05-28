@@ -401,6 +401,7 @@ describe.only('Schedule general', function(){
         .expect('Content-Type', 'application/json')
         .end(function(err, res) {
           if (err) return done(err);
+          assert(res.body.destinationId);
           assert.equal(res.body.destinationId,'acct_160HAZCnPkfEUUV4');
           assert(res.body.schedulePeriods);
           assert.lengthOf(res.body.schedulePeriods, 7, 'array has length of 7');
@@ -421,7 +422,7 @@ describe.only('Schedule general', function(){
         //.expect('Content-Type', 'application/json')
         .end(function(err, res) {
           if (err) return done(err);
-          console.log('req.body',res.body);
+          //console.log('req.body',res.body);
           //assert.equal(res.body.destinationId,'acct_160HAZCnPkfEUUV4');
           done();
         });

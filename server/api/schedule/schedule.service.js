@@ -1,6 +1,7 @@
 'use strict';
 var moment = require('moment');
 var config = require('../../config/environment/index');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 /*
 params : {
@@ -89,6 +90,8 @@ function generateSchedule(params){
     }else{
       nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
     }
+    //TODO jesse
+    schedulePeriod.id = new ObjectId();
     schedulePeriod.nextPayment = nextPayment;
     schedulePeriod.nextPaymentDue
       = calculateNextPaymentDue(nextPayment);
@@ -132,6 +135,8 @@ function generateScheduleDeposit(params){
     throw new Error('DateDeposit is not a Date');
   };
   var depositSchedule = {
+    //TODO jesse
+    id : new ObjectId(),
     nextPayment : params.dateDeposit,
     nextPaymentDue : calculateNextPaymentDue(params.dateDeposit),
     price : params.deposit,
