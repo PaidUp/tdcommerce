@@ -90,7 +90,6 @@ function generateSchedule(params){
     }else{
       nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
     }
-    //TODO jesse
     schedulePeriod.id = new ObjectId();
     schedulePeriod.nextPayment = nextPayment;
     schedulePeriod.nextPaymentDue
@@ -135,7 +134,6 @@ function generateScheduleDeposit(params){
     throw new Error('DateDeposit is not a Date');
   };
   var depositSchedule = {
-    //TODO jesse
     id : new ObjectId(),
     nextPayment : params.dateDeposit,
     nextPaymentDue : calculateNextPaymentDue(params.dateDeposit),

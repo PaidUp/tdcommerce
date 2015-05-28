@@ -389,6 +389,7 @@ describe.only('Schedule general', function(){
       assert.equal(feeMonth, 10.015);//TODO: question aobut this result.
       done();
     });
+
   });
 
   describe('Schedule controller', function(){
@@ -413,10 +414,10 @@ describe.only('Schedule general', function(){
         });
     });
 
-    it('/api/v1/commerce/schedule/payments/order/000001684/status/pending', function(done) {
+    it('/api/v1/commerce/schedule/payments/order/000001689', function(done) {
       this.timeout(15000);
       request(app)
-        .get('/api/v1/commerce/schedule/payments/order/000001684/status/pending')///commecer/schedule/payments/{orderId/{status}
+        .get('/api/v1/commerce/schedule/payments/order/000001675')///commecer/schedule/payments/{orderId/{status}
         .set('Authorization', tokenTDCommerce)
         //.expect(200)
         //.expect('Content-Type', 'application/json')

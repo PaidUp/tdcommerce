@@ -36,10 +36,8 @@ exports.payments = function(req, res) {
         "message": "Order Id is required"
       });
     }
-    //console.log('req.params.orderId',req.params.orderId);
-    commerceService.transactionList({order_id: req.params.orderId}, '', function(err, order){
+    commerceService.transactionList(req.params.orderId, function(err, order){
         if(err) return handleError(res, err);
-        //console.log('transactionList',order);
         return res.json(200, order);
     });
 }
