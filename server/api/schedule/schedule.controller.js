@@ -38,10 +38,8 @@ exports.payments = function(req, res) {
     }
     commerceService.transactionList(req.params.orderId, function(err, transactions){
         if(err) return handleError(res, err);
-        //console.log('transactions',transactions);
         commerceService.orderLoad(req.params.orderId, function(err, order){
           if(err) return handleError(res, err);
-          //console.log('order.schedulePeriods',order.schedulePeriods);
           order.schedulePeriods.forEach(function(element, index, array){
             element.transactions = [];
             if(transactions.length > 0){

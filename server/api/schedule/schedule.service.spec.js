@@ -393,7 +393,7 @@ describe.only('Schedule general', function(){
   });
 
   describe('Schedule controller', function(){
-    it.skip('/schedule/generate/product/8', function(done) {
+    it('/schedule/generate/product/8', function(done) {
       this.timeout(5000);
       request(app)
         .get('/api/v1/commerce/schedule/generate/product/8')

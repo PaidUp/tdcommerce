@@ -98,8 +98,8 @@ var all = {
     shippingMethod: 'freeshipping_freeshipping',
     paymentMethod: 'purchaseorder',
     paymentPlan:{
-      intervalElapsed:1,
-      intervalType:'days'
+      intervalElapsed:5,
+      intervalType:'minutes'
     }
   },
   nodePass: {
