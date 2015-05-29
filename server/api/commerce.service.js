@@ -52,8 +52,8 @@ function orderLoad(orderId, cb) {
   });
 }
 
-function transactionList(filter, user, cb) {
-  commerceAdapter.orderList(filter, function (err, magentoOrders) {
+function transactionList(orderId, cb) {
+  commerceAdapter.transactionList(orderId, function (err, magentoOrders) {
     if (err) {
       return cb(err);
     }

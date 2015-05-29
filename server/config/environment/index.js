@@ -96,7 +96,11 @@ var all = {
         }
       ],
     shippingMethod: 'freeshipping_freeshipping',
-    paymentMethod: 'purchaseorder'
+    paymentMethod: 'purchaseorder',
+    paymentPlan:{
+      intervalElapsed:5,
+      intervalType:'minutes'
+    }
   },
   nodePass: {
     me:{

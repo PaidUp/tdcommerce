@@ -727,6 +727,38 @@
                     }
                 }
             }
+        },
+        "/commerce/schedule/generate/product/{productId}": {
+            "get": {
+                "summary": "Get schedule of product",
+                "description": "Get the list of date payments generate for the product.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "Product id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "schedule"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result Message"
+                    },
+                    "400": {
+                        "description": "Validation field error",
+                        "schema": {
+                            "$ref": "ValidationError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
