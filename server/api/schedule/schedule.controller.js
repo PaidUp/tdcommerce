@@ -4,12 +4,16 @@ var scheduleService = require('./schedule.service.js');
 var catalogService = require('../catalog/catalog.service.js');
 var commerceService = require('../commerce.service.js');
 var logger = require('../../config/logger');
+var moment = require('moment');
 
 exports.generate = function(req, res) {
     catalogService.catalogProductInfo(req.params.productId, function(err, product){
         if(err){
             handleError(res, err);
         }
+        var hour = new Date().getHours();
+        var minute = new Date().getMinutes();
+        product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
         var params = {
             name:product.name,
             price:product.price,
@@ -18,8 +22,8 @@ exports.generate = function(req, res) {
             deposit:product.deposit,
             feePrice:product.feePrice,
             feeNumber:product.feeNumber,
-            dateStart:product.dateStart,
-            dateDeposit:product.dateDeposit,
+            dateStart:product.dateStart.substring(0,11) + hour +":"+ minute+":00",
+            dateDeposit:product.dateDeposit.substring(0,11) + hour +":"+ minute+":00",
             intervalElapsed:product.intervalElapsed,
             intervalType:product.intervalType,
             dateFirstPayment:product.dateFirstPayment,
