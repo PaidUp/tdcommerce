@@ -48,15 +48,12 @@ exports.payments = function(req, res) {
             element.transactions = [];
             if(transactions.length > 0){
               transactions.forEach(function(elemTransaction, ind, arrayTransation){
-                console.log('elemTransaction.scheduleId',elemTransaction.scheduleId);
-                console.log('element.id',element.id);
-                if(elemTransaction.scheduleId === element.id ){
+                if(elemTransaction.details.rawDetailsInfo.scheduleId === element.id ){
                   element.transactions.push(elemTransaction);
                 }
               });
             }
           });
-          console.log('order.schedulePeriods',order.schedulePeriods);
           return res.json(200, {scheduled:order.schedulePeriods});
         });
     });
