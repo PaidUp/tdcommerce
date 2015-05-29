@@ -56,6 +56,7 @@ exports.payments = function(req, res) {
               });
             }
           });
+          console.log('order.schedulePeriods',order.schedulePeriods);
           return res.json(200, {scheduled:order.schedulePeriods});
         });
     });

@@ -423,7 +423,6 @@ describe.only('Schedule general', function(){
         .expect('Content-Type', 'application/json')
         .end(function(err, res) {
           if (err) return done(err);
-          console.log('req.body',req.body);
           assert.operator(res.body.scheduled.length, '>', 0);
           done();
         });
