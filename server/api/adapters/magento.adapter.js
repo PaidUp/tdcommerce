@@ -3,6 +3,7 @@ var MagentoAPI = require('magento');
 var magento = new MagentoAPI(config.commerce.magento);
 var camelize = require('camelize');
 var snakeize = require('snakeize');
+var logger = require('../../config/logger.js');
 
 var login = exports.login = function(cb) {
   magento.core.info(function(err, data) {
