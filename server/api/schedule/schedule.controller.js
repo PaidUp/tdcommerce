@@ -48,7 +48,8 @@ exports.payments = function(req, res) {
             element.transactions = [];
             if(transactions.length > 0){
               transactions.forEach(function(elemTransaction, ind, arrayTransation){
-                console.log('elemTransaction',elemTransaction);
+                console.log('elemTransaction.scheduleId',elemTransaction.scheduleId);
+                console.log('element.id',element.id);
                 if(elemTransaction.scheduleId === element.id ){
                   element.transactions.push(elemTransaction);
                 }
