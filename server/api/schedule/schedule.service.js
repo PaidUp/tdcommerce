@@ -80,7 +80,7 @@ function generateSchedule(params){
   var nextPayment = moment();
   var schedule = {destinationId : params.destinationId , schedulePeriods : []};
   if(params.deposit > 0){
-    schedule.schedulePeriods.push(generateScheduleDeposit(params))
+    schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
   }
   var fee = calculateTotalFee(params) / params.intervalNumber;
   for(var i=0; i<params.intervalNumber;i++){
@@ -96,7 +96,7 @@ function generateSchedule(params){
       = calculateNextPaymentDue(nextPayment);
     schedulePeriod.price = price;
     schedulePeriod.fee = fee;
-
+    schedulePeriod.description = 'Season Fee';
     schedule.schedulePeriods.push(schedulePeriod);
   }
   return schedule;
@@ -125,7 +125,7 @@ function calculatePaymentFee(params){//TDPayment
   return (params.paymentMonth * params.paymentFee) + params.paymentFeeFixed;
 }
 
-function generateScheduleDeposit(params){
+function generateScheduleDeposit(params, description){
   if(!typeof params.deposit === 'number'){
     throw new Error('deposit is not a number');
   };
@@ -138,7 +138,8 @@ function generateScheduleDeposit(params){
     nextPayment : params.dateDeposit,
     nextPaymentDue : calculateNextPaymentDue(params.dateDeposit),
     price : params.deposit,
-    fee:0
+    fee:0,
+    description : description
   }
 
   return depositSchedule;
