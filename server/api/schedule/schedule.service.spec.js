@@ -44,7 +44,7 @@ describe.only('Schedule general', function(){
         assert.equal(paymentPeriod.schedulePeriods[0].fee,10);
 
         assert.equal(paymentPeriod.schedulePeriods[1].nextPayment, moment(paymentPeriod.schedulePeriods[0].nextPayment).add(data.intervalElapsed,data.intervalType).format());
-        assert.equal(paymentPeriod.schedulePeriods[1].nextPaymentDue, moment(paymentPeriod.schedulePeriods[0].nextPayment).add(data.intervalElapsed,data.intervalType).add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType).format());
+        assert.equal(paymentPeriod.schedulePeriods[1].nextPaymentDue, moment(paymentPeriod.schedulePeriods[0].nextPayment).add(data.intervalElapsed,data.intervalType).format());
         assert.equal(paymentPeriod.schedulePeriods[1].price, data.price / data.intervalNumber);
         assert.equal(paymentPeriod.schedulePeriods[1].fee,10);
 
@@ -213,7 +213,7 @@ describe.only('Schedule general', function(){
       assert.equal(paymentPeriod.schedulePeriods[1].fee,10);
 
       assert.equal(paymentPeriod.schedulePeriods[2].nextPayment, moment(paymentPeriod.schedulePeriods[1].nextPayment).add(data.intervalElapsed,data.intervalType).format());
-      assert.equal(paymentPeriod.schedulePeriods[2].nextPaymentDue, moment(paymentPeriod.schedulePeriods[1].nextPayment).add(data.intervalElapsed,data.intervalType).add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType).format());
+      assert.equal(paymentPeriod.schedulePeriods[2].nextPaymentDue, moment(paymentPeriod.schedulePeriods[1].nextPayment).add(data.intervalElapsed,data.intervalType).format());
       assert.equal(paymentPeriod.schedulePeriods[2].price, data.price / data.intervalNumber);
       assert.equal(paymentPeriod.schedulePeriods[2].fee,10);
 
@@ -341,7 +341,7 @@ describe.only('Schedule general', function(){
 
     it('calculate next payment Due now' , function(done){
       var np = paymentService.calculateNextPaymentDue(modelSpec.dateStart);
-      assert.equal(np , modelSpec.dateStart);
+      assert.equal(np , moment().add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType).format());
       done();
     });
 
