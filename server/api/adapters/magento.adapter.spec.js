@@ -17,7 +17,7 @@ modelSpec.orderId;
 var MagentoAPI = require('magento');
 var magento = new MagentoAPI(config.commerce.magento);
 
-describe("Commerce methods", function() {
+describe.only("Commerce methods", function() {
   this.timeout(5000);
 
   it('category tree', function (done) {
