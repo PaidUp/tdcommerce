@@ -470,6 +470,9 @@ function mapOrder(magentoOrder) {
             orderDetails.cardId = json.cardId;
           }
         };
+        if(json.meta){
+          orderDetails.meta = json.meta
+        }
         if(json.schedulePeriods) {
           orderDetails.schedulePeriods = json.schedulePeriods;
         }
