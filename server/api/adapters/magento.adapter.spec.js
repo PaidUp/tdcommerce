@@ -17,7 +17,7 @@ modelSpec.orderId;
 var MagentoAPI = require('magento');
 var magento = new MagentoAPI(config.commerce.magento);
 
-describe.only("Commerce methods", function() {
+describe("Commerce methods", function() {
   this.timeout(5000);
 
   it('category tree', function (done) {
@@ -460,6 +460,34 @@ describe.only("Commerce methods", function() {
       commerceAdapter.transactionList(19, function(err,data){
         if(err) return done(err);
         assert.equal(0, data.length)
+        assert.isNotNull(data);
+        done();
+      });
+    });
+
+    it('create (catalog) group product', function (done) {
+      this.timeout(25000);
+      var testDataProduct = {
+        type:'grouped',//
+        set:'9',// should be 9 for Team attibute set.
+        sku:faker.random.uuid(),
+        data: {
+          name:faker.company.companyName(),
+          websites:['1'],
+          short_description:'short_description',
+          description:'description',
+          status:'1',
+          price:faker.finance.amount(),
+          tax_class_id:'0',
+          url_key:'product-url-key',
+          url_path:'url_path',
+          visibility:'4',// should be 4
+          categories:['4'],// should be 4
+          categoryIds:['4']// should be 4
+        }
+      };
+      commerceAdapter.catalogCreate(testDataProduct, function(err,data){
+        if(err) return done(err);
         assert.isNotNull(data);
         done();
       });
