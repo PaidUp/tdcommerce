@@ -44,16 +44,18 @@ exports.payments = function(req, res) {
         if(err) return handleError(res, err);
         commerceService.orderLoad(req.params.orderId, function(err, order){
           if(err) return handleError(res, err);
-          order.schedulePeriods.forEach(function(element, index, array){
-            element.transactions = [];
-            if(transactions.length > 0){
-              transactions.forEach(function(elemTransaction, ind, arrayTransation){
-                if(elemTransaction.details.rawDetailsInfo.scheduleId === element.id ){
-                  element.transactions.push(elemTransaction);
-                }
-              });
-            }
-          });
+          if(order.schedulePeriods){
+            order.schedulePeriods.forEach(function(element, index, array){
+              element.transactions = [];
+              if(transactions.length > 0){
+                transactions.forEach(function(elemTransaction, ind, arrayTransation){
+                  if(elemTransaction.details.rawDetailsInfo.scheduleId === element.id ){
+                    element.transactions.push(elemTransaction);
+                  }
+                });
+              }
+            });
+          }
           return res.json(200, {scheduled:order});
         });
     });
