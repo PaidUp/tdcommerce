@@ -74,7 +74,7 @@ function findCatalogProductInfo(catalogProductInfo) {
 };
 
 function create(teamData, cb) {
-  commerceAdapter.create(teamData, function (err, data) {
+  commerceAdapter.catalogCreate(teamData, function (err, data) {
     if (err) {
       return cb(err);
     }
