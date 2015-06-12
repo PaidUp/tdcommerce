@@ -44,6 +44,13 @@ function catalogProductInfo(productId, cb) {
   });
 }
 
+function catalogProductLink(productGroupId, cb){
+  commerceAdapter.catalogProductLink(productGroupId , function(err , data){
+    if(err) return cb(err);
+    cb(null , data);
+  });
+}
+
 function mapCatalogProducts(arr, func, cb, dataCatalog) {
   var currentPromise = Q();
   var promises = arr.map(function (el) {
@@ -85,3 +92,4 @@ function create(teamData, cb) {
 exports.catalogList = catalogList;
 exports.catalogProductInfo = catalogProductInfo;
 exports.create = create;
+exports.catalogProductLink = catalogProductLink;

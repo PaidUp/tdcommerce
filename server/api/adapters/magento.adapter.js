@@ -87,7 +87,7 @@ exports.catalogProductLink = function(teamId, res){
     if(err) return res(err);
     magento.catalogProductLink.list({
       product: teamId,
-      type:'related'
+      type:'grouped'
     }, function (err, resProductLink) {
       if(err) return res(err);
       return res(null,camelize(resProductLink));
