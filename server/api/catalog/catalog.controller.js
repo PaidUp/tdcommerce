@@ -51,13 +51,13 @@ exports.create = function(req, res) {
   if(!req.body.set) {
     return res.json(400, {
       "code": "ValidationError",
-      "message": "Product name is required"
+      "message": "set is required"
     });
   }
   if(!req.body.sku) {
     return res.json(400, {
       "code": "ValidationError",
-      "message": "Product name is required"
+      "message": "sku is required"
     });
   }
   if(!req.body.data && !req.body.data.name) {
@@ -66,10 +66,10 @@ exports.create = function(req, res) {
       "message": "Product name is required"
     });
   }
-  if(req.body.data.description) {
+  if(!req.body.data.description) {
     return res.json(400, {
       "code": "ValidationError",
-      "message": "Product name is required"
+      "message": "Product description is required"
     });
   }
   catalogService.create(req.body, function(err, productId){
