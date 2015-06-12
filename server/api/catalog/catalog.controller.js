@@ -41,6 +41,20 @@ data: {
   categoryIds:['4']
 }
  */
+
+exports.productLinkView = function(req, res) {
+  if(!req.params && !req.params.productId) {
+    return res.json(400, {
+      "code": "ValidationError",
+      "message": "Product Id is required"
+    });
+  }
+  catalogService.catalogProductLink(req.params.productId, function(err, dataService){
+    if(err) return handleError(res, err);
+    res.json(200, dataService);
+  });
+};
+
 exports.create = function(req, res) {
   if(!req.body && !req.body.type) {
     return res.json(400, {
