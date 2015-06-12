@@ -12,7 +12,7 @@ var app = require('../../app');
 var request = require('supertest');
 var tokenTDCommerce = 'TDCommerceToken-CHANGE-ME!';
 
-describe.only('Schedule general', function(){
+describe.skip('Schedule general', function(){
 
   describe('flow Payment schedule One', function(){
     it('generate schedule startDate before 30 days without deposit' , function(done){

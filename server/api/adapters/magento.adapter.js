@@ -95,18 +95,35 @@ exports.catalogProductLink = function(teamId, res){
   });
 }
 
-exports.create = function(teamData, res){
-  /*login(function(err) {
+/*
+  teamData:
+  {
+    type:'grouped',//
+    set:'9',// should be 9 for Team attibute set.
+    sku:'uniqueIDSKU',
+    data: {
+      name:'name team9',
+      websites:['1'],
+      short_description:'short_description',
+      description:'description',
+      status:'1',price:'150',
+      tax_class_id:'0',
+      url_key:'product-url-key',
+      url_path:'url_path',
+      visibility:'4',
+      categories:['4'],
+      categoryIds:['4']
+    }
+  }
+*/
+exports.catalogCreate = function(teamData, res){
+  login(function(err) {
     if(err) return res(err);
-    magento.catalog.create({
-      product: teamId,
-      type:'related'
-    }, function (err, team) {
+    magento.catalogProduct.create(teamData, function (err, teamId) {
       if(err) return res(err);
-      return res(null,camelize(team));
+      return res(null,camelize(teamId));
     });
-  });*/
-  return res(null,'productId');
+  });
 }
 //end Catalog
 

@@ -22,12 +22,54 @@ exports.productView = function(req, res) {
     res.json(200, dataService);
   });
 }
-
+/*
+type:'grouped',//
+set:'9',// should be 9 for Team attibute set.
+sku:'uniqueIDSKU',
+data: {
+  name:'name team9',
+  websites:['1'],
+  short_description:'short_description',
+  description:'description',
+  status:'1',
+  price:'150',
+  tax_class_id:'0',
+  url_key:'product-url-key',
+  url_path:'url_path',
+  visibility:'4',
+  categories:['4'],
+  categoryIds:['4']
+}
+ */
 exports.create = function(req, res) {
-  if(!req.body && !req.body.teamName) {
+  if(!req.body && !req.body.type) {
+    return res.json(400, {
+      "code": "ValidationError",
+      "message": "type is required"
+    });
+  }
+  if(!req.body.set) {
+    return res.json(400, {
+      "code": "ValidationError",
+      "message": "set is required"
+    });
+  }
+  if(!req.body.sku) {
+    return res.json(400, {
+      "code": "ValidationError",
+      "message": "sku is required"
+    });
+  }
+  if(!req.body.data && !req.body.data.name) {
     return res.json(400, {
       "code": "ValidationError",
       "message": "Product name is required"
+    });
+  }
+  if(!req.body.data.description) {
+    return res.json(400, {
+      "code": "ValidationError",
+      "message": "Product description is required"
     });
   }
   catalogService.create(req.body, function(err, productId){
