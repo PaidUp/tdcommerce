@@ -111,15 +111,18 @@ exports.catalogProductLink = function(teamId, res){
       url_key:'product-url-key',
       url_path:'url_path',
       visibility:'4',
-      categories:['4'],
-      categoryIds:['4']
+      categories:['3'],//fire
+      categoryIds:['3'],//fire
+      balanced_customer_id:'balanced_customer_id1',
+      t_d_payment_id:'t_d_customer_id1'
     }
   }
 */
 exports.catalogCreate = function(teamData, res){
   login(function(err) {
     if(err) return res(err);
-    magento.catalogProduct.create(teamData, function (err, teamId) {
+    teamData.data.t_d_payment_id = teamData.data.tdPaymentId || teamData.data.balancedCustomerId;
+    magento.catalogProduct.create(snakeize(teamData), function (err, teamId) {
       if(err) return res(err);
       return res(null,camelize(teamId));
     });
