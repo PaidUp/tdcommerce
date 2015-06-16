@@ -23,22 +23,25 @@ exports.productView = function(req, res) {
   });
 }
 /*
+exports.create:
 type:'grouped',//
 set:'9',// should be 9 for Team attibute set.
 sku:'uniqueIDSKU',
 data: {
   name:'name team9',
-  websites:['1'],
-  short_description:'short_description',
+  websites:['1'],//fire
+  shortDescription:'short_description',
   description:'description',
-  status:'1',
+  status:'1',//fire
   price:'150',
-  tax_class_id:'0',
-  url_key:'product-url-key',
-  url_path:'url_path',
-  visibility:'4',
-  categories:['4'],
-  categoryIds:['4']
+  taxClass_id:'0',//fire
+  urlKey:'product-url-key',
+  urlPath:'url_path',
+  visibility:'4',//fire
+  categories:['3'],//fire
+  categoryIds:['3'],//fire
+  balancedCustomer_id:'balanced_customer_id1',
+  tdPaymentId:'t_d_customer_id1'
 }
  */
 
@@ -84,6 +87,12 @@ exports.create = function(req, res) {
     return res.json(400, {
       "code": "ValidationError",
       "message": "Product description is required"
+    });
+  }
+  if(!req.body.data.tdPaymentId) {
+    return res.json(400, {
+      "code": "ValidationError",
+      "message": "Product tdPaymentId is required"
     });
   }
   catalogService.create(req.body, function(err, productId){
