@@ -109,7 +109,7 @@ function paymentPeriod(params){
   if(!typeof params.price === 'number'){
     throw new Error('price is not a number');
   };
-  return params.price / params.intervalNumber;
+  return   parseFloat(Math.ceil((params.price / params.intervalNumber) * 100) / 100).toFixed(2);
 }
 
 function calculatePaymentFee(params){//TDPayment
