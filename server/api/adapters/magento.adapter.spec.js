@@ -474,16 +474,18 @@ describe("Commerce methods", function() {
         data: {
           name:faker.company.companyName(),
           websites:['1'],
-          short_description:'short_description',
+          shortDescription:'short_description',
           description:'description',
           status:'1',
           price:faker.finance.amount(),
-          tax_class_id:'0',
-          url_key:'product-url-key',
-          url_path:'url_path',
+          taxDlassId:'0',
+          urlKey:'product-url-key',
+          urlPath:'url_path',
           visibility:'4',// should be 4
-          categories:['4'],// should be 4
-          categoryIds:['4']// should be 4
+          categories:['3'],// should be 3
+          categoryIds:['3'],// should be 3.
+          balancedCustomerId:'balanced_customer_id1',
+          tdPaymentId:'t_d_customer_id1'
         }
       };
       commerceAdapter.catalogCreate(testDataProduct, function(err,data){
