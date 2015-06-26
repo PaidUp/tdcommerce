@@ -83,12 +83,6 @@ exports.create = function(req, res) {
       "message": "Product name is required"
     });
   }
-  if(!req.body.data.description) {
-    return res.json(400, {
-      "code": "ValidationError",
-      "message": "Product description is required"
-    });
-  }
   if(!req.body.data.tdPaymentId) {
     return res.json(400, {
       "code": "ValidationError",
