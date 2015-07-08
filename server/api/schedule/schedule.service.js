@@ -64,7 +64,6 @@ function calculateNextPaymentDue(nextPayment){
  * @returns [*{}]
  */
 function generateSchedule(params){
-  var ret = [];
 
   if(!typeof params.intervalNumber === 'number'){
     throw new Error('intervalNumber is not a number');
@@ -78,7 +77,6 @@ function generateSchedule(params){
   var schedule = {destinationId : params.destinationId , schedulePeriods : []};
   var hasDeposit = false;
   if(params.deposit > 0){
-    hasDeposit = true
     schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
   }
   var price = paymentPeriod({
@@ -141,7 +139,7 @@ function generateScheduleDeposit(params, description){
     id : new ObjectId(),
     nextPayment : params.dateDeposit,
     nextPaymentDue : calculateNextPaymentDue(params.dateDeposit),
-    price : params.deposit,
+    price : parseFloat(Math.ceil(params.deposit * 100) / 100).toFixed(2),
     fee:0,
     description : description
   }
