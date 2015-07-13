@@ -8,9 +8,12 @@ var moment = require('moment');
 
 exports.generate = function(req, res) {
     catalogService.catalogProductInfo(req.params.productId, function(err, product){
+
         if(err){
             handleError(res, err);
         }
+      var customizeSchedule = getCustomizeSchedule(product);
+
         var hour = new Date().getHours();
         var minute = new Date().getMinutes();
         product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
@@ -27,10 +30,19 @@ exports.generate = function(req, res) {
             intervalElapsed:product.intervalElapsed,
             intervalType:product.intervalType,
             dateFirstPayment:product.dateFirstPayment,
-            destinationId:product.tDPaymentId
+            destinationId:product.tDPaymentId,
+          customizeSchedule : customizeSchedule
          };
         return res.json(200, scheduleService.generateSchedule(params));
     });
+}
+
+function getCustomizeSchedule(product){
+  var customizeSchedule = null;
+  if(product.customizeSchedule){
+    customizeSchedule = JSON.parse(product.customizeSchedule);
+  }
+  return customizeSchedule;
 }
 
 exports.payments = function(req, res) {
