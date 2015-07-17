@@ -53,8 +53,9 @@ function generateSchedule(params){
   };
 
   var schedule = {destinationId : params.destinationId , schedulePeriods : []};
-
-  if(params.customizeSchedule){
+  if(params.isInFullPay){
+    schedule.schedulePeriods.push(parseSchedule(params.onePaymentSchedule));
+  }else if(params.customizeSchedule){
     params.customizeSchedule.forEach(function(ele, pos, arr){
       schedule.schedulePeriods.push(parseSchedule(ele));
     });

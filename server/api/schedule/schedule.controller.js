@@ -12,6 +12,14 @@ exports.generate = function(req, res) {
             handleError(res, err);
         }
       var customizeSchedule = getCustomizeSchedule(product);
+      var onePaymentSchedule =  getOnePaymentSchedule(product);
+      if(onePaymentSchedule){
+        onePaymentSchedule.price = req.body.price;
+      }
+
+
+      console.log('isInFullPay',req.body.isInFullPay);
+      console.log('onePaymentSchedule',onePaymentSchedule);
 
         var hour = new Date().getHours();
         var minute = new Date().getMinutes();
@@ -30,7 +38,8 @@ exports.generate = function(req, res) {
             intervalType:product.intervalType,
             dateFirstPayment:product.dateFirstPayment,
             destinationId:product.tDPaymentId,
-          customizeSchedule : customizeSchedule
+          customizeSchedule : customizeSchedule,
+          onePaymentSchedule : onePaymentSchedule
          };
         return res.json(200, scheduleService.generateSchedule(params));
     });
@@ -42,6 +51,14 @@ function getCustomizeSchedule(product){
     customizeSchedule = JSON.parse(product.customizeSchedule);
   }
   return customizeSchedule;
+}
+
+function getOnePaymentSchedule(product){
+  var onePaymentSchedule = null;
+  if(product.onePaymentSchedule){
+    onePaymentSchedule = JSON.parse(product.onePaymentSchedule);
+  }
+  return onePaymentSchedule;
 }
 
 exports.payments = function(req, res) {
