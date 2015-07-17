@@ -7,7 +7,7 @@ var logger = require('../../config/logger');
 var moment = require('moment');
 
 exports.generate = function(req, res) {
-    catalogService.catalogProductInfo(req.params.productId, function(err, product){
+    catalogService.catalogProductInfo(req.body.productId, function(err, product){
         if(err){
             handleError(res, err);
         }
@@ -15,9 +15,9 @@ exports.generate = function(req, res) {
         var minute = new Date().getMinutes();
         product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
         var params = {
+            isInFullPay: req.body.isInFullPay,
             name:product.name,
-            price:product.price,
-            basePrice:product.basePrice,
+            price:req.body.price,
             intervalNumber:product.intervalNumber,
             deposit:product.deposit,
             feePrice:product.feePrice,

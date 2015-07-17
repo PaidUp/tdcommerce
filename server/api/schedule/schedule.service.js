@@ -21,26 +21,6 @@ function calculateTotalFee(params){
 
 }
 
-/*
- params : {
- basePrice : number,
- deposit : number,
- totalFee : number
- }
- */
-function calculateTotalPrice(params){
-  if(!typeof params.basePrice === 'number'){
-    throw new Error('basePrice is not a number');
-  };
-  if(!typeof params.deposit === 'number'){
-    throw new Error('deposit is not a number');
-  };
-  if(!typeof params.totalFee === 'number'){
-    throw new Error('totalFee is not a number');
-  };
-  return (params.basePrice + params.deposit + params.totalFee).toFixed(0);
-}
-
 function calculateNextPaymentDue(nextPayment){
   var np = moment(nextPayment);
   if(np.isBefore(moment())){
@@ -149,7 +129,6 @@ function generateScheduleDeposit(params, description){
 
 module.exports = {
   calculateTotalFee:calculateTotalFee,
-  calculateTotalPrice:calculateTotalPrice,
   calculateNextPaymentDue:calculateNextPaymentDue,
   generateSchedule:generateSchedule,
   paymentPeriod:paymentPeriod,
