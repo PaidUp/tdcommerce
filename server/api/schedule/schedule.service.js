@@ -21,26 +21,6 @@ function calculateTotalFee(params){
 
 }
 
-/*
- params : {
- basePrice : number,
- deposit : number,
- totalFee : number
- }
- */
-function calculateTotalPrice(params){
-  if(!typeof params.basePrice === 'number'){
-    throw new Error('basePrice is not a number');
-  };
-  if(!typeof params.deposit === 'number'){
-    throw new Error('deposit is not a number');
-  };
-  if(!typeof params.totalFee === 'number'){
-    throw new Error('totalFee is not a number');
-  };
-  return (params.basePrice + params.deposit + params.totalFee).toFixed(0);
-}
-
 function calculateNextPaymentDue(nextPayment){
   var np = moment(nextPayment);
   if(np.isBefore(moment())){
@@ -55,7 +35,7 @@ function calculateNextPaymentDue(nextPayment){
  * intervalNumber : number
  * intervalType : 'string'
  * intervalElapsed : number
- * dateStart : string 'DD-MM-YYYY'
+ * dateStart : string 'YYYY-MM-DD'
  * price : number
  * destinationId : string
  * deposit : number
@@ -72,37 +52,60 @@ function generateSchedule(params){
     throw new Error('dateStart is not a Date');
   };
 
-
-  var nextPayment = moment();
   var schedule = {destinationId : params.destinationId , schedulePeriods : []};
-  var hasDeposit = false;
-  if(params.deposit > 0){
-    schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
-  }
-  var price = paymentPeriod({
-    intervalNumber : params.intervalNumber,
-    price : params.price,
-    deposit : params.deposit
-  });
-  var fee = calculateTotalFee(params) / params.intervalNumber;
-  for(var i=0; i<params.intervalNumber;i++){
-    var schedulePeriod = {};
-    if(i === 0) {
-      nextPayment = params.dateStart;
-    }else{
-      nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
+  if(params.isInFullPay){
+    schedule.schedulePeriods.push(parseSchedule(params.onePaymentSchedule));
+  }else if(params.customizeSchedule){
+    params.customizeSchedule.forEach(function(ele, pos, arr){
+      schedule.schedulePeriods.push(parseSchedule(ele));
+    });
+  }else{
+    var nextPayment = moment();
+
+    if(params.deposit > 0){
+      schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
     }
-    schedulePeriod.id = new ObjectId();
-    schedulePeriod.nextPayment = nextPayment;
-    schedulePeriod.nextPaymentDue
-      = calculateNextPaymentDue(nextPayment);
-    schedulePeriod.price = price;
-    schedulePeriod.fee = fee;
-    schedulePeriod.description = 'Season Fee';
-    schedule.schedulePeriods.push(schedulePeriod);
+    var price = paymentPeriod({
+      intervalNumber : params.intervalNumber,
+      price : params.price,
+      deposit : params.deposit
+    });
+    var fee = calculateTotalFee(params) / params.intervalNumber;
+    for(var i=0; i<params.intervalNumber;i++){
+      var schedulePeriod = {};
+      if(i === 0) {
+        nextPayment = params.dateStart;
+      }else{
+        nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
+      }
+      schedulePeriod.id = new ObjectId();
+      schedulePeriod.nextPayment = nextPayment;
+      schedulePeriod.nextPaymentDue
+        = calculateNextPaymentDue(nextPayment);
+      schedulePeriod.price = price;
+      schedulePeriod.fee = fee;
+      schedulePeriod.description = 'Season Fee';
+      schedule.schedulePeriods.push(schedulePeriod);
+    }
   }
+
+
   return schedule;
 }
+
+function parseSchedule(customizeSchedule){
+  var nPayment = customizeSchedule.date + ' ' + customizeSchedule.time;
+  var ds = {
+    id : new ObjectId(),
+    nextPayment : nPayment,
+    nextPaymentDue : calculateNextPaymentDue(nPayment),
+    price : parseFloat(Math.ceil(customizeSchedule.price * 100) / 100).toFixed(2),
+    fee:parseFloat(Math.ceil(customizeSchedule.fee * 100) / 100).toFixed(2),
+    description : customizeSchedule.description
+  }
+
+  return ds;
+};
 
 function paymentPeriod(params){
   if(!typeof params.intervalNumber === 'number' && params.intervalNumber != 0){
@@ -149,7 +152,6 @@ function generateScheduleDeposit(params, description){
 
 module.exports = {
   calculateTotalFee:calculateTotalFee,
-  calculateTotalPrice:calculateTotalPrice,
   calculateNextPaymentDue:calculateNextPaymentDue,
   generateSchedule:generateSchedule,
   paymentPeriod:paymentPeriod,

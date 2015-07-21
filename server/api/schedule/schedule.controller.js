@@ -7,17 +7,27 @@ var logger = require('../../config/logger');
 var moment = require('moment');
 
 exports.generate = function(req, res) {
-    catalogService.catalogProductInfo(req.params.productId, function(err, product){
+    catalogService.catalogProductInfo(req.body.productId, function(err, product){
         if(err){
             handleError(res, err);
         }
+      var customizeSchedule = getCustomizeSchedule(product);
+      var onePaymentSchedule =  getOnePaymentSchedule(product);
+      if(onePaymentSchedule){
+        onePaymentSchedule.price = req.body.price;
+      }
+
+
+      console.log('isInFullPay',req.body.isInFullPay);
+      console.log('onePaymentSchedule',onePaymentSchedule);
+
         var hour = new Date().getHours();
         var minute = new Date().getMinutes();
         product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
         var params = {
+            isInFullPay: req.body.isInFullPay,
             name:product.name,
-            price:product.price,
-            basePrice:product.basePrice,
+            price:req.body.price,
             intervalNumber:product.intervalNumber,
             deposit:product.deposit,
             feePrice:product.feePrice,
@@ -27,10 +37,28 @@ exports.generate = function(req, res) {
             intervalElapsed:product.intervalElapsed,
             intervalType:product.intervalType,
             dateFirstPayment:product.dateFirstPayment,
-            destinationId:product.tDPaymentId
+            destinationId:product.tDPaymentId,
+          customizeSchedule : customizeSchedule,
+          onePaymentSchedule : onePaymentSchedule
          };
         return res.json(200, scheduleService.generateSchedule(params));
     });
+}
+
+function getCustomizeSchedule(product){
+  var customizeSchedule = null;
+  if(product.customizeSchedule){
+    customizeSchedule = JSON.parse(product.customizeSchedule);
+  }
+  return customizeSchedule;
+}
+
+function getOnePaymentSchedule(product){
+  var onePaymentSchedule = null;
+  if(product.onePaymentSchedule){
+    onePaymentSchedule = JSON.parse(product.onePaymentSchedule);
+  }
+  return onePaymentSchedule;
 }
 
 exports.payments = function(req, res) {
