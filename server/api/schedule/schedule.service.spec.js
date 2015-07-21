@@ -329,16 +329,6 @@ describe.skip('Schedule general', function(){
       done();
     });
 
-    it('total price' , function(done){
-      var totalPrice = paymentService.calculateTotalPrice({
-        basePrice : modelSpec.basePrice,
-        deposit : modelSpec.deposit,
-        totalFee : modelSpec.totalFee
-      });
-      assert.equal(totalPrice , modelSpec.price);
-      done();
-    });
-
     it('calculate next payment Due now' , function(done){
       var np = paymentService.calculateNextPaymentDue(modelSpec.dateStart);
       assert.equal(np , moment().add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType).format());
