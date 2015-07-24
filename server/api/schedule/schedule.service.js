@@ -66,9 +66,9 @@ function generateSchedule(params){
       schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
     }
     var price = paymentPeriod({
-      intervalNumber : params.intervalNumber,
-      price : params.price,
-      deposit : params.deposit
+      intervalNumber : parseFloat(params.intervalNumber),
+      price : parseFloat(params.price),
+      deposit : parseFloat(params.deposit)
     });
     var fee = calculateTotalFee(params) / params.intervalNumber;
     for(var i=0; i<params.intervalNumber;i++){
@@ -108,10 +108,10 @@ function parseSchedule(customizeSchedule){
 };
 
 function paymentPeriod(params){
-  if(!typeof params.intervalNumber === 'number' && params.intervalNumber != 0){
+  if(typeof params.intervalNumber !== 'number' || params.intervalNumber == 0){
     throw new Error('intervalNumber is not a number');
   };
-  if(!typeof params.price === 'number'){
+  if(typeof params.price !== 'number'){
     throw new Error('price is not a number');
   };
   return   parseFloat(Math.ceil(((params.price - params.deposit) / params.intervalNumber) * 100) / 100).toFixed(2);
