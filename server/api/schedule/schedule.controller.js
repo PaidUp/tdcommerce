@@ -16,11 +16,6 @@ exports.generate = function(req, res) {
       if(onePaymentSchedule){
         onePaymentSchedule.price = req.body.price;
       }
-
-
-      console.log('isInFullPay',req.body.isInFullPay);
-      console.log('onePaymentSchedule',onePaymentSchedule);
-
         var hour = new Date().getHours();
         var minute = new Date().getMinutes();
         product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
@@ -96,6 +91,5 @@ function handleError(res, err) {
     httpErrorCode = 400;
   }
   logger.log('error', err);
-
   return res.json(httpErrorCode, {code : err.name, message : err.message, errors : err.errors});
 }
