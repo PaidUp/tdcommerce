@@ -2,6 +2,7 @@
 var moment = require('moment');
 var config = require('../../config/environment/index');
 var ObjectId = require('mongoose').Types.ObjectId;
+var logger = require('../../config/logger');
 
 /*
 params : {
@@ -26,7 +27,13 @@ function calculateNextPaymentDue(nextPayment){
   if(np.isBefore(moment())){
       np = moment().add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType);
   }
-  return np.format();
+  var resp = np.format();
+  if(resp === 'Invalid date'){
+    logger.error('invalid date: '+nextPayment );
+    throw new Error('invalid date');
+    return null;
+  }
+  return resp;
 };
 
 /**
@@ -44,53 +51,55 @@ function calculateNextPaymentDue(nextPayment){
  * @returns [*{}]
  */
 function generateSchedule(params){
+  try{
+    if(!typeof params.intervalNumber === 'number'){
+      throw new Error('intervalNumber is not a number');
+    };
+    if(!typeof params.dateStart === 'string'){
+      throw new Error('dateStart is not a Date');
+    };
 
-  if(!typeof params.intervalNumber === 'number'){
-    throw new Error('intervalNumber is not a number');
-  };
-  if(!typeof params.dateStart === 'string'){
-    throw new Error('dateStart is not a Date');
-  };
+    var schedule = {destinationId : params.destinationId , schedulePeriods : []};
+    if(params.isInFullPay){
+      schedule.schedulePeriods.push(parseSchedule(params.onePaymentSchedule));
+    }else if(params.customizeSchedule){
+      params.customizeSchedule.forEach(function(ele, pos, arr){
+        schedule.schedulePeriods.push(parseSchedule(ele));
+      });
+    }else{
+      var nextPayment = moment();
 
-  var schedule = {destinationId : params.destinationId , schedulePeriods : []};
-  if(params.isInFullPay){
-    schedule.schedulePeriods.push(parseSchedule(params.onePaymentSchedule));
-  }else if(params.customizeSchedule){
-    params.customizeSchedule.forEach(function(ele, pos, arr){
-      schedule.schedulePeriods.push(parseSchedule(ele));
-    });
-  }else{
-    var nextPayment = moment();
-
-    if(params.deposit > 0){
-      schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
-    }
-    var price = paymentPeriod({
-      intervalNumber : parseFloat(params.intervalNumber),
-      price : parseFloat(params.price),
-      deposit : parseFloat(params.deposit)
-    });
-    var fee = calculateTotalFee(params) / params.intervalNumber;
-    for(var i=0; i<params.intervalNumber;i++){
-      var schedulePeriod = {};
-      if(i === 0) {
-        nextPayment = params.dateStart;
-      }else{
-        nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
+      if(params.deposit > 0){
+        schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
       }
-      schedulePeriod.id = new ObjectId();
-      schedulePeriod.nextPayment = nextPayment;
-      schedulePeriod.nextPaymentDue
-        = calculateNextPaymentDue(nextPayment);
-      schedulePeriod.price = price;
-      schedulePeriod.fee = fee;
-      schedulePeriod.description = 'Season Fee';
-      schedule.schedulePeriods.push(schedulePeriod);
+      var price = paymentPeriod({
+        intervalNumber : parseFloat(params.intervalNumber),
+        price : parseFloat(params.price),
+        deposit : parseFloat(params.deposit)
+      });
+      var fee = calculateTotalFee(params) / params.intervalNumber;
+      for(var i=0; i<params.intervalNumber;i++){
+        var schedulePeriod = {};
+        if(i === 0) {
+          nextPayment = params.dateStart;
+        }else{
+          nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
+        }
+        schedulePeriod.id = new ObjectId();
+        schedulePeriod.nextPayment = nextPayment;
+        schedulePeriod.nextPaymentDue
+          = calculateNextPaymentDue(nextPayment);
+        schedulePeriod.price = price;
+        schedulePeriod.fee = fee;
+        schedulePeriod.description = 'Season Fee';
+        schedule.schedulePeriods.push(schedulePeriod);
+      }
     }
+    return schedule;
+  }catch(err){
+    logger.error(err);
+    return {error : err}
   }
-
-
-  return schedule;
 }
 
 function parseSchedule(customizeSchedule){
