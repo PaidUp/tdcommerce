@@ -95,7 +95,6 @@ function generateSchedule(params){
         schedule.schedulePeriods.push(schedulePeriod);
       }
     }
-    console.log(schedule);
     return schedule;
   }catch(err){
     logger.error(err);
