@@ -95,6 +95,7 @@ function generateSchedule(params){
         schedule.schedulePeriods.push(schedulePeriod);
       }
     }
+    console.log(schedule);
     return schedule;
   }catch(err){
     logger.error(err);
@@ -103,13 +104,31 @@ function generateSchedule(params){
 }
 
 function parseSchedule(customizeSchedule){
-  var nPayment = customizeSchedule.date + ' ' + customizeSchedule.time;
+  var mom = moment(customizeSchedule.date + ' ' + customizeSchedule.time);
+  var nPayment = mom.format();
+  if(nPayment === 'Invalid date'){
+    logger.error('invalid date: '+nextPayment );
+    throw new Error('invalid date');
+  }
+
+  var price = parseFloat(parseFloat(Math.ceil(customizeSchedule.price * 100) / 100).toFixed(2));
+  if(!price){
+    logger.error('price not is a number: '+nextPayment );
+    throw new Error('price not is a number');
+  }
+
+  var fee = parseFloat(parseFloat(Math.ceil(customizeSchedule.fee * 100) / 100).toFixed(2));
+  if(!fee){
+    logger.error('fee not is a number: '+nextPayment );
+    throw new Error('fee not is a number');
+  }
+
   var ds = {
     id : new ObjectId(),
     nextPayment : nPayment,
     nextPaymentDue : calculateNextPaymentDue(nPayment),
-    price : parseFloat(Math.ceil(customizeSchedule.price * 100) / 100).toFixed(2),
-    fee:parseFloat(Math.ceil(customizeSchedule.fee * 100) / 100).toFixed(2),
+    price : price,
+    fee:fee,
     description : customizeSchedule.description
   }
 

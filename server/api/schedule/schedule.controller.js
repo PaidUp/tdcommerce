@@ -43,7 +43,11 @@ exports.generate = function(req, res) {
 function getCustomizeSchedule(product){
   var customizeSchedule = null;
   if(product.customizeSchedule){
-    customizeSchedule = JSON.parse(product.customizeSchedule);
+    try{
+      customizeSchedule = JSON.parse(product.customizeSchedule);
+    }catch(err){
+      return {error : err};
+    }
   }
   return customizeSchedule;
 }
@@ -51,7 +55,11 @@ function getCustomizeSchedule(product){
 function getOnePaymentSchedule(product){
   var onePaymentSchedule = null;
   if(product.onePaymentSchedule){
-    onePaymentSchedule = JSON.parse(product.onePaymentSchedule);
+    try{
+      onePaymentSchedule = JSON.parse(product.onePaymentSchedule);
+    }catch(err){
+      return {error : err};
+    }
   }
   return onePaymentSchedule;
 }
