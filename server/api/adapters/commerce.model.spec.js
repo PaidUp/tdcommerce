@@ -22,7 +22,7 @@ var data = {
     loanUserId:'',
     applicationId:'',
     loanId:'',
-    productsCart : [{productId:"8",sku:"AUSTIN_BOOM",qty:1,options:{"4":"10","5":"11"}}],
+    productsCart : [{productId:"110",sku:"NORTH TEXAS BANDITOS - 7U BLACK",qty:1,options:{"4":"10","5":"11"}}],
     loanUserData : function(){
         return {firstName:this.firstName,lastName:this.lastName,ssn:"123456789"};
     },
