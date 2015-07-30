@@ -51,6 +51,9 @@ function calculateNextPaymentDue(nextPayment){
  * @returns [*{}]
  */
 function generateSchedule(params){
+  //console.log('-----');
+  //console.log('generateSchedule.params',params);
+  //console.log('-----');
   try{
     if(!typeof params.intervalNumber === 'number'){
       throw new Error('intervalNumber is not a number');
@@ -106,19 +109,19 @@ function parseSchedule(customizeSchedule){
   var mom = moment(customizeSchedule.date + ' ' + customizeSchedule.time);
   var nPayment = mom.format();
   if(nPayment === 'Invalid date'){
-    logger.error('invalid date: '+nextPayment );
+    logger.error('invalid date: '+nPayment );
     throw new Error('invalid date');
   }
 
   var price = parseFloat(parseFloat(Math.ceil(customizeSchedule.price * 100) / 100).toFixed(2));
   if(!price){
-    logger.error('price not is a number: '+nextPayment );
+    logger.error('price not is a number: '+nPayment );
     throw new Error('price not is a number');
   }
 
   var fee = parseFloat(parseFloat(Math.ceil(customizeSchedule.fee * 100) / 100).toFixed(2));
   if(!fee){
-    logger.error('fee not is a number: '+nextPayment );
+    logger.error('fee not is a number: '+nPayment );
     throw new Error('fee not is a number');
   }
 
