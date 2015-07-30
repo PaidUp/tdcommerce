@@ -7,13 +7,7 @@ var logger = require('../../config/logger');
 var moment = require('moment');
 
 exports.generate = function(req, res) {
-  //console.log('--------------------');
-  //console.log('req.body',req.body);
-  //console.log('--------------------');
     catalogService.catalogProductInfo(req.body.productId, function(err, product){
-      //console.log('----------');
-      //console.log('product',product);
-      //console.log('----------');
         if(err){
             handleError(res, err);
         }
@@ -42,17 +36,11 @@ exports.generate = function(req, res) {
           customizeSchedule : customizeSchedule,
           onePaymentSchedule : onePaymentSchedule
         };
-        //console.log('----------');
-        //console.log('params generate',params);
-        //console.log('----------');
         return res.json(200, scheduleService.generateSchedule(params));
     });
 }
 
 function getCustomizeSchedule(product){
-  //console.log('----------');
-  //console.log('getCustomizeSchedule product.customizeSchedule',product.customizeSchedule);
-  //console.log('----------');
   var customizeSchedule = null;
   if(product.customizeSchedule){
     try{
@@ -61,9 +49,6 @@ function getCustomizeSchedule(product){
       return {error : err};
     }
   }
-  //console.log('----------');
-  //console.log('getCustomizeSchedule customizeSchedule',customizeSchedule);
-  //console.log('----------');
   return customizeSchedule;
 }
 
