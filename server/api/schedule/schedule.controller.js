@@ -35,7 +35,7 @@ exports.generate = function(req, res) {
             destinationId:product.tDPaymentId,
           customizeSchedule : customizeSchedule,
           onePaymentSchedule : onePaymentSchedule
-         };
+        };
         return res.json(200, scheduleService.generateSchedule(params));
     });
 }

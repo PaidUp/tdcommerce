@@ -5,6 +5,7 @@ var commerceAdapter = require(config.commerce.adapter);
 var Q = require('q');
 
 function orderList(filter, cb) {
+  //console.log('orderList 3');
   commerceAdapter.orderList(filter, function (err, orders) {
     if (err) {
       return cb(err);
