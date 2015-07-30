@@ -7,9 +7,9 @@ var logger = require('../../config/logger');
 var moment = require('moment');
 
 exports.generate = function(req, res) {
-  console.log('--------------------');
-  console.log('req.body',req.body);
-  console.log('--------------------');
+  //console.log('--------------------');
+  //console.log('req.body',req.body);
+  //console.log('--------------------');
     catalogService.catalogProductInfo(req.body.productId, function(err, product){
       //console.log('----------');
       //console.log('product',product);
