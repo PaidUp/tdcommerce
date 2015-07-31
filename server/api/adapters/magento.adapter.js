@@ -476,6 +476,7 @@ function mapOrder(magentoOrder) {
   orderDetails.incrementId = magentoOrder.increment_id;
   orderDetails.status = magentoOrder.status;
   orderDetails.grandTotal = magentoOrder.grand_total;
+  orderDetails.retry = []
   if(magentoOrder.items) {
     orderDetails.sku = magentoOrder.items[0].sku;
     orderDetails.productId = magentoOrder.items[0].product_id;
@@ -501,6 +502,9 @@ function mapOrder(magentoOrder) {
         }
         if(json.schedulePeriods) {
           orderDetails.schedulePeriods = json.schedulePeriods;
+        }
+        if(json.retryId) {
+          orderDetails.retry.push(json);
         }
       }
     } catch (e) {
