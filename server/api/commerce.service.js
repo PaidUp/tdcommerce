@@ -159,11 +159,12 @@ function loadOrders(orders){
 
 function getListToRetryPayment(ordersLoad){
   var deferred = Q.defer();
-  var retryCandidateList = [];
   var now = moment();
+  var ordersList = [];
   async.eachSeries(ordersLoad,
     function(orderLoad, callback){
       try{
+        var retryCandidateList = [];
         var candidate = true;
         orderLoad.retry.forEach(function(ele, idx, arr){
           orderLoad.transactions.forEach(function(ele2, idx2, arr2){
@@ -174,11 +175,14 @@ function getListToRetryPayment(ordersLoad){
           );
           if(candidate){
             if(now.isAfter(ele.nextPaymentDue, 'second')){
-              console.log('isBefore');
               retryCandidateList.push(ele);
             }
           }
         });
+        if(retryCandidateList.length > 0){
+          orderLoad.retrySchedules = retryCandidateList;
+          ordersList.push(orderLoad);
+        }
       }catch (err){
         logger.error(err);
       }finally{
@@ -189,7 +193,7 @@ function getListToRetryPayment(ordersLoad){
       if(err){
         deferred.reject(err);
       }else{
-        deferred.resolve(retryCandidateList);
+        deferred.resolve(ordersList);
       }
     });
   return deferred.promise;
