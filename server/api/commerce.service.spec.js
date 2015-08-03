@@ -2,6 +2,7 @@
 
 var config = require('../config/environment/index');
 var service = require('./commerce.service');
+var assert = require('chai').assert;
 
 describe.only('commerce service', function(){
   it('retry payment' , function(done){
@@ -9,9 +10,8 @@ describe.only('commerce service', function(){
     service.retryPayment(function(err, data){
       //console.log('err',err);
       console.log('data' ,JSON.stringify(data));
-      //done()
+      assert(data);
+      done()
     })
-
-
   });
 });

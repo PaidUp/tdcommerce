@@ -5,6 +5,7 @@ var logger = require('../config/logger');
 var commerceAdapter = require(config.commerce.adapter);
 var Q = require('q');
 var async = require('async');
+var moment = require('moment');
 
 function orderList(filter, cb) {
   //console.log('orderList 3');
@@ -159,26 +160,36 @@ function loadOrders(orders){
 function getListToRetryPayment(ordersLoad){
   var deferred = Q.defer();
   var retryCandidateList = [];
+  var now = moment();
   async.eachSeries(ordersLoad,
     function(orderLoad, callback){
-
-      orderLoad.retry.forEach(function(ele, idx, arr){
-          
+      try{
+        var candidate = true;
+        orderLoad.retry.forEach(function(ele, idx, arr){
           orderLoad.transactions.forEach(function(ele2, idx2, arr2){
-             if(ele2.retryId && ele.retryId === ele2.retryId){
-
-             }
+              if(ele2.retryId && ele.retryId === ele2.retryId){
+                candidate = false;
+              }
             }
           );
+          if(candidate){
+            if(now.isAfter(ele.nextPaymentDue, 'second')){
+              console.log('isBefore');
+              retryCandidateList.push(ele);
+            }
+          }
+        });
+      }catch (err){
+        logger.error(err);
+      }finally{
+        callback();
       }
-      );
-
     },
     function(err){
       if(err){
         deferred.reject(err);
       }else{
-        deferred.resolve(orderList);
+        deferred.resolve(retryCandidateList);
       }
     });
   return deferred.promise;
@@ -188,6 +199,8 @@ function retryPayment(cb){
   orderListPromise({status: ["pending","processing"]})
     .then(function(orders){
       return loadOrders(orders);
+    }).then(function (ordersLoad){
+      return getListToRetryPayment(ordersLoad);
     }).done(function(data){
       cb(null, data);
     });
