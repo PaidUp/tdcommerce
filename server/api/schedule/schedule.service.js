@@ -2,6 +2,7 @@
 var moment = require('moment');
 var config = require('../../config/environment/index');
 var ObjectId = require('mongoose').Types.ObjectId;
+var logger = require('../../config/logger');
 
 /*
 params : {
@@ -21,32 +22,18 @@ function calculateTotalFee(params){
 
 }
 
-/*
- params : {
- basePrice : number,
- deposit : number,
- totalFee : number
- }
- */
-function calculateTotalPrice(params){
-  if(!typeof params.basePrice === 'number'){
-    throw new Error('basePrice is not a number');
-  };
-  if(!typeof params.deposit === 'number'){
-    throw new Error('deposit is not a number');
-  };
-  if(!typeof params.totalFee === 'number'){
-    throw new Error('totalFee is not a number');
-  };
-  return (params.basePrice + params.deposit + params.totalFee).toFixed(0);
-}
-
 function calculateNextPaymentDue(nextPayment){
   var np = moment(nextPayment);
   if(np.isBefore(moment())){
       np = moment().add(config.commerce.paymentPlan.intervalElapsed,config.commerce.paymentPlan.intervalType);
   }
-  return np.format();
+  var resp = np.format();
+  if(resp === 'Invalid date'){
+    logger.error('invalid date: '+nextPayment );
+    throw new Error('invalid date');
+    return null;
+  }
+  return resp;
 };
 
 /**
@@ -55,7 +42,7 @@ function calculateNextPaymentDue(nextPayment){
  * intervalNumber : number
  * intervalType : 'string'
  * intervalElapsed : number
- * dateStart : string 'DD-MM-YYYY'
+ * dateStart : string 'YYYY-MM-DD'
  * price : number
  * destinationId : string
  * deposit : number
@@ -64,51 +51,97 @@ function calculateNextPaymentDue(nextPayment){
  * @returns [*{}]
  */
 function generateSchedule(params){
+  //console.log('-----');
+  //console.log('generateSchedule.params',params);
+  //console.log('-----');
+  try{
+    if(!typeof params.intervalNumber === 'number'){
+      throw new Error('intervalNumber is not a number');
+    };
+    if(!typeof params.dateStart === 'string'){
+      throw new Error('dateStart is not a Date');
+    };
 
-  if(!typeof params.intervalNumber === 'number'){
-    throw new Error('intervalNumber is not a number');
-  };
-  if(!typeof params.dateStart === 'string'){
-    throw new Error('dateStart is not a Date');
-  };
-
-
-  var nextPayment = moment();
-  var schedule = {destinationId : params.destinationId , schedulePeriods : []};
-  var hasDeposit = false;
-  if(params.deposit > 0){
-    schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
-  }
-  var price = paymentPeriod({
-    intervalNumber : params.intervalNumber,
-    price : params.price,
-    deposit : params.deposit
-  });
-  var fee = calculateTotalFee(params) / params.intervalNumber;
-  for(var i=0; i<params.intervalNumber;i++){
-    var schedulePeriod = {};
-    if(i === 0) {
-      nextPayment = params.dateStart;
+    var schedule = {destinationId : params.destinationId , schedulePeriods : []};
+    if(params.isInFullPay){
+      schedule.schedulePeriods.push(parseSchedule(params.onePaymentSchedule));
+    }else if(params.customizeSchedule){
+      params.customizeSchedule.forEach(function(ele, pos, arr){
+        schedule.schedulePeriods.push(parseSchedule(ele));
+      });
     }else{
-      nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
+      var nextPayment = moment();
+
+      if(params.deposit > 0){
+        schedule.schedulePeriods.push(generateScheduleDeposit(params, 'Deposit'))
+      }
+      var price = paymentPeriod({
+        intervalNumber : parseFloat(params.intervalNumber),
+        price : parseFloat(params.price),
+        deposit : parseFloat(params.deposit)
+      });
+      var fee = calculateTotalFee(params) / params.intervalNumber;
+      for(var i=0; i<params.intervalNumber;i++){
+        var schedulePeriod = {};
+        if(i === 0) {
+          nextPayment = params.dateStart;
+        }else{
+          nextPayment = moment(nextPayment).add(params.intervalElapsed , params.intervalType).format();
+        }
+        schedulePeriod.id = new ObjectId();
+        schedulePeriod.nextPayment = nextPayment;
+        schedulePeriod.nextPaymentDue
+          = calculateNextPaymentDue(nextPayment);
+        schedulePeriod.price = price;
+        schedulePeriod.fee = fee;
+        schedulePeriod.description = 'Season Fee';
+        schedule.schedulePeriods.push(schedulePeriod);
+      }
     }
-    schedulePeriod.id = new ObjectId();
-    schedulePeriod.nextPayment = nextPayment;
-    schedulePeriod.nextPaymentDue
-      = calculateNextPaymentDue(nextPayment);
-    schedulePeriod.price = price;
-    schedulePeriod.fee = fee;
-    schedulePeriod.description = 'Season Fee';
-    schedule.schedulePeriods.push(schedulePeriod);
+    return schedule;
+  }catch(err){
+    logger.error(err);
+    return {error : err}
   }
-  return schedule;
 }
 
+function parseSchedule(customizeSchedule){
+  var mom = moment(customizeSchedule.date + ' ' + customizeSchedule.time);
+  var nPayment = mom.format();
+  if(nPayment === 'Invalid date'){
+    logger.error('invalid date: '+nPayment );
+    throw new Error('invalid date');
+  }
+
+  var price = parseFloat(parseFloat(Math.ceil(customizeSchedule.price * 100) / 100).toFixed(2));
+  if(!price){
+    logger.error('price not is a number: '+nPayment );
+    throw new Error('price not is a number');
+  }
+
+  var fee = parseFloat(parseFloat(Math.ceil(customizeSchedule.fee * 100) / 100).toFixed(2));
+  if(!fee){
+    logger.error('fee not is a number: '+nPayment );
+    throw new Error('fee not is a number');
+  }
+
+  var ds = {
+    id : new ObjectId(),
+    nextPayment : nPayment,
+    nextPaymentDue : calculateNextPaymentDue(nPayment),
+    price : price,
+    fee:fee,
+    description : customizeSchedule.description
+  }
+
+  return ds;
+};
+
 function paymentPeriod(params){
-  if(!typeof params.intervalNumber === 'number' && params.intervalNumber != 0){
+  if(typeof params.intervalNumber !== 'number' || params.intervalNumber == 0){
     throw new Error('intervalNumber is not a number');
   };
-  if(!typeof params.price === 'number'){
+  if(typeof params.price !== 'number'){
     throw new Error('price is not a number');
   };
   return   parseFloat(Math.ceil(((params.price - params.deposit) / params.intervalNumber) * 100) / 100).toFixed(2);
@@ -149,7 +182,6 @@ function generateScheduleDeposit(params, description){
 
 module.exports = {
   calculateTotalFee:calculateTotalFee,
-  calculateTotalPrice:calculateTotalPrice,
   calculateNextPaymentDue:calculateNextPaymentDue,
   generateSchedule:generateSchedule,
   paymentPeriod:paymentPeriod,

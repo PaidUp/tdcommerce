@@ -69,7 +69,7 @@ describe("Commerce methods", function() {
           }, function (err, resimg) {
             res.images = resimg;
             assert.notEqual(res.length, 0);
-            assert.equal(res.images[0].file, "/s/c/screen_shot_2014-11-25_at_8.50.53_am.png");
+            assert.equal(res.images[0].file, "/n/t/ntxbanditos_1.png");
             done();
         });
       });
@@ -85,10 +85,10 @@ describe("Commerce methods", function() {
         }
         // use magento
         magento.catalogProductAttributeMedia.list({
-          product: config.commerce.testing.teamId//3
+          product: config.commerce.testing.teamId//110
         }, function (err, res) {
           assert.notEqual(res.length, 0);
-          assert.equal(res[0].file, "/s/c/screen_shot_2014-11-25_at_8.50.53_am.png");
+          assert.equal(res[0].file, "/n/t/ntxbanditos_1.png");
           done();
         });
       });
@@ -106,15 +106,15 @@ describe("Commerce methods", function() {
       productId: config.commerce.testing.teamId
       }, function (err, res) {
         assert.operator(res.length, '>', 0);
-        assert.equal(res[0].title, 'Season');
+        assert.equal(res[0].title, 'Payment Method');
         assert.equal(res[0].type, 'drop_down');
-        assert.equal(res[1].title, 'Years');
+        assert.equal(res[1].title, 'test');
         done();
       });
     });
   });
 
-  it('product view attribute options', function (done) {
+  it.skip('product view attribute options', function (done) {
     this.timeout(5000);
     magento.login(function (err, sessId) {
       if (err) {
@@ -123,7 +123,7 @@ describe("Commerce methods", function() {
       }
       // use magento
       magento.catalogProductCustomOptionValue.list({
-        optionId: 2
+        optionId: 0
       }, function (err, res) {
         assert.notEqual(res.length, 0);
         assert.equal(res[0].value_id, '7');
@@ -184,8 +184,8 @@ describe("Commerce methods", function() {
         return cb(null, res);
       }
       var shoppingCartProductEntityArray = {
-        product_id: 2,
-        sku: "TIGERS",
+        product_id: 110,
+        sku: "NORTH TEXAS BANDITOS - 7U BLACK",
         qty: 1,
         options: {"2" : "7", "1" : "3"},
         bundle_option: [],
@@ -327,7 +327,19 @@ describe("Commerce methods", function() {
   });
 
   it('checkout add comment to order', function (done) {
-    var myComment = {data: 123123123, name: "BalancedPayments"};
+    var myComment = {
+      "destinationId":"acct_16N29JCSxGRWBMDD",
+      "schedulePeriods":[
+        {"id":"55b7f7055a02911733037220",
+        "nextPayment":"2015-07-10T00:00:00-05:00",
+        "nextPaymentDue":"2015-07-28T16:46:25-05:00",
+        "price":2020,"fee":10.2,
+        "description":"first pay"}],
+      "meta":{"org_name":"NORTH TEXAS BANDITOS - 7U BLACK",
+        "sku":"NORTH TEXAS BANDITOS - 7U BLACK-PMINFULL-TEST1SKU",
+        "athlete_first_name":"son",
+        "athlete_last_name":"son"}
+    };
     magento.login(function (err, sessId) {
       if (err) {
         logger.info(err, err);
@@ -383,7 +395,7 @@ describe("Commerce methods", function() {
             logger.info(err, err);
             done(err);
           }
-          magento.checkoutCartProduct.remove({quoteId:modelSpec.quoteId, productsData:{sku: "TIGERS", qty: "1", options: {"2" : "7", "1" : "3"}}}, function (err, res) {
+          magento.checkoutCartProduct.remove({quoteId:modelSpec.quoteId, productsData:{sku: "NORTH TEXAS BANDITOS - 7U BLACK", qty: "1", options: {"2" : "7", "1" : "3"}}}, function (err, res) {
             assert.equal(res, true);
             done();
           });

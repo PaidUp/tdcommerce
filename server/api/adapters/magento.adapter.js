@@ -143,12 +143,16 @@ exports.cartCreate = function(res){
 }
 
 exports.cartAdd = function(cartId, productsArray, res){
+  //console.log('cartId',cartId);
+  //console.log('productsArray',productsArray);
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCartProduct.add({
       quoteId: cartId,
       products:  snakeize(productsArray)
     }, function (err, resChkCartProduct) {
+      //console.log('err',err);
+      //console.log('resChkCartProduct',resChkCartProduct);
       if(err) return res(err);
       return res(null,camelize(resChkCartProduct));
     });
@@ -440,6 +444,7 @@ exports.orderList = function(filters, cb) {
       logger.info(err, err);
       return cb(err);
     }
+    //console.log('orderList 4');
     magento.salesOrder.list({
       filters : filters
     }, function (err, res) {
@@ -466,6 +471,7 @@ exports.transactionList = function(orderId, cb) {
 }
 
 function mapOrder(magentoOrder) {
+  //console.log('magentoOrder',magentoOrder);
   var orderDetails = {};
   orderDetails.incrementId = magentoOrder.increment_id;
   orderDetails.status = magentoOrder.status;
@@ -500,6 +506,7 @@ function mapOrder(magentoOrder) {
     } catch (e) {
     }
   }
+  //console.log('orderDetails',orderDetails);
   return orderDetails;
 }
 
