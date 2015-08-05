@@ -168,8 +168,9 @@ function getListToRetryPayment(ordersLoad){
         var candidate = true;
         orderLoad.retry.forEach(function(ele, idx, arr){
           orderLoad.transactions.forEach(function(ele2, idx2, arr2){
-              if(ele2.retryId && ele.retryId === ele2.retryId){
+              if(ele.retryId === ele2.details.rawDetailsInfo.retryId){
                 candidate = false;
+                return;
               }
             }
           );
