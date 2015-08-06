@@ -67,7 +67,7 @@ function generateSchedule(params){
       schedule.schedulePeriods.push(parseSchedule(params.onePaymentSchedule));
     }else if(params.customizeSchedule){
       params.customizeSchedule.forEach(function(ele, pos, arr){
-        schedule.schedulePeriods.push(parseSchedule(ele));
+        schedule.schedulePeriods.push(parseSchedule(params.price, ele));
       });
     }else{
       var nextPayment = moment();
@@ -105,7 +105,7 @@ function generateSchedule(params){
   }
 }
 
-function parseSchedule(customizeSchedule){
+function parseSchedule(price, customizeSchedule){
   var mom = moment(customizeSchedule.date + ' ' + customizeSchedule.time);
   var nPayment = mom.format();
   if(nPayment === 'Invalid date'){
@@ -113,10 +113,16 @@ function parseSchedule(customizeSchedule){
     throw new Error('invalid date');
   }
 
-  var price = parseFloat(parseFloat(Math.ceil(customizeSchedule.price * 100) / 100).toFixed(2));
   if(isNaN(price)){
-    logger.error('price not is a number: '+nPayment );
+    logger.error('price not is a number: '+price );
     throw new Error('price not is a number');
+  }
+
+
+  var priceDue =  calculatePrice(price , customizeSchedule.percent);
+  if(isNaN(priceDue)){
+    logger.error('priceDue not is a number: '+priceDue );
+    throw new Error('priceDue not is a number');
   }
 
   var fee = parseFloat(parseFloat(Math.ceil(customizeSchedule.fee * 100) / 100).toFixed(2));
@@ -129,13 +135,30 @@ function parseSchedule(customizeSchedule){
     id : new ObjectId(),
     nextPayment : nPayment,
     nextPaymentDue : calculateNextPaymentDue(nPayment),
-    price : price,
+    price : priceDue,
+    percent : customizeSchedule.percent,
     fee:fee,
     description : customizeSchedule.description
   }
 
   return ds;
 };
+
+function calculatePrice(totalPrice, percent){
+  if(isNaN(totalPrice)){
+    logger.error('totalPrice not is a number: '+totalPrice );
+    throw new Error('totalPrice not is a number');
+  }
+
+  if(isNaN(percent)){
+    logger.error('percent not is a number: '+percent );
+    throw new Error('percent not is a number');
+  }
+
+  var tmp = totalPrice * (percent / 100);
+  return parseFloat(parseFloat(Math.ceil(tmp * 100) / 100).toFixed(2));
+
+}
 
 function paymentPeriod(params){
   if(typeof params.intervalNumber !== 'number' || params.intervalNumber == 0){
