@@ -94,7 +94,7 @@ describe("Commerce methods", function() {
       });
   });
 
-  it('product view attributes required', function (done) {
+  it.skip('product view attributes required', function (done) {
     this.timeout(5000);
     magento.login(function (err, sessId) {
       if (err) {
@@ -249,7 +249,7 @@ describe("Commerce methods", function() {
     });
   });
 
-  it('cart totals', function (done) {
+  it('cart totals before coupon', function (done) {
     magento.login(function (err, sessId) {
       if (err) {
         logger.info(err, err);
@@ -259,6 +259,44 @@ describe("Commerce methods", function() {
       magento.checkoutCart.totals({
         quoteId: modelSpec.quoteId,
       }, function (err, res) {
+        console.log('cart totals before: res',res);
+        assert.operator(res.length, '>', 0);
+        done();
+      });
+    });
+  });
+
+  it('cart add coupon', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      console.log('modelSpec.quoteId',modelSpec.quoteId);
+      magento.checkoutCartCoupon.add({
+        quoteId: modelSpec.quoteId,
+        couponCode: 'TEST'
+      }, function (err, res) {
+        console.log('cart add coupon: err',err);
+        console.log('cart add coupon: res',res);
+        //assert.operator(res.length, '>', 0);
+        done();
+      });
+    });
+  });
+
+  it('cart totals after coupon', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCart.totals({
+        quoteId: modelSpec.quoteId,
+      }, function (err, res) {
+        console.log('cart totals after: res',res);
         assert.operator(res.length, '>', 0);
         done();
       });
@@ -407,6 +445,7 @@ describe("Commerce methods", function() {
     it('order load', function (done) {
       var orderId = modelSpec.orderId;
       commerceAdapter.orderLoad(orderId, function(err, data){
+        console.log('order load: data',data);
         assert.isNull(err);
         assert.isNotNull(data);
         assert.isNotNull(data.sku);

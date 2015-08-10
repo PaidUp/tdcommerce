@@ -250,6 +250,7 @@ exports.cartView = function(quoteId,res){
     magento.checkoutCart.info({
       quoteId: quoteId
     }, function (err, resChkCartView) {
+      console.log('cartView: resChkCartView',resChkCartView);
       if(err) return res(err);
       return res(null,camelize(resChkCartView));
     });
@@ -262,8 +263,23 @@ exports.cartTotals = function(quoteId,res){
     magento.checkoutCart.totals({
       quoteId: quoteId
     }, function (err, resChkCartTotals) {
+      //console.log('cartTotals: resChkCartTotals',resChkCartTotals);
       if(err) return res(err);
       return res(null,camelize(resChkCartTotals));
+    });
+  });
+}
+
+exports.cartAddCoupon = function(quoteId, couponCode, res){
+  login(function(err) {
+    if(err) return res(err);
+    magento.checkoutCartCoupon.add({
+      quoteId: quoteId,
+      couponCode: couponCode
+    }, function(err ,resCartCoupon){
+      //console.log('cartAddCoupon: cartAddCoupon',resCartCoupon);
+      if(err) return res(err);
+      return res(null,camelize(resCartCoupon));
     });
   });
 }
