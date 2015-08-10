@@ -118,7 +118,7 @@ exports.totals = function(req, res) {
   });
 }
 
-exports.add = function(req, res) {
+exports.couponAdd = function(req, res) {
   if(!req.body && !req.body.coupon  && !req.body.cartId) {
     return res.json(400, {
       "code": "ValidationError",
