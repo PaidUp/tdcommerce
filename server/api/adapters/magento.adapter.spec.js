@@ -159,7 +159,9 @@ describe("Commerce methods", function() {
         return cb(err);
       }
       // use magento
-      magento.checkoutCart.create(function (err, res) {
+      magento.checkoutCart.create({
+        storeView: '1'
+      },function (err, res) {
         if(err) return cb(err);
         //return idCart
         assert.notEqual(res, 0);
@@ -259,45 +261,9 @@ describe("Commerce methods", function() {
       magento.checkoutCart.totals({
         quoteId: modelSpec.quoteId,
       }, function (err, res) {
-        console.log('cart totals before: res',res);
         assert.operator(res.length, '>', 0);
-        done();
-      });
-    });
-  });
-
-  it('cart add coupon', function (done) {
-    magento.login(function (err, sessId) {
-      if (err) {
-        logger.info(err, err);
-        done(err);
-      }
-      // use magento
-      console.log('modelSpec.quoteId',modelSpec.quoteId);
-      magento.checkoutCartCoupon.add({
-        quoteId: modelSpec.quoteId,
-        couponCode: 'TEST'
-      }, function (err, res) {
-        console.log('cart add coupon: err',err);
-        console.log('cart add coupon: res',res);
-        //assert.operator(res.length, '>', 0);
-        done();
-      });
-    });
-  });
-
-  it('cart totals after coupon', function (done) {
-    magento.login(function (err, sessId) {
-      if (err) {
-        logger.info(err, err);
-        done(err);
-      }
-      // use magento
-      magento.checkoutCart.totals({
-        quoteId: modelSpec.quoteId,
-      }, function (err, res) {
-        console.log('cart totals after: res',res);
-        assert.operator(res.length, '>', 0);
+        assert.equal(res[0].title, 'Subtotal');
+        assert.equal(res[1].title, 'Grand Total');
         done();
       });
     });
@@ -341,6 +307,59 @@ describe("Commerce methods", function() {
       });
     });
   });
+
+  it('cart totals bf coupon', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCart.totals({
+        quoteId: modelSpec.quoteId,
+      }, function (err, res) {
+        //assert.operator(res.length, '>', 0);
+        done();
+      });
+    });
+  });
+
+  it('cart add coupon', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCartCoupon.add({
+        quoteId: modelSpec.quoteId,
+        couponCode: 'JJCALATC0935',
+        storeView:'1'
+      }, function (err, res) {
+        assert.equal(res,true);
+        done();
+      });
+    });
+  });
+
+  it('cart totals after coupon', function (done) {
+    magento.login(function (err, sessId) {
+      if (err) {
+        logger.info(err, err);
+        done(err);
+      }
+      // use magento
+      magento.checkoutCart.totals({
+        quoteId: modelSpec.quoteId,
+      }, function (err, res) {
+        assert.operator(res.length, '>', 0);
+        assert.equal(res[0].title, 'Subtotal');
+        assert.equal(res[1].title, 'Discount (JJCALATC0935)');
+        done();
+      });
+    });
+  });
+
 
   it('checkout place order', function (done) {
     magento.login(function (err, sessId) {
@@ -442,109 +461,108 @@ describe("Commerce methods", function() {
     });
   });
 
-    it('order load', function (done) {
-      var orderId = modelSpec.orderId;
-      commerceAdapter.orderLoad(orderId, function(err, data){
-        console.log('order load: data',data);
-        assert.isNull(err);
-        assert.isNotNull(data);
-        assert.isNotNull(data.sku);
-        assert.isNotNull(data.productId);
-        assert.isNotNull(data.paymentMethod);
-        assert.isNotNull(data.athleteId);
-        done();
-      });
-    });
-
-    it('order list commerce', function (done) {
-      this.timeout(5000);
-      commerceAdapter.orderList({status: "pending"}, function(err, data){
-        assert.isNull(err);
-        assert.isNotNull(data);
-        done();
-      });
-    });
-
-    it('create customer', function(done) {
-      var user = {
-        firstName: modelSpec.firstName,
-        lastName: modelSpec.lastName,
-        email: modelSpec.email,
-        gender: modelSpec.gender
-      };
-      commerceAdapter.createCustomer(user, function(err, data){
-        if(err) return done(err);
-        assert.isNotNull(data);
-        modelSpec.customerId = data;
-        done();
-      });
-    });
-
-    it('create customer address', function(done) {
-      var address = {mode: 'billing-shipping', "firstName":"Ignacio","lastName":"Pascual","address1":"my address my address2","city":"Austin","state":"TX","zipCode":11111,"country":"US","telephone":"1234444555"};
-
-      commerceAdapter.createCustomerAddress(modelSpec.customerId, address, function(err, data){
-        if(err) return done(err);
-        assert.isNotNull(data);
-        modelSpec.customerAddressId = data;
-        done();
-      });
-    });
-
-    it('delete all customer addresses', function(done) {
-      //TODO
-      // magento.customerAddress.list
-      // magento.customerAddress.delete
+  it('order load', function (done) {
+    var orderId = modelSpec.orderId;
+    commerceAdapter.orderLoad(orderId, function(err, data){
+      assert.isNull(err);
+      assert.isNotNull(data);
+      assert.isNotNull(data.sku);
+      assert.isNotNull(data.productId);
+      assert.isNotNull(data.paymentMethod);
+      assert.isNotNull(data.athleteId);
       done();
-    })
+    });
+  });
 
-    it('merge all customer addresses', function(done) {
-      //TODO
-      // delete all address
-      // create user address on Magento
+  it('order list commerce', function (done) {
+    this.timeout(5000);
+    commerceAdapter.orderList({status: "pending"}, function(err, data){
+      assert.isNull(err);
+      assert.isNotNull(data);
       done();
-    })
-
-    it('list order transactions', function (done) {
-      this.timeout(25000);
-
-      commerceAdapter.transactionList(19, function(err,data){
-        if(err) return done(err);
-        assert.equal(0, data.length)
-        assert.isNotNull(data);
-        done();
-      });
     });
+  });
 
-    it('create (catalog) group product', function (done) {
-      this.timeout(25000);
-      var testDataProduct = {
-        type:'grouped',//
-        set:'9',// should be 9 for Team attibute set.
-        sku:faker.random.uuid(),
-        data: {
-          name:faker.company.companyName(),
-          websites:['1'],
-          shortDescription:'short_description',
-          description:'description',
-          status:'1',
-          price:faker.finance.amount(),
-          taxDlassId:'0',
-          urlKey:'product-url-key',
-          urlPath:'url_path',
-          visibility:'4',// should be 4
-          categories:['3'],// should be 3
-          categoryIds:['3'],// should be 3.
-          balancedCustomerId:'balanced_customer_id1',
-          tdPaymentId:'t_d_customer_id1'
-        }
-      };
-      commerceAdapter.catalogCreate(testDataProduct, function(err,data){
-        if(err) return done(err);
-        assert.isNotNull(data);
-        done();
-      });
+  it('create customer', function(done) {
+    var user = {
+      firstName: modelSpec.firstName,
+      lastName: modelSpec.lastName,
+      email: modelSpec.email,
+      gender: modelSpec.gender
+    };
+    commerceAdapter.createCustomer(user, function(err, data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      modelSpec.customerId = data;
+      done();
     });
+  });
+
+  it('create customer address', function(done) {
+    var address = {mode: 'billing-shipping', "firstName":"Ignacio","lastName":"Pascual","address1":"my address my address2","city":"Austin","state":"TX","zipCode":11111,"country":"US","telephone":"1234444555"};
+
+    commerceAdapter.createCustomerAddress(modelSpec.customerId, address, function(err, data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      modelSpec.customerAddressId = data;
+      done();
+    });
+  });
+
+  it('delete all customer addresses', function(done) {
+    //TODO
+    // magento.customerAddress.list
+    // magento.customerAddress.delete
+    done();
+  })
+
+  it('merge all customer addresses', function(done) {
+    //TODO
+    // delete all address
+    // create user address on Magento
+    done();
+  })
+
+  it('list order transactions', function (done) {
+    this.timeout(25000);
+
+    commerceAdapter.transactionList(19, function(err,data){
+      if(err) return done(err);
+      assert.equal(0, data.length)
+      assert.isNotNull(data);
+      done();
+    });
+  });
+
+  it('create (catalog) group product', function (done) {
+    this.timeout(25000);
+    var testDataProduct = {
+      type:'grouped',//
+      set:'9',// should be 9 for Team attibute set.
+      sku:faker.random.uuid(),
+      data: {
+        name:faker.company.companyName(),
+        websites:['1'],
+        shortDescription:'short_description',
+        description:'description',
+        status:'1',
+        price:faker.finance.amount(),
+        taxDlassId:'0',
+        urlKey:'product-url-key',
+        urlPath:'url_path',
+        visibility:'4',// should be 4
+        categories:['3'],// should be 3
+        categoryIds:['3'],// should be 3.
+        balancedCustomerId:'balanced_customer_id1',
+        tdPaymentId:'t_d_customer_id1'
+      }
+    };
+    commerceAdapter.catalogCreate(testDataProduct, function(err,data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      done();
+    });
+  });
 
 });
 
