@@ -4,7 +4,7 @@ var config = require('../config/environment/index');
 var service = require('./commerce.service');
 var assert = require('chai').assert;
 
-describe('commerce service', function(){
+describe.skip('commerce service', function(){
   it('retry payment' , function(done){
     this.timeout(30000);
     service.retryPayment(function(err, data){
