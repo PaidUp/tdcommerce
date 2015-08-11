@@ -17,5 +17,6 @@ router.post('/payment', controller.payment);
 router.get('/place/:cartId', controller.place);
 router.get('/view/:id', controller.view);
 router.get('/totals/:id', controller.totals);
+router.post('/coupon/add', controller.couponAdd);
 
 module.exports = router;
