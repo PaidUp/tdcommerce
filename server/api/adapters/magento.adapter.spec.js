@@ -94,7 +94,7 @@ describe("Commerce methods", function() {
       });
   });
 
-  it('product view attributes required', function (done) {
+  it.skip('product view attributes required', function (done) {
     this.timeout(5000);
     magento.login(function (err, sessId) {
       if (err) {
