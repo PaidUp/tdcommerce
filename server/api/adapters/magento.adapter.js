@@ -135,7 +135,9 @@ exports.catalogCreate = function(teamData, res){
 exports.cartCreate = function(res){
   login(function(err) {
     if (err) return res(err);
-    magento.checkoutCart.create(function (err, resCartCreate) {
+    magento.checkoutCart.create({
+      storeView: '1'
+    },function (err, resCartCreate) {
       if (err) return res(err);
       return res(null, camelize(resCartCreate));
     });
