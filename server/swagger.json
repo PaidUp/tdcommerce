@@ -599,6 +599,29 @@
                 }
             }
         },
+      "/commerce/order/retry/payments": {
+        "get": {
+          "summary": "Return schedule objects to retry payment.",
+          "description": "Return schedule objects to retry payment.",
+          "produces": [
+            "application/json"
+          ],
+          "tags": [
+            "Order"
+          ],
+          "responses": {
+            "200": {
+              "description": "Array of schedule order list"
+            },
+            "400": {
+              "description": "Validation field error",
+              "schema": {
+                "$ref": "ValidationError"
+              }
+            }
+          }
+        }
+      },
         "/commerce/order/comment/create": {
             "post": {
                 "summary": "Return order list.",

@@ -118,6 +118,19 @@ exports.totals = function(req, res) {
   });
 }
 
+exports.couponAdd = function(req, res) {
+  if(!req.body && !req.body.coupon  && !req.body.cartId) {
+    return res.json(400, {
+      "code": "ValidationError",
+      "message": "Cart Id and coupon are required"
+    });
+  }
+  cartService.cartAddCoupon(req.body.cartId, req.body.coupon, function(err, iscouponAdd){
+    if(err) return handleError(res, err);
+    res.json(200, iscouponAdd);
+  });
+}
+
 function handleError(res, err) {
   logger.info(err, err);
   var httpErrorCode = 500;
