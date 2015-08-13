@@ -13,7 +13,9 @@ exports.generate = function(req, res) {
         }
       var customizeSchedule = getCustomizeSchedule(product);
       var onePaymentSchedule =  getOnePaymentSchedule(product);
-      onePaymentSchedule.price = req.body.price;
+      if(onePaymentSchedule){
+        onePaymentSchedule.price = req.body.price;
+      }
         var hour = new Date().getHours();
         var minute = new Date().getMinutes();
         product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
