@@ -165,8 +165,8 @@ function getListToRetryPayment(ordersLoad){
     function(orderLoad, callback){
       try{
         var retryCandidateList = [];
-        var candidate = true;
         orderLoad.retry.forEach(function(ele, idx, arr){
+          var candidate = true;
           orderLoad.transactions.forEach(function(ele2, idx2, arr2){
               if(ele.retryId === ele2.details.rawDetailsInfo.retryId){
                 candidate = false;
@@ -175,7 +175,7 @@ function getListToRetryPayment(ordersLoad){
             }
           );
           if(candidate){
-            if(now.isAfter(ele.nextPaymentDue, 'second')){
+            if(now.isAfter(ele.date, 'second')){
               retryCandidateList.push(ele);
             }
           }
