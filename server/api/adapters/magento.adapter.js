@@ -252,7 +252,6 @@ exports.cartView = function(quoteId,res){
     magento.checkoutCart.info({
       quoteId: quoteId
     }, function (err, resChkCartView) {
-      console.log('cartView: resChkCartView',resChkCartView);
       if(err) return res(err);
       return res(null,camelize(resChkCartView));
     });
