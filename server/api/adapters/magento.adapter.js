@@ -4,6 +4,7 @@ var magento = new MagentoAPI(config.commerce.magento);
 var camelize = require('camelize');
 var snakeize = require('snakeize');
 var logger = require('../../config/logger.js');
+var Q = require('q');
 
 var login = exports.login = function(cb) {
   magento.core.info(function(err, data) {
@@ -484,6 +485,27 @@ exports.transactionList = function(orderId, cb) {
       if(err) return cb(err);
       return cb(null,camelize(data));
     });
+  });
+}
+
+exports.createOrderInvoice = function(orderId, qty) {
+  var deferred = Q.defer();
+  login(function(err) {
+    if(err){
+      deferred.reject(err);
+    }else{
+      magento.SalesOrderInvoice.create({
+        orderIncrementId: orderId,
+        itemsQty:qty
+      }, function (err1, data) {
+        if(err1){
+          deferred.reject(err1);
+        };
+
+        deferred.resolve(camelize(data));
+      });
+    }
+    return deferred.promise;
   });
 }
 

@@ -211,6 +211,54 @@ function retryPayment(cb){
     });
 };
 
+function getOrdersToComplete(ordersLoad){
+  var deferred = Q.defer();
+  var ordersList = [];
+
+  ordersLoad.forEach(function(ele , indx, arr){
+    var obj = {};
+    var schedulePeriods = ele.schedulePeriods;
+    var transactions = ele.transactions;
+
+    schedulePeriods.forEach(function(period, idxPeriod, arrPeriod){
+      transactions.forEach(function(transaction, idxTrans, arrTrans){
+        if(transaction.details.rawDetailsInfo.scheduleId == period.id &&
+          transaction.details.rawDetailsInfo.status == 'succeeded'){
+            obj[period.id] = true;
+          return;
+        }
+      });
+    });
+
+    if(schedulePeriods.length === Object.keys(obj).length){
+      ordersList.push(ele);
+    };
+    if(arr.length == (indx+1)){
+      deferred.resolve(ordersList);
+    };
+  });
+  return deferred.promise;
+};
+
+function completeOrders(cb){
+  orderListPromise({status: ["pending","processing"]})
+    .then(function(orders){
+      return loadOrders(orders);
+    }).then(function (ordersLoad){
+
+      return getOrdersToComplete(ordersLoad);
+    }).done(function(data){
+      console.log('ordersLoad',data);
+      cb(null, data);
+    });
+};
+
+function createInvoice(orderId, qty){
+  commerceAdapter.createOrderInvoice(orderId,qty).then(function(){
+    
+  });
+}
+
 exports.orderUpdateStatus = orderUpdateStatus;
 exports.orderList = orderList;
 exports.orderLoad = orderLoad;
@@ -219,4 +267,5 @@ exports.orderCommentCreate = orderCommentCreate;
 exports.transactionCreate = transactionCreate;
 exports.customerCreate = customerCreate;
 exports.retryPayment = retryPayment;
+exports.completeOrders = completeOrders;
 
