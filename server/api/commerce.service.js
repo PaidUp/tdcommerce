@@ -6,6 +6,7 @@ var commerceAdapter = require(config.commerce.adapter);
 var Q = require('q');
 var async = require('async');
 var moment = require('moment');
+var async = require('async');
 
 function orderList(filter, cb) {
   //console.log('orderList 3');
@@ -243,20 +244,43 @@ function getOrdersToComplete(ordersLoad){
 function completeOrders(cb){
   orderListPromise({status: ["pending","processing"]})
     .then(function(orders){
+      console.log('orders' , orders);
       return loadOrders(orders);
     }).then(function (ordersLoad){
-
       return getOrdersToComplete(ordersLoad);
+    }).then(function(ordersList){
+      return createInvoice(ordersList);
     }).done(function(data){
       console.log('ordersLoad',data);
       cb(null, data);
     });
 };
 
-function createInvoice(orderId, qty){
-  commerceAdapter.createOrderInvoice(orderId,qty).then(function(){
-    
-  });
+function createInvoice(ordersList){
+  var deferred = Q.defer();
+  var process = {};
+
+  if(ordersList.length === 0){
+    deferred.resolve(process);
+  }
+
+  async.eachSeries(ordersList, function iterator(order, callback) {
+    console.log('order' , order);
+    commerceAdapter.createOrderInvoice(order).then(function (invoice) {
+      process[order.incrementId] = invoice;
+      console.log('invoice', invoice);
+      callback(null, invoice);
+    }).catch(function (err) {
+      process[order.incrementId] = err;
+      console.log('err', err);
+      callback(null, err);
+    }).done(function () {
+      deferred.resolve(process);
+    });
+  })
+
+  console.log('pre defer');
+  return deferred.promise;
 }
 
 exports.orderUpdateStatus = orderUpdateStatus;

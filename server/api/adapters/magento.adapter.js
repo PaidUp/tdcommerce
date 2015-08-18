@@ -448,6 +448,7 @@ exports.orderLoad = function(orderId, cb) {
     magento.salesOrder.info({
       orderIncrementId: orderId
     }, function (err, res) {
+      console.log('info ' , res.items.length);
       if(err) return cb(err);
       var orderDetails = mapOrder(res);
       return cb(null, orderDetails);
@@ -488,25 +489,29 @@ exports.transactionList = function(orderId, cb) {
   });
 }
 
-exports.createOrderInvoice = function(orderId, qty) {
+exports.createOrderInvoice = function(order) {
+  var itemsQty = {};
+  itemsQty[order.orderItemId] = 1;
+  console.log('input createOrderInvoice');
   var deferred = Q.defer();
   login(function(err) {
     if(err){
+      console.log('err login' , err);
       deferred.reject(err);
     }else{
-      magento.SalesOrderInvoice.create({
-        orderIncrementId: orderId,
-        itemsQty:qty
+      magento.salesOrderInvoice.create({
+        orderIncrementId: order.incrementId,
+        itemsQty:itemsQty
       }, function (err1, data) {
         if(err1){
           deferred.reject(err1);
-        };
-
-        deferred.resolve(camelize(data));
+        }else{
+          deferred.resolve(camelize(data));
+        }
       });
     }
-    return deferred.promise;
   });
+  return deferred.promise;
 }
 
 function mapOrder(magentoOrder) {
@@ -519,6 +524,7 @@ function mapOrder(magentoOrder) {
   if(magentoOrder.items) {
     orderDetails.sku = magentoOrder.items[0].sku;
     orderDetails.productId = magentoOrder.items[0].product_id;
+    orderDetails.orderItemId = magentoOrder.items[0].item_id;
   }
   for(var commentId in magentoOrder.status_history) {
     try {
