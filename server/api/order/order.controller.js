@@ -51,6 +51,13 @@ exports.retryPayment = function(req, res) {
   });
 }
 
+exports.complete = function(req, res) {
+  commerceService.completeOrders(function(err, data){
+    if(err) return handleError(res, err);
+    return res.json(200, data);
+  });
+}
+
 function handleError(res, err) {
   var httpErrorCode = 500;
 

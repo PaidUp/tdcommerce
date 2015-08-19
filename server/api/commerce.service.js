@@ -6,6 +6,7 @@ var commerceAdapter = require(config.commerce.adapter);
 var Q = require('q');
 var async = require('async');
 var moment = require('moment');
+var async = require('async');
 
 function orderList(filter, cb) {
   //console.log('orderList 3');
@@ -128,32 +129,36 @@ function customerCreate(user, cb) {
 
 function loadOrders(orders){
   var deferred = Q.defer();
-  var orderList = [];
-  async.eachSeries(orders,
-    function(order, callback){
-      orderLoad(order.incrementId, function(err, data){
+  if(orders.length === 0){
+    deferred.resolve(orders);
+  } else {
+    var orderList = [];
+    async.eachSeries(orders,
+      function(order, callback){
+        orderLoad(order.incrementId, function(err, data){
+          if(err){
+            callback(err);
+          }else{
+            transactionList(order.incrementId, function(err1, data1){
+              if(err){
+                callback(err1)
+              }else{
+                data.transactions = data1;
+                orderList.push(data);
+                callback();
+              }
+            })
+          }
+        });
+      },
+      function(err){
         if(err){
-          callback(err);
+          deferred.reject(err);
         }else{
-          transactionList(order.incrementId, function(err1, data1){
-            if(err){
-              callback(err1)
-            }else{
-              data.transactions = data1;
-              orderList.push(data);
-              callback();
-            }
-          })
+          deferred.resolve(orderList);
         }
       });
-    },
-    function(err){
-      if(err){
-        deferred.reject(err);
-      }else{
-        deferred.resolve(orderList);
-      }
-    });
+  }
   return deferred.promise;
 };
 
@@ -211,6 +216,98 @@ function retryPayment(cb){
     });
 };
 
+function getOrdersToComplete(ordersLoad){
+  var deferred = Q.defer();
+
+  if(ordersLoad.length === 0){
+    deferred.resolve(ordersLoad);
+  }else{
+    var ordersList = [];
+    ordersLoad.forEach(function(ele , indx, arr){
+      var obj = {};
+      var schedulePeriods = ele.schedulePeriods;
+      var transactions = ele.transactions;
+
+      schedulePeriods.forEach(function(period, idxPeriod, arrPeriod){
+        transactions.forEach(function(transaction, idxTrans, arrTrans){
+          if(transaction.details.rawDetailsInfo.scheduleId == period.id &&
+            transaction.details.rawDetailsInfo.status == 'succeeded'){
+            obj[period.id] = true;
+            return;
+          }
+        });
+      });
+
+      if(schedulePeriods.length === Object.keys(obj).length){
+        ordersList.push(ele);
+      };
+      if(arr.length == (indx+1)){
+        deferred.resolve(ordersList);
+      };
+    });
+
+  };
+  return deferred.promise;
+}
+
+function completeOrders(cb){
+  orderListPromise({status: ["pending","processing"]})
+    .then(function(orders){
+      return loadOrders(orders);
+    }).then(function (ordersLoad){
+      return getOrdersToComplete(ordersLoad);
+    }).then(function(ordersList){
+      return createInvoice(ordersList);
+    }).then(function(ordersInvoiceList){
+      return createShipment(ordersInvoiceList);
+    }).done(function(data){
+      console.log('ordersInvoiceList',data);
+      cb(null, data);
+    });
+};
+
+function createInvoice(ordersList){
+  var deferred = Q.defer();
+  if(ordersList.length === 0){
+    deferred.resolve(ordersList);
+  }else{
+    async.eachSeries(ordersList, function iterator(order, callback) {
+      commerceAdapter.createOrderInvoice(order).then(function (invoice) {
+        order.invoice = invoice;
+        callback(null, order);
+      }).catch(function (err) {
+        order.invoiceErr = err;
+        callback(null, order);
+      });
+    }, function done(){
+      console.log('orderInvoiceProcessed',ordersList);
+      deferred.resolve(ordersList);
+    })
+  }
+  return deferred.promise;
+}
+
+function createShipment(ordersInvoiceList){
+  var deferred = Q.defer();
+  if(ordersInvoiceList.length === 0){
+    deferred.resolve(ordersInvoiceList);
+  }else{
+    async.eachSeries(ordersInvoiceList, function iterator(order, callback) {
+      commerceAdapter.createOrderShipment(order).then(function (shipment) {
+        order.shipment = shipment;
+        callback(null, order);
+      }).catch(function (err) {
+        order.shipmentErr = err;
+        callback(null, order);
+      });
+
+    }, function done(){
+      deferred.resolve(ordersInvoiceList);
+    })
+  }
+  return deferred.promise;
+}
+
 exports.orderUpdateStatus = orderUpdateStatus;
 exports.orderList = orderList;
 exports.orderLoad = orderLoad;
@@ -219,4 +316,5 @@ exports.orderCommentCreate = orderCommentCreate;
 exports.transactionCreate = transactionCreate;
 exports.customerCreate = customerCreate;
 exports.retryPayment = retryPayment;
+exports.completeOrders = completeOrders;
 
