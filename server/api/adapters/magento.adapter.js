@@ -448,7 +448,6 @@ exports.orderLoad = function(orderId, cb) {
     magento.salesOrder.info({
       orderIncrementId: orderId
     }, function (err, res) {
-      console.log('info ' , res.items.length);
       if(err) return cb(err);
       var orderDetails = mapOrder(res);
       return cb(null, orderDetails);
@@ -492,11 +491,10 @@ exports.transactionList = function(orderId, cb) {
 exports.createOrderInvoice = function(order) {
   var itemsQty = {};
   itemsQty[order.orderItemId] = 1;
-  console.log('input createOrderInvoice');
   var deferred = Q.defer();
   login(function(err) {
     if(err){
-      console.log('err login' , err);
+      logger.error(err);
       deferred.reject(err);
     }else{
       magento.salesOrderInvoice.create({
@@ -517,12 +515,9 @@ exports.createOrderInvoice = function(order) {
 exports.createOrderShipment = function(order){
   var itemsQty = {};
   itemsQty[order.orderItemId] = 1;
-  console.log('input createOrderShipment');
-
   var deferred = Q.defer();
   login(function(err) {
     if(err){
-      console.log('err login' , err);
       deferred.reject(err);
     }else{
       magento.salesOrderShipment.create({
