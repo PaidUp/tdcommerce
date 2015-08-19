@@ -129,32 +129,36 @@ function customerCreate(user, cb) {
 
 function loadOrders(orders){
   var deferred = Q.defer();
-  var orderList = [];
-  async.eachSeries(orders,
-    function(order, callback){
-      orderLoad(order.incrementId, function(err, data){
+  if(orders.length === 0){
+    deferred.resolve(orders);
+  } else {
+    var orderList = [];
+    async.eachSeries(orders,
+      function(order, callback){
+        orderLoad(order.incrementId, function(err, data){
+          if(err){
+            callback(err);
+          }else{
+            transactionList(order.incrementId, function(err1, data1){
+              if(err){
+                callback(err1)
+              }else{
+                data.transactions = data1;
+                orderList.push(data);
+                callback();
+              }
+            })
+          }
+        });
+      },
+      function(err){
         if(err){
-          callback(err);
+          deferred.reject(err);
         }else{
-          transactionList(order.incrementId, function(err1, data1){
-            if(err){
-              callback(err1)
-            }else{
-              data.transactions = data1;
-              orderList.push(data);
-              callback();
-            }
-          })
+          deferred.resolve(orderList);
         }
       });
-    },
-    function(err){
-      if(err){
-        deferred.reject(err);
-      }else{
-        deferred.resolve(orderList);
-      }
-    });
+  }
   return deferred.promise;
 };
 
@@ -214,72 +218,93 @@ function retryPayment(cb){
 
 function getOrdersToComplete(ordersLoad){
   var deferred = Q.defer();
-  var ordersList = [];
 
-  ordersLoad.forEach(function(ele , indx, arr){
-    var obj = {};
-    var schedulePeriods = ele.schedulePeriods;
-    var transactions = ele.transactions;
+  if(ordersLoad.length === 0){
+    deferred.resolve(ordersLoad);
+  }else{
+    var ordersList = [];
+    ordersLoad.forEach(function(ele , indx, arr){
+      var obj = {};
+      var schedulePeriods = ele.schedulePeriods;
+      var transactions = ele.transactions;
 
-    schedulePeriods.forEach(function(period, idxPeriod, arrPeriod){
-      transactions.forEach(function(transaction, idxTrans, arrTrans){
-        if(transaction.details.rawDetailsInfo.scheduleId == period.id &&
-          transaction.details.rawDetailsInfo.status == 'succeeded'){
+      schedulePeriods.forEach(function(period, idxPeriod, arrPeriod){
+        transactions.forEach(function(transaction, idxTrans, arrTrans){
+          if(transaction.details.rawDetailsInfo.scheduleId == period.id &&
+            transaction.details.rawDetailsInfo.status == 'succeeded'){
             obj[period.id] = true;
-          return;
-        }
+            return;
+          }
+        });
       });
+
+      if(schedulePeriods.length === Object.keys(obj).length){
+        ordersList.push(ele);
+      };
+      if(arr.length == (indx+1)){
+        deferred.resolve(ordersList);
+      };
     });
 
-    if(schedulePeriods.length === Object.keys(obj).length){
-      ordersList.push(ele);
-    };
-    if(arr.length == (indx+1)){
-      deferred.resolve(ordersList);
-    };
-  });
+  };
   return deferred.promise;
-};
+}
 
 function completeOrders(cb){
   orderListPromise({status: ["pending","processing"]})
     .then(function(orders){
-      console.log('orders' , orders);
       return loadOrders(orders);
     }).then(function (ordersLoad){
       return getOrdersToComplete(ordersLoad);
     }).then(function(ordersList){
       return createInvoice(ordersList);
+    }).then(function(ordersInvoiceList){
+      return createShipment(ordersInvoiceList);
     }).done(function(data){
-      console.log('ordersLoad',data);
+      console.log('ordersInvoiceList',data);
       cb(null, data);
     });
 };
 
 function createInvoice(ordersList){
   var deferred = Q.defer();
-  var process = {};
-
   if(ordersList.length === 0){
-    deferred.resolve(process);
+    deferred.resolve(ordersList);
+  }else{
+    async.eachSeries(ordersList, function iterator(order, callback) {
+      commerceAdapter.createOrderInvoice(order).then(function (invoice) {
+        order.invoice = invoice;
+        callback(null, order);
+      }).catch(function (err) {
+        order.invoiceErr = err;
+        callback(null, order);
+      });
+    }, function done(){
+      console.log('orderInvoiceProcessed',ordersList);
+      deferred.resolve(ordersList);
+    })
   }
+  return deferred.promise;
+}
 
-  async.eachSeries(ordersList, function iterator(order, callback) {
-    console.log('order' , order);
-    commerceAdapter.createOrderInvoice(order).then(function (invoice) {
-      process[order.incrementId] = invoice;
-      console.log('invoice', invoice);
-      callback(null, invoice);
-    }).catch(function (err) {
-      process[order.incrementId] = err;
-      console.log('err', err);
-      callback(null, err);
-    }).done(function () {
-      deferred.resolve(process);
-    });
-  })
+function createShipment(ordersInvoiceList){
+  var deferred = Q.defer();
+  if(ordersInvoiceList.length === 0){
+    deferred.resolve(ordersInvoiceList);
+  }else{
+    async.eachSeries(ordersInvoiceList, function iterator(order, callback) {
+      commerceAdapter.createOrderShipment(order).then(function (shipment) {
+        order.shipment = shipment;
+        callback(null, order);
+      }).catch(function (err) {
+        order.shipmentErr = err;
+        callback(null, order);
+      });
 
-  console.log('pre defer');
+    }, function done(){
+      deferred.resolve(ordersInvoiceList);
+    })
+  }
   return deferred.promise;
 }
 

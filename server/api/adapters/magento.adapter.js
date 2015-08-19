@@ -514,6 +514,32 @@ exports.createOrderInvoice = function(order) {
   return deferred.promise;
 }
 
+exports.createOrderShipment = function(order){
+  var itemsQty = {};
+  itemsQty[order.orderItemId] = 1;
+  console.log('input createOrderShipment');
+
+  var deferred = Q.defer();
+  login(function(err) {
+    if(err){
+      console.log('err login' , err);
+      deferred.reject(err);
+    }else{
+      magento.salesOrderShipment.create({
+        orderIncrementId: order.incrementId,
+        itemsQty:itemsQty
+      }, function (err1, data) {
+        if(err1){
+          deferred.reject(err1);
+        }else{
+          deferred.resolve(camelize(data));
+        }
+      });
+    }
+  });
+  return deferred.promise;
+};
+
 function mapOrder(magentoOrder) {
   //console.log('magentoOrder',magentoOrder);
   var orderDetails = {};
