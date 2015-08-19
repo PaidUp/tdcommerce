@@ -261,7 +261,6 @@ function completeOrders(cb){
     }).then(function(ordersInvoiceList){
       return createShipment(ordersInvoiceList);
     }).done(function(data){
-      console.log('ordersInvoiceList',data);
       cb(null, data);
     });
 };
@@ -280,7 +279,6 @@ function createInvoice(ordersList){
         callback(null, order);
       });
     }, function done(){
-      console.log('orderInvoiceProcessed',ordersList);
       deferred.resolve(ordersList);
     })
   }
