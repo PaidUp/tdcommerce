@@ -4,6 +4,7 @@ var magento = new MagentoAPI(config.commerce.magento);
 var camelize = require('camelize');
 var snakeize = require('snakeize');
 var logger = require('../../config/logger.js');
+var Q = require('q');
 
 var login = exports.login = function(cb) {
   magento.core.info(function(err, data) {
@@ -447,6 +448,7 @@ exports.orderLoad = function(orderId, cb) {
     magento.salesOrder.info({
       orderIncrementId: orderId
     }, function (err, res) {
+      console.log('info ' , res.items.length);
       if(err) return cb(err);
       var orderDetails = mapOrder(res);
       return cb(null, orderDetails);
@@ -487,6 +489,57 @@ exports.transactionList = function(orderId, cb) {
   });
 }
 
+exports.createOrderInvoice = function(order) {
+  var itemsQty = {};
+  itemsQty[order.orderItemId] = 1;
+  console.log('input createOrderInvoice');
+  var deferred = Q.defer();
+  login(function(err) {
+    if(err){
+      console.log('err login' , err);
+      deferred.reject(err);
+    }else{
+      magento.salesOrderInvoice.create({
+        orderIncrementId: order.incrementId,
+        itemsQty:itemsQty
+      }, function (err1, data) {
+        if(err1){
+          deferred.reject(err1);
+        }else{
+          deferred.resolve(camelize(data));
+        }
+      });
+    }
+  });
+  return deferred.promise;
+}
+
+exports.createOrderShipment = function(order){
+  var itemsQty = {};
+  itemsQty[order.orderItemId] = 1;
+  console.log('input createOrderShipment');
+
+  var deferred = Q.defer();
+  login(function(err) {
+    if(err){
+      console.log('err login' , err);
+      deferred.reject(err);
+    }else{
+      magento.salesOrderShipment.create({
+        orderIncrementId: order.incrementId,
+        itemsQty:itemsQty
+      }, function (err1, data) {
+        if(err1){
+          deferred.reject(err1);
+        }else{
+          deferred.resolve(camelize(data));
+        }
+      });
+    }
+  });
+  return deferred.promise;
+};
+
 function mapOrder(magentoOrder) {
   //console.log('magentoOrder',magentoOrder);
   var orderDetails = {};
@@ -497,6 +550,7 @@ function mapOrder(magentoOrder) {
   if(magentoOrder.items) {
     orderDetails.sku = magentoOrder.items[0].sku;
     orderDetails.productId = magentoOrder.items[0].product_id;
+    orderDetails.orderItemId = magentoOrder.items[0].item_id;
   }
   for(var commentId in magentoOrder.status_history) {
     try {
