@@ -44,6 +44,13 @@ exports.updateStatus = function(req, res) {
   });
 }
 
+exports.retryPayment = function(req, res) {
+  commerceService.retryPayment(function(err, data){
+    if(err) return handleError(res, err);
+    return res.json(200, data);
+  });
+}
+
 function handleError(res, err) {
   var httpErrorCode = 500;
 

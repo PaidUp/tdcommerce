@@ -135,7 +135,9 @@ exports.catalogCreate = function(teamData, res){
 exports.cartCreate = function(res){
   login(function(err) {
     if (err) return res(err);
-    magento.checkoutCart.create(function (err, resCartCreate) {
+    magento.checkoutCart.create({
+      storeView: '1'
+    },function (err, resCartCreate) {
       if (err) return res(err);
       return res(null, camelize(resCartCreate));
     });
@@ -262,8 +264,23 @@ exports.cartTotals = function(quoteId,res){
     magento.checkoutCart.totals({
       quoteId: quoteId
     }, function (err, resChkCartTotals) {
+      //console.log('cartTotals: resChkCartTotals',resChkCartTotals);
       if(err) return res(err);
       return res(null,camelize(resChkCartTotals));
+    });
+  });
+}
+
+exports.cartAddCoupon = function(quoteId, couponCode, res){
+  login(function(err) {
+    if(err) return res(err);
+    magento.checkoutCartCoupon.add({
+      quoteId: quoteId,
+      couponCode: couponCode
+    }, function(err ,resCartCoupon){
+      //console.log('cartAddCoupon: cartAddCoupon',resCartCoupon);
+      if(err) return res(err);
+      return res(null,camelize(resCartCoupon));
     });
   });
 }
@@ -476,6 +493,7 @@ function mapOrder(magentoOrder) {
   orderDetails.incrementId = magentoOrder.increment_id;
   orderDetails.status = magentoOrder.status;
   orderDetails.grandTotal = magentoOrder.grand_total;
+  orderDetails.retry = []
   if(magentoOrder.items) {
     orderDetails.sku = magentoOrder.items[0].sku;
     orderDetails.productId = magentoOrder.items[0].product_id;
@@ -501,6 +519,9 @@ function mapOrder(magentoOrder) {
         }
         if(json.schedulePeriods) {
           orderDetails.schedulePeriods = json.schedulePeriods;
+        }
+        if(json.retryId) {
+          orderDetails.retry.push(json);
         }
       }
     } catch (e) {

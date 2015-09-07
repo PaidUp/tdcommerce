@@ -98,3 +98,12 @@ exports.place = function(cartId, cb){
     return cb(null, data);
   });
 }
+
+exports.cartAddCoupon = function(cartId, products, cb) {
+  commerceAdapter.cartAddCoupon(cartId, products, function(err, data) {
+    if(err) {
+      return cb(err);
+    }
+    return cb(null, data);
+  });
+}

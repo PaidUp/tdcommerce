@@ -7,6 +7,13 @@ var logger = require('../../config/logger');
 var moment = require('moment');
 
 exports.generate = function(req, res) {
+  if(!req.body.price){
+    throw new Error('price is required');
+  }
+  if(!req.body.productId){
+    throw new Error('productId is required');
+  }
+
     catalogService.catalogProductInfo(req.body.productId, function(err, product){
         if(err){
             handleError(res, err);
