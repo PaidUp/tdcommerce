@@ -128,7 +128,8 @@ function parseSchedule(price, customizeSchedule, discountFee){
     throw new Error('priceDue not is a number');
   }
 
-  var fee = parseFloat(parseFloat(((customizeSchedule.fee/100) * (priceDue / (1+(customizeSchedule.fee/100))))).toFixed(2));
+  var fee = parseFloat(((customizeSchedule.fee/100) * (priceDue / (1+(customizeSchedule.fee/100))))).toFixed(2);
+
   if(isNaN(fee)){
     logger.error('fee not is a number: '+nPayment );
     throw new Error('fee not is a number');
@@ -142,9 +143,9 @@ function parseSchedule(price, customizeSchedule, discountFee){
     id : new ObjectId(),
     nextPayment : nPayment,
     nextPaymentDue : calculateNextPaymentDue(nPayment),
-    price : priceDue,
+    price : priceDue.toString(),
     percent : customizeSchedule.percent,
-    fee:fee,
+    fee:fee.toString(),
     feePercent:customizeSchedule.fee,
     description : customizeSchedule.description,
     discountToFee : discountFee
@@ -164,7 +165,7 @@ function calculatePrice(totalPrice, percent){
   }
 
   var tmp = totalPrice * (percent / 100);
-  return parseFloat(parseFloat(tmp * 100 / 100).toFixed(2));
+  return parseFloat(tmp).toFixed(2);
 
 }
 
