@@ -622,6 +622,29 @@
           }
         }
       },
+      "/commerce/order/complete": {
+        "get": {
+          "summary": "Return list of orders was completed",
+          "description": "Return list of orders was completed.",
+          "produces": [
+            "application/json"
+          ],
+          "tags": [
+            "Order"
+          ],
+          "responses": {
+            "200": {
+              "description": "Array of order list"
+            },
+            "400": {
+              "description": "Validation field error",
+              "schema": {
+                "$ref": "ValidationError"
+              }
+            }
+          }
+        }
+      },
         "/commerce/order/comment/create": {
             "post": {
                 "summary": "Return order list.",
