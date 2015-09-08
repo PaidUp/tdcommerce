@@ -108,7 +108,6 @@ function generateSchedule(params){
 }
 
 function parseSchedule(price, customizeSchedule, discountFee){
-  console.log('parse schedule');
   var disc = discountFee ? discountFee : 0;
   var mom = moment(customizeSchedule.date + ' ' + customizeSchedule.time);
   var nPayment = mom.format();
@@ -129,12 +128,7 @@ function parseSchedule(price, customizeSchedule, discountFee){
     throw new Error('priceDue not is a number');
   }
 
-  console.log('price due' , priceDue)
-  console.log('price due text' , priceDue.toString())
-
   var fee = parseFloat(((customizeSchedule.fee/100) * (priceDue / (1+(customizeSchedule.fee/100))))).toFixed(2);
-  console.log('fee' , fee);
-  console.log('fee str' , fee.toString());
 
   if(isNaN(fee)){
     logger.error('fee not is a number: '+nPayment );
@@ -149,7 +143,7 @@ function parseSchedule(price, customizeSchedule, discountFee){
     id : new ObjectId(),
     nextPayment : nPayment,
     nextPaymentDue : calculateNextPaymentDue(nPayment),
-    price : priceDue,
+    price : priceDue.toString(),
     percent : customizeSchedule.percent,
     fee:fee.toString(),
     feePercent:customizeSchedule.fee,
@@ -171,7 +165,7 @@ function calculatePrice(totalPrice, percent){
   }
 
   var tmp = totalPrice * (percent / 100);
-  return parseFloat(parseFloat(tmp * 100 / 100).toFixed(2));
+  return parseFloat(tmp).toFixed(2);
 
 }
 
