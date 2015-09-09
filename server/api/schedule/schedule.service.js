@@ -66,9 +66,8 @@ function generateSchedule(params){
     if(params.isInFullPay){
       schedule.schedulePeriods.push(parseSchedule(params.price, params.onePaymentSchedule, params.discount));
     }else if(params.customizeSchedule){
-      var discount = params.discount ? params.discount / params.customizeSchedule.length : 0;
-
       params.customizeSchedule.forEach(function(ele, pos, arr){
+        var discount = parseFloat(params.discount * (ele.percent / 100));
         schedule.schedulePeriods.push(parseSchedule(params.price, ele, discount));
       });
     }else{
@@ -108,7 +107,7 @@ function generateSchedule(params){
 }
 
 function parseSchedule(price, customizeSchedule, discountFee){
-  var disc = discountFee ? discountFee : 0;
+  var disc = discountFee ? parseFloat(discountFee) : 0;
   var mom = moment(customizeSchedule.date + ' ' + customizeSchedule.time);
   var nPayment = mom.format();
   if(nPayment === 'Invalid date'){
@@ -121,14 +120,13 @@ function parseSchedule(price, customizeSchedule, discountFee){
     throw new Error('price not is a number');
   }
 
-
-  var priceDue =  calculatePrice(price , customizeSchedule.percent);
+  var priceDue = parseFloat(calculatePrice(price  , customizeSchedule.percent).toFixed(2));
   if(isNaN(priceDue)){
     logger.error('priceDue not is a number: '+priceDue );
     throw new Error('priceDue not is a number');
   }
 
-  var fee = parseFloat(((customizeSchedule.fee/100) * (priceDue / (1+(customizeSchedule.fee/100))))).toFixed(2);
+  var fee = parseFloat((((customizeSchedule.fee/100) * ((priceDue+disc) / (1+(customizeSchedule.fee/100))))-disc).toFixed(2));
 
   if(isNaN(fee)){
     logger.error('fee not is a number: '+nPayment );
@@ -165,7 +163,7 @@ function calculatePrice(totalPrice, percent){
   }
 
   var tmp = totalPrice * (percent / 100);
-  return parseFloat(tmp).toFixed(2);
+  return parseFloat(tmp);
 
 }
 
