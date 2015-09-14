@@ -71,6 +71,8 @@ function generateSchedule(params){
         schedule.schedulePeriods.push(parseSchedule(params.price, ele, discount));
       });
     }else{
+      throw Error('onePaymentSchedule or customizeSchedule must be defined');
+      /*
       var nextPayment = moment();
 
       if(params.deposit > 0){
@@ -97,7 +99,7 @@ function generateSchedule(params){
         schedulePeriod.fee = fee;
         schedulePeriod.description = 'Season Fee';
         schedule.schedulePeriods.push(schedulePeriod);
-      }
+      }*/
     }
     return schedule;
   }catch(err){
@@ -151,6 +153,7 @@ function parseSchedule(price, customizeSchedule, discountFee){
   return ds;
 };
 
+
 function calculatePrice(totalPrice, percent){
   if(isNaN(totalPrice)){
     logger.error('totalPrice not is a number: '+totalPrice );
@@ -166,7 +169,7 @@ function calculatePrice(totalPrice, percent){
   return parseFloat(tmp);
 
 }
-
+/*
 function paymentPeriod(params){
   if(typeof params.intervalNumber !== 'number' || params.intervalNumber == 0){
     throw new Error('intervalNumber is not a number');
@@ -209,12 +212,12 @@ function generateScheduleDeposit(params, description){
 
   return depositSchedule;
 }
-
+*/
 module.exports = {
-  calculateTotalFee:calculateTotalFee,
-  calculateNextPaymentDue:calculateNextPaymentDue,
+  //calculateTotalFee:calculateTotalFee,
+  //calculateNextPaymentDue:calculateNextPaymentDue,
   generateSchedule:generateSchedule,
-  paymentPeriod:paymentPeriod,
-  calculatePaymentFee:calculatePaymentFee,
-  generateScheduleDeposit:generateScheduleDeposit
+  //paymentPeriod:paymentPeriod,
+  //calculatePaymentFee:calculatePaymentFee,
+  //generateScheduleDeposit:generateScheduleDeposit
 }
