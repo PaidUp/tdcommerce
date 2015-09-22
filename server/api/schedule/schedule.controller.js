@@ -44,7 +44,7 @@ exports.generate = function(req, res) {
           customizeSchedule : customizeSchedule,
           onePaymentSchedule : onePaymentSchedule
         };
-        return res.json(200, scheduleService.generateSchedule(params));
+        return res.status(200).json(scheduleService.generateSchedule(params));
     });
 }
 
@@ -74,7 +74,7 @@ function getOnePaymentSchedule(product){
 
 exports.payments = function(req, res) {
     if(!req.params && !req.params.orderId) {
-      return res.json(400, {
+      return res.status(400).json({
         "code": "ValidationError",
         "message": "Order Id is required"
       });
@@ -95,7 +95,7 @@ exports.payments = function(req, res) {
               }
             });
           }
-          return res.json(200, {scheduled:order});
+          return res.status(200).json({scheduled:order});
         });
     });
 }
@@ -107,5 +107,5 @@ function handleError(res, err) {
     httpErrorCode = 400;
   }
   logger.log('error', err);
-  return res.json(httpErrorCode, {code : err.name, message : err.message, errors : err.errors});
+  return res.status(httpErrorCode).json({code : err.name, message : err.message, errors : err.errors});
 }
