@@ -10,5 +10,6 @@ router.post('/list', controller.list);
 router.post('/comment/create', controller.commentCreate);
 router.get('/:orderId/status/:status', controller.updateStatus);
 router.get('/retry/payments', controller.retryPayment);
+router.get('/complete', controller.complete);
 
 module.exports = router;

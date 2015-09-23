@@ -64,10 +64,12 @@ function generateSchedule(params){
 
     var schedule = {destinationId : params.destinationId , schedulePeriods : []};
     if(params.isInFullPay){
-      schedule.schedulePeriods.push(parseSchedule(params.price,params.onePaymentSchedule));
+      schedule.schedulePeriods.push(parseSchedule(params.price, params.onePaymentSchedule, params.discount));
     }else if(params.customizeSchedule){
+      var discount = params.discount ? params.discount / params.customizeSchedule.length : 0;
+
       params.customizeSchedule.forEach(function(ele, pos, arr){
-        schedule.schedulePeriods.push(parseSchedule(params.price, ele));
+        schedule.schedulePeriods.push(parseSchedule(params.price, ele, discount));
       });
     }else{
       var nextPayment = moment();
@@ -105,7 +107,8 @@ function generateSchedule(params){
   }
 }
 
-function parseSchedule(price, customizeSchedule){
+function parseSchedule(price, customizeSchedule, discountFee){
+  var disc = discountFee ? discountFee : 0;
   var mom = moment(customizeSchedule.date + ' ' + customizeSchedule.time);
   var nPayment = mom.format();
   if(nPayment === 'Invalid date'){
@@ -130,6 +133,10 @@ function parseSchedule(price, customizeSchedule){
     logger.error('fee not is a number: '+nPayment );
     throw new Error('fee not is a number');
   }
+  if(fee < 0){
+    logger.error('fee must be a positive number: '+fee );
+    throw new Error('fee must be a positive number, verify the value of order discount');
+  }
 
   var ds = {
     id : new ObjectId(),
@@ -139,7 +146,8 @@ function parseSchedule(price, customizeSchedule){
     percent : customizeSchedule.percent,
     fee:fee,
     feePercent:customizeSchedule.fee,
-    description : customizeSchedule.description
+    description : customizeSchedule.description,
+    discountToFee : discountFee
   }
   return ds;
 };

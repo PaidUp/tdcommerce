@@ -28,6 +28,7 @@ exports.generate = function(req, res) {
         product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
         var params = {
             isInFullPay: req.body.isInFullPay,
+            discount: req.body.discount,
             name:product.name,
             price:req.body.price,
             intervalNumber:product.intervalNumber,
