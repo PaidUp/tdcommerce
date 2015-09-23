@@ -25,21 +25,21 @@ exports.generate = function(req, res) {
       }
         var hour = new Date().getHours();
         var minute = new Date().getMinutes();
-        product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
+        //product.dateDeposit = product.dateDeposit.substring(0,11) + hour +":"+ minute+":00";
         var params = {
             isInFullPay: req.body.isInFullPay,
             discount: req.body.discount,
             name:product.name,
             price:req.body.price,
-            intervalNumber:product.intervalNumber,
-            deposit:product.deposit,
-            feePrice:product.feePrice,
-            feeNumber:product.feeNumber,
+            //intervalNumber:product.intervalNumber,
+            //deposit:product.deposit,
+            //feePrice:product.feePrice,
+            //feeNumber:product.feeNumber,
             dateStart:product.dateStart.substring(0,11) + hour +":"+ minute+":00",
-            dateDeposit:product.dateDeposit.substring(0,11) + hour +":"+ minute+":00",
-            intervalElapsed:product.intervalElapsed,
-            intervalType:product.intervalType,
-            dateFirstPayment:product.dateFirstPayment,
+            //dateDeposit:product.dateDeposit.substring(0,11) + hour +":"+ minute+":00",
+            //intervalElapsed:product.intervalElapsed,
+            //intervalType:product.intervalType,
+            //dateFirstPayment:product.dateFirstPayment,
             destinationId:product.tDPaymentId,
           customizeSchedule : customizeSchedule,
           onePaymentSchedule : onePaymentSchedule

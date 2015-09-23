@@ -66,12 +66,13 @@ function generateSchedule(params){
     if(params.isInFullPay){
       schedule.schedulePeriods.push(parseSchedule(params.price, params.onePaymentSchedule, params.discount));
     }else if(params.customizeSchedule){
-      var discount = params.discount ? params.discount / params.customizeSchedule.length : 0;
-
       params.customizeSchedule.forEach(function(ele, pos, arr){
+        var discount = parseFloat(params.discount * (ele.percent / 100));
         schedule.schedulePeriods.push(parseSchedule(params.price, ele, discount));
       });
     }else{
+      throw Error('onePaymentSchedule or customizeSchedule must be defined');
+      /*
       var nextPayment = moment();
 
       if(params.deposit > 0){
@@ -98,7 +99,7 @@ function generateSchedule(params){
         schedulePeriod.fee = fee;
         schedulePeriod.description = 'Season Fee';
         schedule.schedulePeriods.push(schedulePeriod);
-      }
+      }*/
     }
     return schedule;
   }catch(err){
@@ -108,7 +109,7 @@ function generateSchedule(params){
 }
 
 function parseSchedule(price, customizeSchedule, discountFee){
-  var disc = discountFee ? discountFee : 0;
+  var disc = discountFee ? parseFloat(discountFee) : 0;
   var mom = moment(customizeSchedule.date + ' ' + customizeSchedule.time);
   var nPayment = mom.format();
   if(nPayment === 'Invalid date'){
@@ -121,14 +122,14 @@ function parseSchedule(price, customizeSchedule, discountFee){
     throw new Error('price not is a number');
   }
 
-
-  var priceDue =  calculatePrice(price , customizeSchedule.percent);
+  var priceDue = parseFloat(calculatePrice(price  , customizeSchedule.percent).toFixed(2));
   if(isNaN(priceDue)){
     logger.error('priceDue not is a number: '+priceDue );
     throw new Error('priceDue not is a number');
   }
 
-  var fee = parseFloat(parseFloat(((customizeSchedule.fee/100) * (priceDue / (1+(customizeSchedule.fee/100))))).toFixed(2));
+  var fee = parseFloat((((customizeSchedule.fee/100) * ((priceDue+disc) / (1+(customizeSchedule.fee/100))))-disc).toFixed(2));
+
   if(isNaN(fee)){
     logger.error('fee not is a number: '+nPayment );
     throw new Error('fee not is a number');
@@ -142,15 +143,16 @@ function parseSchedule(price, customizeSchedule, discountFee){
     id : new ObjectId(),
     nextPayment : nPayment,
     nextPaymentDue : calculateNextPaymentDue(nPayment),
-    price : priceDue,
+    price : priceDue.toString(),
     percent : customizeSchedule.percent,
-    fee:fee,
+    fee:fee.toString(),
     feePercent:customizeSchedule.fee,
     description : customizeSchedule.description,
     discountToFee : discountFee
   }
   return ds;
 };
+
 
 function calculatePrice(totalPrice, percent){
   if(isNaN(totalPrice)){
@@ -164,10 +166,10 @@ function calculatePrice(totalPrice, percent){
   }
 
   var tmp = totalPrice * (percent / 100);
-  return parseFloat(parseFloat(tmp * 100 / 100).toFixed(2));
+  return parseFloat(tmp);
 
 }
-
+/*
 function paymentPeriod(params){
   if(typeof params.intervalNumber !== 'number' || params.intervalNumber == 0){
     throw new Error('intervalNumber is not a number');
@@ -210,12 +212,12 @@ function generateScheduleDeposit(params, description){
 
   return depositSchedule;
 }
-
+*/
 module.exports = {
-  calculateTotalFee:calculateTotalFee,
-  calculateNextPaymentDue:calculateNextPaymentDue,
+  //calculateTotalFee:calculateTotalFee,
+  //calculateNextPaymentDue:calculateNextPaymentDue,
   generateSchedule:generateSchedule,
-  paymentPeriod:paymentPeriod,
-  calculatePaymentFee:calculatePaymentFee,
-  generateScheduleDeposit:generateScheduleDeposit
+  //paymentPeriod:paymentPeriod,
+  //calculatePaymentFee:calculatePaymentFee,
+  //generateScheduleDeposit:generateScheduleDeposit
 }
