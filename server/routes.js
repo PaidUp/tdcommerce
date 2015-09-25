@@ -22,6 +22,6 @@ module.exports = function(app) {
   // All other routes should redirect to the index.html
   app.route('/*')
     .get(function(req, res) {
-      res.json(200,{'node':'Commerce!!!'});
+      res.status(200).json({'node':'Commerce!!!'});
     });
 };

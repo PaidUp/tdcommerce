@@ -427,7 +427,7 @@ describe("Commerce methods", function() {
       // use magento
       magento.bighippoSales.createTransaction(
           { orderId: modelSpec.orderId,
-            transactionId: faker.helpers.randomNumber(9999999999999),
+            transactionId: faker.random.number(9999999999999),
             addInfo: {amount:123, test:345}
           }, function (err, res) {
         if(err) {
