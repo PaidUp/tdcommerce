@@ -45,11 +45,12 @@ var all = {
   commerce: {
     adapter: path.normalize(__dirname + '/../../..') + '/server/api/adapters/magento.adapter',
     magento: {
-      host: 'develop.convenienceselect.com',
-      port: 8888,
-      path: '/api/xmlrpc/',
+      host: 'virtual',
+      //port: 80,
+      path: '/index.php/api/xmlrpc/',
       login: 'magento',
-      pass: 'Sv38SJVR'
+      //pass: 'Sv38SJVR'
+      pass: 'test4echo'
     },
     category: {
       teams: 3,
