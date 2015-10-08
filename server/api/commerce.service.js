@@ -285,6 +285,22 @@ function createInvoice(ordersList){
   return deferred.promise;
 }
 
+function createOrderInvoice(orderId, callback){
+  orderLoad(orderId, function(err, order){
+    if(err){
+      callback(err);
+    }else{
+      commerceAdapter.createOrderInvoice(order).then(function (invoice) {
+        order.invoice = invoice;
+        callback(null, order);
+      }).catch(function (err) {
+        order.invoiceErr = err;
+        callback(null, order);
+      });
+    }
+  });
+}
+
 function createShipment(ordersInvoiceList){
   var deferred = Q.defer();
   if(ordersInvoiceList.length === 0){
@@ -315,4 +331,6 @@ exports.transactionCreate = transactionCreate;
 exports.customerCreate = customerCreate;
 exports.retryPayment = retryPayment;
 exports.completeOrders = completeOrders;
+exports.createOrderInvoice = createOrderInvoice;
+
 
