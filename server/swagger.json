@@ -337,6 +337,57 @@
                 }
             }
         },
+
+
+
+      "/commerce/order/{orderId}/create/creditmemo": {
+        "post": {
+          "operationId": "postCommerceCreateCreditMemo",
+          "summary": "Return true.",
+          "description": "Return true, if credit memo is aggregate successful.",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "orderId",
+              "in": "path",
+              "required": true,
+              "description" : "order id",
+              "type" : "string"
+            },
+            {
+              "name": "salesOrderCreditmemoData",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/postCommerceCreateCreditMemo"
+              }
+            }
+          ],
+          "tags": [
+            "Order"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful create cart",
+              "schema": {
+                "$ref": "#/definitions/postCommerceCartAddResponse"
+              }
+            },
+            "400": {
+              "description": "Validation field error",
+              "schema": {
+                "$ref": "ValidationError"
+              }
+            }
+          }
+        }
+      },
+
+
+
+
         "/commerce/cart/place/{cartId}": {
             "get": {
                 "operationId": "postCommerceCartPlace",
@@ -873,6 +924,22 @@
                 }
             }
         },
+      "postCommerceCreateCreditMemo": {
+        "required": [
+          "qty",
+          "value"
+        ],
+        "properties": {
+          "qty": {
+            "type": "string",
+            "description": "Qty product."
+          },
+          "value": {
+            "type": "string",
+            "description": "value of credit memo"
+          }
+        }
+      },
         "postCommerceCartAdd": {
             "required": [
                 "cartId",

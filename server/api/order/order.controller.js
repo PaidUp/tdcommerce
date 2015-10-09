@@ -79,6 +79,37 @@ exports.createOrderInvoice = function(req, res) {
   });
 }
 
+exports.createOrderCreditMemo = function(req, res) {
+  if(!req.params && !req.params.orderId) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "Order Id is required"
+    });
+  }
+  if(!req.body && !req.body.qty) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "qty is required"
+    });
+  }
+  if(!req.body && !req.body.value) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "value is required"
+    });
+  }
+
+
+  commerceService.createCreditMemo({
+    orderId : req.params.orderId,
+    qty : req.body.qty,
+    value : req.body.value
+  }, function(err, data){
+    if(err) return handleError(res, err);
+    return res.status(200).json(data);
+  });
+}
+
 function handleError(res, err) {
   var httpErrorCode = 500;
 
