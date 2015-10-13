@@ -257,9 +257,7 @@ function completeOrders(cb){
     }).then(function (ordersLoad){
       return getOrdersToComplete(ordersLoad);
     }).then(function(ordersList){
-      return createInvoice(ordersList);
-    }).then(function(ordersInvoiceList){
-      return createShipment(ordersInvoiceList);
+      return createShipment(ordersList);
     }).done(function(data){
       cb(null, data);
     });
@@ -320,6 +318,31 @@ function createShipment(ordersInvoiceList){
     })
   }
   return deferred.promise;
+};
+
+function createCreditMemo(params, cb) {
+  orderLoad(params.orderId, function(err, data){
+    if (err) {
+      return cb(err);
+    }
+
+    var magentoParam = {
+      orderIncrementId : params.orderId,
+      refundToStoreCreditAmount : "1",
+      creditmemoData : {
+        qtys : [data.products[0].productId, params.qty],
+        adjustment_positive : params.value
+      }
+    }
+
+    commerceAdapter.createOrderCreditMemo(magentoParam, function (err2, mgtodata) {
+      if (err2) {
+        return cb(err2);
+      }
+      return cb(null, mgtodata);
+    });
+  })
+
 }
 
 exports.orderUpdateStatus = orderUpdateStatus;
@@ -332,5 +355,6 @@ exports.customerCreate = customerCreate;
 exports.retryPayment = retryPayment;
 exports.completeOrders = completeOrders;
 exports.createOrderInvoice = createOrderInvoice;
+exports.createCreditMemo = createCreditMemo;
 
 
