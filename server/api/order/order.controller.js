@@ -66,7 +66,6 @@ exports.createInvoice = function(req, res) {
 }
 
 exports.createOrderInvoice = function(req, res) {
-  console.log('orderId' , req.params.orderId);
   if(!req.params && !req.params.orderId) {
     return res.status(400).json({
       "code": "ValidationError",

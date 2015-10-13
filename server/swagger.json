@@ -1,1187 +1,1220 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "title": "CS API",
-        "description": "Convenience Select",
-        "version": "1.0.0"
-    },
-    "host": "localhost:9002",
-    "schemes": [
-        "http",
-        "https"
-    ],
-    "basePath": "/api/v1",
-    "produces": [
-        "application/json"
-    ],
-    "paths": {
-        "/commerce/cart/create": {
-            "get": {
-                "operationId": "getCommerceCreate",
-                "summary": "Return a cartId.",
-                "description": "Return a cartId.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful create cart",
-                        "schema": {
-                            "$ref": "#/definitions/getCommerceCreateCartResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/add": {
-            "post": {
-                "operationId": "postCommerceCartAdd",
-                "summary": "Return true.",
-                "description": "Return true, if product is aggregate successful.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "commerce",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAdd"
-                        }
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful create cart",
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAddResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/remove": {
-            "post": {
-                "operationId": "postCommerceCartAdd",
-                "summary": "Return true.",
-                "description": "Return true, if product was removed successful.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "commerce",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAdd"
-                        }
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful create cart",
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAddResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/list/{cartId}": {
-            "get": {
-                "operationId": "getCommerceCartList",
-                "summary": "Return an Array of products.",
-                "description": "Return an Array of products, is need send  in the body.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "cartId",
-                        "in": "path",
-                        "description": "cart id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful cart list",
-                        "schema": {
-                            "$ref": "#/definitions/getCommerceCartListResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/address": {
-            "post": {
-                "operationId": "postCommerceCartAddress",
-                "summary": "Return true.",
-                "description": "Return true, if address is aggregate successful, is need send  in the body.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "commerce",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAddress"
-                        }
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful aggregate address to cart",
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAddressResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/update/price": {
-            "post": {
-                "operationId": "postCommerceCartUpdatePrice",
-                "summary": "Return true.",
-                "description": "Return true, if the product price in the cart was changed.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "commerce",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartUpdatePrice"
-                        }
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful aggregate address to cart",
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAddressResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/customer": {
-            "post": {
-                "operationId": "postCommerceCartCustomer",
-                "summary": "Return true.",
-                "description": "Return true, if the customer was succesfully linked to the cart.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "commerce",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartUpdatePrice"
-                        }
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful aggregate address to cart",
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAddressResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/shipping": {
-            "post": {
-                "operationId": "postCommerceCartShipping",
-                "summary": "Return true.",
-                "description": "Return true, if the shipping method was set.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "commerce",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartShipping"
-                        }
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAddressResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/payment": {
-            "post": {
-                "operationId": "postCommerceCartPayment",
-                "summary": "Return true.",
-                "description": "Return true, if the payment method was set.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "commerce",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartPayment"
-                        }
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/postCommerceCartAddressResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-
-
-
-      "/commerce/order/{orderId}/create/creditmemo": {
-        "post": {
-          "operationId": "postCommerceCreateCreditMemo",
-          "summary": "Return true.",
-          "description": "Return true, if credit memo is aggregate successful.",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "name": "orderId",
-              "in": "path",
-              "required": true,
-              "description" : "order id",
-              "type" : "string"
-            },
-            {
-              "name": "salesOrderCreditmemoData",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/postCommerceCreateCreditMemo"
-              }
-            }
-          ],
-          "tags": [
-            "Order"
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful create cart",
-              "schema": {
-                "$ref": "#/definitions/postCommerceCartAddResponse"
-              }
-            },
-            "400": {
-              "description": "Validation field error",
-              "schema": {
-                "$ref": "ValidationError"
-              }
-            }
-          }
-        }
-      },
-
-
-
-
-        "/commerce/cart/place/{cartId}": {
-            "get": {
-                "operationId": "postCommerceCartPlace",
-                "summary": "Return true.",
-                "description": "Return order id if the cart was succesfully placed into an order.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "cartId",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/postCartPlaceResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/view/{cartId}": {
-            "get": {
-                "operationId": "getCommerceCartView",
-                "summary": "Return a cart.",
-                "description": "Return an Object of Cart, is need send  in the body.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "cartId",
-                        "in": "path",
-                        "description": "cart id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful cart list",
-                        "schema": {
-                            "$ref": "#/definitions/getCommerceCartViewResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/cart/totals/{cartId}": {
-            "get": {
-                "operationId": "getCommerceCartTotals",
-                "summary": "Return a cart totals.",
-                "description": "Return an Object of Cart totals, is need send  in the body.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "cartId",
-                        "in": "path",
-                        "description": "cart id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful cart totals",
-                        "schema": {
-                            "$ref": "#/definitions/getCommerceCartTotalsResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/catalog/category/{categoryId}": {
-            "get": {
-                "operationId": "getCommerceCatalogCategoryTeams",
-                "summary": "Return a list products.",
-                "description": "Return a list of products.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Catalog"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful cart totals"
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/catalog/product/{productId}": {
-            "get": {
-                "operationId": "getCatalogProductInfo",
-                "summary": "Return a product info.",
-                "description": "Return an Object of product info.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "productId",
-                        "in": "path",
-                        "description": "product id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Catalog"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Product data",
-                        "schema": null
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/catalog/product/link/{productId}": {
-        "get": {
-          "operationId": "catalogProductLink",
-          "summary": "Return a list of products.",
-          "description": "Return an list Object of product.",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "name": "productId",
-              "in": "path",
-              "description": "product id",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "tags": [
-            "Catalog"
-          ],
-          "responses": {
-            "200": {
-              "description": "Product data",
-              "schema": null
-            },
-            "400": {
-              "description": "Validation field error",
-              "schema": {
-                "$ref": "ValidationError"
-              }
-            }
-          }
-        }
-      },
-        "/commerce/order/load/{orderId}": {
-            "get": {
-                "summary": "Return order information.",
-                "description": "Return order information and line details.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "orderId",
-                        "in": "path",
-                        "description": "order id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Order data"
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/order/list": {
-            "post": {
-                "summary": "Return order list.",
-                "description": "Return order list, applying the filter.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "filter",
-                        "in": "body",
-                        "description": "JSON object with filters.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Array of order list"
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-      "/commerce/order/retry/payments": {
-        "get": {
-          "summary": "Return schedule objects to retry payment.",
-          "description": "Return schedule objects to retry payment.",
-          "produces": [
-            "application/json"
-          ],
-          "tags": [
-            "Order"
-          ],
-          "responses": {
-            "200": {
-              "description": "Array of schedule order list"
-            },
-            "400": {
-              "description": "Validation field error",
-              "schema": {
-                "$ref": "ValidationError"
-              }
-            }
-          }
-        }
-      },
-      "/commerce/order/complete": {
-        "get": {
-          "summary": "Return list of orders was completed",
-          "description": "Return list of orders was completed.",
-          "produces": [
-            "application/json"
-          ],
-          "tags": [
-            "Order"
-          ],
-          "responses": {
-            "200": {
-              "description": "Array of order list"
-            },
-            "400": {
-              "description": "Validation field error",
-              "schema": {
-                "$ref": "ValidationError"
-              }
-            }
-          }
-        }
-      },
-        "/commerce/order/comment/create": {
-            "post": {
-                "summary": "Return order list.",
-                "description": "Return order list, applying the filter.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "orderId",
-                        "in": "body",
-                        "description": "Order id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "comment",
-                        "in": "body",
-                        "description": "String of the comment to add.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "status",
-                        "in": "body",
-                        "description": "If status of the order needs to be changed.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Result message"
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/order/{orderId}/status/{status}": {
-            "get": {
-                "summary": "Change the status of an order.",
-                "description": "Change the status of an order. It depends of the order work flow of the commerce platform.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "orderId",
-                        "in": "path",
-                        "description": "Order id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "status",
-                        "in": "path",
-                        "description": "status of the order",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Result Message"
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/transaction/create": {
-            "post": {
-                "summary": "Create a transaction to an order",
-                "description": "Create an order transaction.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "orderId",
-                        "in": "body",
-                        "description": "Order id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "transactionId",
-                        "in": "body",
-                        "description": "It must be unique.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "details",
-                        "in": "body",
-                        "description": "JSON object with transaction details.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Transaction"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Result message"
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/transaction/list/order/{orderId}": {
-            "get": {
-                "summary": "Get the list of transactions of an order",
-                "description": "Get the list of transactions of an order.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "orderId",
-                        "in": "path",
-                        "description": "Order id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "Transaction"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Result Message"
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        },
-        "/commerce/schedule/generate/product/{productId}": {
-            "get": {
-                "summary": "Get schedule of product",
-                "description": "Get the list of date payments generate for the product.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "productId",
-                        "in": "path",
-                        "description": "Product id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "tags": [
-                    "schedule"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Result Message"
-                    },
-                    "400": {
-                        "description": "Validation field error",
-                        "schema": {
-                            "$ref": "ValidationError"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "definitions": {
-        "ValidationError": {
-            "properties": {
-                "code": {
-                    "type": "string",
-                    "default": "ValidationError"
-                },
-                "message": {
-                    "type": "string",
-                    "description": "Error description",
-                    "default": "Field error description"
-                },
-                "errors": {
-                    "type": "string",
-                    "description": "Optional detail of errors",
-                    "default": "Optional array with detail of errors"
-                }
-            }
-        },
-        "getCommerceCreateCartResponse": {
-            "required": [
-                "cartId",
-                "subject",
-                "content"
-            ],
-            "properties": {
-                "cartId": {
-                    "type": "string",
-                    "description": "cartId for application CS."
-                }
-            }
-        },
-      "postCommerceCreateCreditMemo": {
-        "required": [
-          "qty",
-          "value"
+  "swagger": "2.0",
+  "info": {
+    "title": "CS API",
+    "description": "Convenience Select",
+    "version": "1.0.0"
+  },
+  "host": "localhost:9002",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "basePath": "/api/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/commerce/cart/create": {
+      "get": {
+        "operationId": "getCommerceCreate",
+        "summary": "Return a cartId.",
+        "description": "Return a cartId.",
+        "produces": [
+          "application/json"
         ],
-        "properties": {
-          "qty": {
-            "type": "string",
-            "description": "Qty product."
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful create cart",
+            "schema": {
+              "$ref": "#/definitions/getCommerceCreateCartResponse"
+            }
           },
-          "value": {
-            "type": "string",
-            "description": "value of credit memo"
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
           }
         }
-      },
-        "postCommerceCartAdd": {
-            "required": [
-                "cartId",
-                "products"
-            ],
-            "properties": {
-                "cartId": {
-                    "type": "string",
-                    "description": "cartid for aggregate products."
-                },
-                "products": {
-                    "type": "Array",
-                    "description": "products to aggregate"
-                }
+      }
+    },
+    "/commerce/cart/add": {
+      "post": {
+        "operationId": "postCommerceCartAdd",
+        "summary": "Return true.",
+        "description": "Return true, if product is aggregate successful.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "commerce",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAdd"
             }
-        },
-        "postCommerceCartAddResponse": {
-            "required": [
-                "return"
-            ],
-            "properties": {
-                "return": {
-                    "type": "boolean",
-                    "description": "proccess successful for application CS."
-                }
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful create cart",
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddResponse"
             }
-        },
-        "getCommerceCartListResponse": {
-            "required": [
-                "list"
-            ],
-            "properties": {
-                "list": {
-                    "type": "Array",
-                    "description": "list to products for cartId CS."
-                }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
             }
-        },
-        "postCommerceCartAddress": {
-            "required": [
-                "cartId",
-                "addresses"
-            ],
-            "properties": {
-                "cartId": {
-                    "type": "string",
-                    "description": "cartid for aggregate address."
-                },
-                "addresses": {
-                    "type": "Array",
-                    "description": "address to aggregate"
-                }
-            }
-        },
-        "postCommerceCartAddressResponse": {
-            "required": [
-                "return"
-            ],
-            "properties": {
-                "return": {
-                    "type": "boolean",
-                    "description": "proccess successful for application CS."
-                }
-            }
-        },
-        "getCommerceCartViewResponse": {
-            "required": [
-                "Cart"
-            ],
-            "properties": {
-                "Cart": {
-                    "type": "Array",
-                    "description": "object cart CS."
-                }
-            }
-        },
-        "getCommerceCartTotalsResponse": {
-            "required": [
-                "Cart"
-            ],
-            "properties": {
-                "Cart": {
-                    "type": "Array",
-                    "description": "object cart totals CS."
-                }
-            }
-        },
-        "getCommerceCatalogCategoryTeamsResponse": {
-            "required": [
-                "CartList"
-            ],
-            "properties": {
-                "CartList": {
-                    "type": "Array",
-                    "description": "object cart list CS."
-                }
-            }
-        },
-        "getCommerceCatalogProduct": {
-            "required": [
-                "ProductInfo"
-            ],
-            "properties": {
-                "ProductInfo": {
-                    "type": "Object",
-                    "description": "object product info CS."
-                }
-            }
-        },
-        "postCommerceCheckout": {
-            "required": [
-                "addresses",
-                "cartId",
-                "poNumber",
-                "cardId",
-                "userId"
-            ],
-            "properties": {
-                "addresses": {
-                    "type": "string",
-                    "description": "addresses of checkout."
-                },
-                "cartId": {
-                    "type": "string",
-                    "description": "cartId of checkout."
-                },
-                "poNumber": {
-                    "type": "string",
-                    "description": "poNumber of checkout."
-                },
-                "cardId": {
-                    "type": "string",
-                    "description": "cardId of checkout."
-                },
-                "userId": {
-                    "type": "string",
-                    "description": "userId of checkout."
-                }
-            }
-        },
-        "postCommerceCheckoutResponse": {
-            "required": [
-                "orderId"
-            ],
-            "properties": {
-                "orderId": {
-                    "type": "string",
-                    "description": "orderId of checkout."
-                }
-            }
-        },
-        "postCommerceCartUpdatePrice": {
-            "required": [
-                "cartId",
-                "productId",
-                "amount"
-            ],
-            "properties": {
-                "cartId": {
-                    "type": "string",
-                    "description": "cartId of checkout."
-                },
-                "productId": {
-                    "type": "string",
-                    "description": "productId of the product in the cart"
-                },
-                "amount": {
-                    "type": "string",
-                    "description": "new price of the product"
-                }
-            }
-        },
-        "postCommerceCartCustomer": {
-            "required": [
-                "cartId",
-                "firstName",
-                "lastName",
-                "email"
-            ],
-            "properties": {
-                "cartId": {
-                    "type": "string",
-                    "description": "cartId of checkout."
-                },
-                "productId": {
-                    "type": "string",
-                    "description": "productId of the product in the cart"
-                },
-                "firstName": {
-                    "type": "string",
-                    "description": "first name of the customer"
-                },
-                "lastName": {
-                    "type": "string",
-                    "description": "last name of the customer"
-                },
-                "email": {
-                    "type": "string",
-                    "description": "email of the customer"
-                }
-            }
-        },
-        "postCommerceCartShipping": {
-            "required": [
-                "cartId",
-                "shippingMethod"
-            ],
-            "properties": {
-                "cartId": {
-                    "type": "string",
-                    "description": null
-                },
-                "shippingMethod": {
-                    "type": "string",
-                    "description": "shipping method allowed by the commerce"
-                }
-            }
-        },
-        "postCommerceCartPayment": {
-            "required": [
-                "cartId",
-                "paymentData"
-            ],
-            "properties": {
-                "cartId": {
-                    "type": "string"
-                },
-                "paymentMethod": {
-                    "type": "string",
-                    "description": "payment method allowd by the commerce"
-                }
-            }
-        },
-        "postCartPlaceResponse": {
-            "required": [
-                "orderId"
-            ],
-            "properties": {
-                "orderId": {
-                    "type": "string"
-                }
-            }
+          }
         }
+      }
+    },
+    "/commerce/cart/remove": {
+      "post": {
+        "operationId": "postCommerceCartAdd",
+        "summary": "Return true.",
+        "description": "Return true, if product was removed successful.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "commerce",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAdd"
+            }
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful create cart",
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/cart/list/{cartId}": {
+      "get": {
+        "operationId": "getCommerceCartList",
+        "summary": "Return an Array of products.",
+        "description": "Return an Array of products, is need send  in the body.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "description": "cart id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful cart list",
+            "schema": {
+              "$ref": "#/definitions/getCommerceCartListResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/cart/address": {
+      "post": {
+        "operationId": "postCommerceCartAddress",
+        "summary": "Return true.",
+        "description": "Return true, if address is aggregate successful, is need send  in the body.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "commerce",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddress"
+            }
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful aggregate address to cart",
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddressResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/cart/update/price": {
+      "post": {
+        "operationId": "postCommerceCartUpdatePrice",
+        "summary": "Return true.",
+        "description": "Return true, if the product price in the cart was changed.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "commerce",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartUpdatePrice"
+            }
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful aggregate address to cart",
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddressResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/cart/customer": {
+      "post": {
+        "operationId": "postCommerceCartCustomer",
+        "summary": "Return true.",
+        "description": "Return true, if the customer was succesfully linked to the cart.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "commerce",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartUpdatePrice"
+            }
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful aggregate address to cart",
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddressResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/cart/shipping": {
+      "post": {
+        "operationId": "postCommerceCartShipping",
+        "summary": "Return true.",
+        "description": "Return true, if the shipping method was set.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "commerce",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartShipping"
+            }
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddressResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/cart/payment": {
+      "post": {
+        "operationId": "postCommerceCartPayment",
+        "summary": "Return true.",
+        "description": "Return true, if the payment method was set.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "commerce",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartPayment"
+            }
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddressResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+
+
+
+    "/commerce/order/{orderId}/create/creditmemo": {
+      "post": {
+        "operationId": "postCommerceCreateCreditMemo",
+        "summary": "Return true.",
+        "description": "Return true, if credit memo is aggregate successful.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description" : "order id",
+            "type" : "string"
+          },
+          {
+            "name": "salesOrderCreditmemoData",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCommerceCreateCreditMemo"
+            }
+          }
+        ],
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful create cart",
+            "schema": {
+              "$ref": "#/definitions/postCommerceCartAddResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+
+
+
+
+    "/commerce/cart/place/{cartId}": {
+      "get": {
+        "operationId": "postCommerceCartPlace",
+        "summary": "Return true.",
+        "description": "Return order id if the cart was succesfully placed into an order.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/postCartPlaceResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/cart/view/{cartId}": {
+      "get": {
+        "operationId": "getCommerceCartView",
+        "summary": "Return a cart.",
+        "description": "Return an Object of Cart, is need send  in the body.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "description": "cart id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful cart list",
+            "schema": {
+              "$ref": "#/definitions/getCommerceCartViewResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/cart/totals/{cartId}": {
+      "get": {
+        "operationId": "getCommerceCartTotals",
+        "summary": "Return a cart totals.",
+        "description": "Return an Object of Cart totals, is need send  in the body.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "description": "cart id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Cart"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful cart totals",
+            "schema": {
+              "$ref": "#/definitions/getCommerceCartTotalsResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/catalog/category/{categoryId}": {
+      "get": {
+        "operationId": "getCommerceCatalogCategoryTeams",
+        "summary": "Return a list products.",
+        "description": "Return a list of products.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Catalog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful cart totals"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/catalog/product/{productId}": {
+      "get": {
+        "operationId": "getCatalogProductInfo",
+        "summary": "Return a product info.",
+        "description": "Return an Object of product info.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "product id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Catalog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Product data",
+            "schema": null
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/catalog/product/link/{productId}": {
+      "get": {
+        "operationId": "catalogProductLink",
+        "summary": "Return a list of products.",
+        "description": "Return an list Object of product.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "product id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Catalog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Product data",
+            "schema": null
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/order/load/{orderId}": {
+      "get": {
+        "summary": "Return order information.",
+        "description": "Return order information and line details.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "order id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Order data"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+
+    "/commerce/order/{orderId}/create/invoice": {
+      "get": {
+        "summary": "Create invoice by order.",
+        "description": "Create invoice by order.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "order id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Invoice id"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/order/list": {
+      "post": {
+        "summary": "Return order list.",
+        "description": "Return order list, applying the filter.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "body",
+            "description": "JSON object with filters.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of order list"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/order/retry/payments": {
+      "get": {
+        "summary": "Return schedule objects to retry payment.",
+        "description": "Return schedule objects to retry payment.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of schedule order list"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/order/complete": {
+      "get": {
+        "summary": "Return list of orders was completed",
+        "description": "Return list of orders was completed.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of order list"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/order/comment/create": {
+      "post": {
+        "summary": "Return order list.",
+        "description": "Return order list, applying the filter.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "body",
+            "description": "Order id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment",
+            "in": "body",
+            "description": "String of the comment to add.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "body",
+            "description": "If status of the order needs to be changed.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Result message"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/order/{orderId}/status/{status}": {
+      "get": {
+        "summary": "Change the status of an order.",
+        "description": "Change the status of an order. It depends of the order work flow of the commerce platform.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "Order id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "description": "status of the order",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "Result Message"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/transaction/create": {
+      "post": {
+        "summary": "Create a transaction to an order",
+        "description": "Create an order transaction.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "body",
+            "description": "Order id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "transactionId",
+            "in": "body",
+            "description": "It must be unique.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "details",
+            "in": "body",
+            "description": "JSON object with transaction details.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Transaction"
+        ],
+        "responses": {
+          "200": {
+            "description": "Result message"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/transaction/list/order/{orderId}": {
+      "get": {
+        "summary": "Get the list of transactions of an order",
+        "description": "Get the list of transactions of an order.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "Order id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Transaction"
+        ],
+        "responses": {
+          "200": {
+            "description": "Result Message"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/commerce/schedule/generate/product/{productId}": {
+      "get": {
+        "summary": "Get schedule of product",
+        "description": "Get the list of date payments generate for the product.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "Product id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "schedule"
+        ],
+        "responses": {
+          "200": {
+            "description": "Result Message"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
     }
+  },
+  "definitions": {
+    "ValidationError": {
+      "properties": {
+        "code": {
+          "type": "string",
+          "default": "ValidationError"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error description",
+          "default": "Field error description"
+        },
+        "errors": {
+          "type": "string",
+          "description": "Optional detail of errors",
+          "default": "Optional array with detail of errors"
+        }
+      }
+    },
+    "getCommerceCreateCartResponse": {
+      "required": [
+        "cartId",
+        "subject",
+        "content"
+      ],
+      "properties": {
+        "cartId": {
+          "type": "string",
+          "description": "cartId for application CS."
+        }
+      }
+    },
+    "postCommerceCreateCreditMemo": {
+      "required": [
+        "qty",
+        "value"
+      ],
+      "properties": {
+        "qty": {
+          "type": "string",
+          "description": "Qty product."
+        },
+        "value": {
+          "type": "string",
+          "description": "value of credit memo"
+        }
+      }
+    },
+    "postCommerceCartAdd": {
+      "required": [
+        "cartId",
+        "products"
+      ],
+      "properties": {
+        "cartId": {
+          "type": "string",
+          "description": "cartid for aggregate products."
+        },
+        "products": {
+          "type": "Array",
+          "description": "products to aggregate"
+        }
+      }
+    },
+    "postCommerceCartAddResponse": {
+      "required": [
+        "return"
+      ],
+      "properties": {
+        "return": {
+          "type": "boolean",
+          "description": "proccess successful for application CS."
+        }
+      }
+    },
+    "getCommerceCartListResponse": {
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "Array",
+          "description": "list to products for cartId CS."
+        }
+      }
+    },
+    "postCommerceCartAddress": {
+      "required": [
+        "cartId",
+        "addresses"
+      ],
+      "properties": {
+        "cartId": {
+          "type": "string",
+          "description": "cartid for aggregate address."
+        },
+        "addresses": {
+          "type": "Array",
+          "description": "address to aggregate"
+        }
+      }
+    },
+    "postCommerceCartAddressResponse": {
+      "required": [
+        "return"
+      ],
+      "properties": {
+        "return": {
+          "type": "boolean",
+          "description": "proccess successful for application CS."
+        }
+      }
+    },
+    "getCommerceCartViewResponse": {
+      "required": [
+        "Cart"
+      ],
+      "properties": {
+        "Cart": {
+          "type": "Array",
+          "description": "object cart CS."
+        }
+      }
+    },
+    "getCommerceCartTotalsResponse": {
+      "required": [
+        "Cart"
+      ],
+      "properties": {
+        "Cart": {
+          "type": "Array",
+          "description": "object cart totals CS."
+        }
+      }
+    },
+    "getCommerceCatalogCategoryTeamsResponse": {
+      "required": [
+        "CartList"
+      ],
+      "properties": {
+        "CartList": {
+          "type": "Array",
+          "description": "object cart list CS."
+        }
+      }
+    },
+    "getCommerceCatalogProduct": {
+      "required": [
+        "ProductInfo"
+      ],
+      "properties": {
+        "ProductInfo": {
+          "type": "Object",
+          "description": "object product info CS."
+        }
+      }
+    },
+    "postCommerceCheckout": {
+      "required": [
+        "addresses",
+        "cartId",
+        "poNumber",
+        "cardId",
+        "userId"
+      ],
+      "properties": {
+        "addresses": {
+          "type": "string",
+          "description": "addresses of checkout."
+        },
+        "cartId": {
+          "type": "string",
+          "description": "cartId of checkout."
+        },
+        "poNumber": {
+          "type": "string",
+          "description": "poNumber of checkout."
+        },
+        "cardId": {
+          "type": "string",
+          "description": "cardId of checkout."
+        },
+        "userId": {
+          "type": "string",
+          "description": "userId of checkout."
+        }
+      }
+    },
+    "postCommerceCheckoutResponse": {
+      "required": [
+        "orderId"
+      ],
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "description": "orderId of checkout."
+        }
+      }
+    },
+    "postCommerceCartUpdatePrice": {
+      "required": [
+        "cartId",
+        "productId",
+        "amount"
+      ],
+      "properties": {
+        "cartId": {
+          "type": "string",
+          "description": "cartId of checkout."
+        },
+        "productId": {
+          "type": "string",
+          "description": "productId of the product in the cart"
+        },
+        "amount": {
+          "type": "string",
+          "description": "new price of the product"
+        }
+      }
+    },
+    "postCommerceCartCustomer": {
+      "required": [
+        "cartId",
+        "firstName",
+        "lastName",
+        "email"
+      ],
+      "properties": {
+        "cartId": {
+          "type": "string",
+          "description": "cartId of checkout."
+        },
+        "productId": {
+          "type": "string",
+          "description": "productId of the product in the cart"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "first name of the customer"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "last name of the customer"
+        },
+        "email": {
+          "type": "string",
+          "description": "email of the customer"
+        }
+      }
+    },
+    "postCommerceCartShipping": {
+      "required": [
+        "cartId",
+        "shippingMethod"
+      ],
+      "properties": {
+        "cartId": {
+          "type": "string",
+          "description": null
+        },
+        "shippingMethod": {
+          "type": "string",
+          "description": "shipping method allowed by the commerce"
+        }
+      }
+    },
+    "postCommerceCartPayment": {
+      "required": [
+        "cartId",
+        "paymentData"
+      ],
+      "properties": {
+        "cartId": {
+          "type": "string"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "payment method allowd by the commerce"
+        }
+      }
+    },
+    "postCartPlaceResponse": {
+      "required": [
+        "orderId"
+      ],
+      "properties": {
+        "orderId": {
+          "type": "string"
+        }
+      }
+    }
+  }
 }
