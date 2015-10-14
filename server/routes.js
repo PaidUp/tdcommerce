@@ -16,7 +16,7 @@ module.exports = function(app) {
    .get(errors[404]);
 
   app.get('/swagger.json', function(req,res){
-    return res.sendfile(__dirname + '/swagger.json', 'swagger.json');
+    return res.download(__dirname + '/swagger.json', 'swagger.json');
   });
 
   // All other routes should redirect to the index.html
