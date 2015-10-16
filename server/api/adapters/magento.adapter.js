@@ -535,6 +535,28 @@ exports.createOrderShipment = function(order){
   return deferred.promise;
 };
 
+/**
+ * Function to create credit memo
+ * @param data = {
+ * orderIncrementId : ''
+ * creditmemoData : {
+ *  qtys : [order_item_id : qty]
+ *  adjustment_positive : 0,
+ *  adjustment_negative : null
+ * }
+ * }
+ */
+
+exports.createOrderCreditMemo = function(params, cb){
+  login(function(err) {
+    if(err) return res(err);
+    magento.salesOrderCreditMemo.create(params, function (err, data) {
+      if(err) return cb(err);
+      return cb(null,camelize(data));
+    });
+  });
+};
+
 function mapOrder(magentoOrder) {
   //console.log('magentoOrder',magentoOrder);
   var orderDetails = {};
