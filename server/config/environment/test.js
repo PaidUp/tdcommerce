@@ -8,13 +8,13 @@ module.exports = {
         uri: 'mongodb://localhost/tdcommerce-test'
     },
     commerce: {
-        /*magento: {
+        magento: {
             host: 'develop.convenienceselect.com',
             port: 8888,
             path: '/api/xmlrpc/',
             login: 'magento',
             pass: 'Sv38SJVR'
-        },*/
+        },/*
         magento: {
           host: 'virtual',
           //port: 80,
@@ -22,7 +22,7 @@ module.exports = {
           login: 'magento',
           //pass: 'Sv38SJVR'
           pass: 'test4echo'
-        },
+        },*/
         paymentPlan:{
             intervalElapsed:5,
             intervalType:'minutes'
