@@ -89,6 +89,15 @@ function create(teamData, cb) {
   });
 }
 
+function listSimpleProducts(params, cb){
+  commerceAdapter.listSimpleProducts(params, function(err, data){
+    if (err) {
+      return cb(err);
+    }
+    return cb(null,data);
+  });
+};
+
 exports.catalogList = catalogList;
 exports.catalogProductInfo = catalogProductInfo;
 exports.create = create;
