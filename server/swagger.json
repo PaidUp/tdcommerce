@@ -518,6 +518,41 @@
         }
       }
     },
+
+
+    "/../v2/commerce/catalog/category/{categoryId}": {
+      "get": {
+        "operationId": "getCommerceCatalogCategoryTeams",
+        "summary": "Return a list products.",
+        "description": "Return a list of products.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "description": "category id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Catalog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful cart totals"
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
     "/commerce/catalog/product/{productId}": {
       "get": {
         "operationId": "getCatalogProductInfo",

@@ -8,6 +8,20 @@ exports.categoryProducts = function(req, res) {
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });
+};
+
+exports.categoryProductsV2 = function(req, res) {
+  if(!req.params && !req.params.categoryId) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "Category Id is required"
+    });
+  }
+
+  catalogService.listGroupedProducts({categoryId:req.params.categoryId}, null, true, function(err, dataService){
+    if(err) return handleError(res, err);
+    res.status(200).json(dataService);
+  });
 }
 
 exports.productView = function(req, res) {

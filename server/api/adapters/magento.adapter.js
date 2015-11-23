@@ -604,7 +604,7 @@ function mapOrder(magentoOrder) {
 
 
 // Implementation new feature bighippo.
-// bighippo_product 
+// bighippo_product
 
 exports.listSimpleProducts = function(params, cb){
   login(function(err) {
@@ -616,10 +616,15 @@ exports.listSimpleProducts = function(params, cb){
   });
 };
 
-exports.listGroupedProducts = function(params, cb){
+exports.listGroupedProducts = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia, cb){
   login(function(err) {
     if(err) return res(err);
-    magento.bighippoProducts.listGroupedProducts(params, function (err, data) {
+    console.log('params' , params);
+    magento.bighippoProducts.listGroupedProducts(
+      {argumentsGroupedProducts:{filters:argumentsSimpleProducts},
+        argumentsSimpleProducts:argumentsSimpleProducts,
+        includeMedia:includeMedia},
+     function (err, data) {
       if(err) return cb(err);
       return cb(null,camelize(data));
     });

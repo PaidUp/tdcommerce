@@ -98,7 +98,19 @@ function listSimpleProducts(params, cb){
   });
 };
 
+function listGroupedProducts(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia, cb){
+  commerceAdapter.listGroupedProducts(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia, function(err, data){
+    if (err) {
+      return cb(err);
+    }
+    return cb(null,data);
+  });
+};
+
 exports.catalogList = catalogList;
 exports.catalogProductInfo = catalogProductInfo;
 exports.create = create;
 exports.catalogProductLink = catalogProductLink;
+exports.listSimpleProducts = listSimpleProducts;
+exports.listGroupedProducts = listGroupedProducts;
+
