@@ -107,10 +107,20 @@ function listGroupedProducts(argumentsGroupedProducts, argumentsSimpleProducts, 
   });
 };
 
+function listGroupedProductsByCategories(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia, categoryIds, cb){
+  commerceAdapter.listGroupedProductsByCategories(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia, categoryIds, function(err, data){
+    if (err) {
+      return cb(err);
+    }
+    return cb(null,data);
+  });
+};
+
 exports.catalogList = catalogList;
 exports.catalogProductInfo = catalogProductInfo;
 exports.create = create;
 exports.catalogProductLink = catalogProductLink;
 exports.listSimpleProducts = listSimpleProducts;
 exports.listGroupedProducts = listGroupedProducts;
+exports.listGroupedProductsByCategories = listGroupedProductsByCategories;
 

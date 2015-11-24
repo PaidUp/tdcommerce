@@ -18,7 +18,7 @@ exports.categoryProductsV2 = function(req, res) {
     });
   }
 
-  catalogService.listGroupedProducts({categoryId:req.params.categoryId}, null, true, function(err, dataService){
+  catalogService.listGroupedProductsByCategories({categoryId:req.params.categoryId}, null, true, [3], function(err, dataService){
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });

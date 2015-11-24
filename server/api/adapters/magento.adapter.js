@@ -624,6 +624,22 @@ exports.listGroupedProducts = function(argumentsGroupedProducts, argumentsSimple
       {argumentsGroupedProducts:{filters:argumentsSimpleProducts},
         argumentsSimpleProducts:argumentsSimpleProducts,
         includeMedia:includeMedia},
+      function (err, data) {
+        if(err) return cb(err);
+        return cb(null,camelize(data));
+      });
+  });
+};
+
+exports.listGroupedProductsByCategories = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia,
+                                                   categoryIds, cb){
+  login(function(err) {
+    if(err) return res(err);
+    magento.bighippoProducts.listGroupedProductsByCategories(
+      {argumentsGroupedProducts:[],
+        argumentsSimpleProducts:{filters:{entity_id:0}},
+        includeMedia:true,
+        categoryIds: [3] },
      function (err, data) {
       if(err) return cb(err);
       return cb(null,camelize(data));
