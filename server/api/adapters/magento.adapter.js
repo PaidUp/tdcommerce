@@ -619,14 +619,13 @@ exports.listSimpleProducts = function(params, cb){
 exports.listGroupedProducts = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia, cb){
   login(function(err) {
     if(err) return res(err);
-
+    var param = {argumentsGroupedProducts:argumentsGroupedProducts,
+      argumentsSimpleProducts:argumentsSimpleProducts,
+      includeMedia:includeMedia}
     magento.bighippoProducts.listGroupedProducts(
-      {argumentsGroupedProducts:argumentsGroupedProducts,
-        argumentsSimpleProducts:argumentsSimpleProducts,
-        includeMedia:includeMedia},
+      param,
       function (err, data) {
         if(err) return cb(err);
-        console.log('data' , data);
         return cb(null,camelize(data));
       });
   });
@@ -643,6 +642,7 @@ exports.listGroupedProductsByCategories = function(argumentsGroupedProducts, arg
         categoryIds: categoryIds },
      function (err, data) {
       if(err) return cb(err);
+
       return cb(null,camelize(data));
     });
   });

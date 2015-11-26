@@ -50,9 +50,6 @@ exports.productViewV2 = function(req, res) {
     }
   };
   catalogService.listGroupedProducts(filter, [], true, function(err, dataService){
-    console.log('err' , err);
-    console.log('dataservice' , dataService);
-
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });

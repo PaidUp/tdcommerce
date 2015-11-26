@@ -587,6 +587,40 @@
         }
       }
     },
+    "/../v2/commerce/catalog/product/{productId}": {
+      "get": {
+        "operationId": "getCatalogProductInfo",
+        "summary": "Return a product info.",
+        "description": "Return an Object of product info.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "product id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Catalog"
+        ],
+        "responses": {
+          "200": {
+            "description": "Product data",
+            "schema": null
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
     "/commerce/catalog/product/link/{productId}": {
       "get": {
         "operationId": "catalogProductLink",
