@@ -18,7 +18,7 @@ exports.categoryProductsV2 = function(req, res) {
     });
   }
 
-  catalogService.listGroupedProductsByCategories({categoryId:req.params.categoryId}, null, true, [3], function(err, dataService){
+  catalogService.listGroupedProductsByCategories([], [], true, [req.params.categoryId], function(err, dataService){
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });
@@ -32,6 +32,27 @@ exports.productView = function(req, res) {
     });
   }
   catalogService.catalogProductInfo(req.params.productId, function(err, dataService){
+    if(err) return handleError(res, err);
+    res.status(200).json(dataService);
+  });
+}
+
+exports.productViewV2 = function(req, res) {
+  if(!req.params && !req.params.productId) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "Product Id is required"
+    });
+  }
+  var filter = {
+    filters : {
+      entity_id : req.params.productId
+    }
+  };
+  catalogService.listGroupedProducts(filter, [], true, function(err, dataService){
+    console.log('err' , err);
+    console.log('dataservice' , dataService);
+
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });
