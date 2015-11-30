@@ -14,15 +14,7 @@ module.exports = {
             path: '/api/xmlrpc/',
             login: 'magento',
             pass: 'Sv38SJVR'
-        },/*
-        magento: {
-          host: 'virtual',
-          //port: 80,
-          path: '/api/xmlrpc/',
-          login: 'magento',
-          //pass: 'Sv38SJVR'
-          pass: 'test4echo'
-        },*/
+        },
         paymentPlan:{
             intervalElapsed:5,
             intervalType:'minutes'

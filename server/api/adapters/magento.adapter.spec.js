@@ -566,23 +566,18 @@ describe("Commerce methods (adapter)", function() {
 
   it('list Simple Products error missing value for productId', function (done) {
     this.timeout(25000);
-
     commerceAdapter.listSimpleProducts({}, function(err,data){
-      console.log('err',err)
       assert.equal('missing value for "productId"', err.message)
       assert.equal('listSimpleProducts', err.method)
       done();
     });
   });
 
-  it.only('list Simple Products', function (done) {
+  it('list Simple Products', function (done) {
     this.timeout(25000);
 
-    commerceAdapter.listSimpleProducts({productId:110}, function(err,data){
-      console.log('err',err)
-      console.log('data',data)
+    commerceAdapter.listSimpleProducts({productId:105, arguments: [], includeMedia :true}, function(err,data){
       if(err) return done(err);
-      assert.equal(0, data.length)
       assert.isNotNull(data);
       done();
     });
@@ -592,10 +587,7 @@ describe("Commerce methods (adapter)", function() {
     this.timeout(25000);
 
     commerceAdapter.listGroupedProducts({}, function(err,data){
-      console.log('err',err)
-      console.log('data',data)
       if(err) return done(err);
-      assert.equal(0, data.length)
       assert.isNotNull(data);
       done();
     });
