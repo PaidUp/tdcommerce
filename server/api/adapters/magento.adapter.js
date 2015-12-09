@@ -647,3 +647,37 @@ exports.listGroupedProductsByCategories = function(argumentsGroupedProducts, arg
     });
   });
 };
+
+// coupon (Move to TDCOmmerce)
+/* list
+*/
+exports.couponList = function(res){
+  login(function(err) {
+    if (err) {
+      return res(err);
+    }
+    magento.bighippoCoupon.list(function (err, resPaymentPLanMetadata) {
+      if(err) return res(err);
+      return res(null,camelize(resPaymentPLanMetadata));
+    });
+  });
+}
+
+/* info
+  param =
+  {
+    salesRuleId:'String'
+  }
+*/
+exports.couponInfo = function(param, res){
+  login(function(err) {
+    if (err) {
+      return res(err);
+    }
+    magento.bighippoCoupon.info(param, function (err, resPaymentPLanMetadata) {
+      if(err) return res(err);
+      return res(null,camelize(resPaymentPLanMetadata));
+    });
+  });
+}
+// coupon (Move to TDCOmmerce)

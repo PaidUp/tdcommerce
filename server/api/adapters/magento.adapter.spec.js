@@ -9,6 +9,7 @@ var logger = require('../../config/logger');
 var commerceAdapter = require(config.commerce.adapter);
 var modelSpec = require('./commerce.model.spec.js');
 var faker = require('faker');
+let resultCoupon = {}
 
 // Testing vars
 modelSpec.quoteId;
@@ -589,6 +590,28 @@ describe("Commerce methods (adapter)", function() {
     commerceAdapter.listGroupedProducts({}, function(err,data){
       if(err) return done(err);
       assert.isNotNull(data);
+      done();
+    });
+  });
+
+  it('list Coupon', function (done) {
+    this.timeout(25000);
+    commerceAdapter.couponList(function(err,data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      assert.isArray(data);
+      resultCoupon.ruleId = data[0].ruleId;
+      done();
+    });
+  });
+
+  it('info Coupon', function (done) {
+    this.timeout(25000);
+    commerceAdapter.couponInfo({salesRuleId:resultCoupon.ruleId} ,function(err,data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      assert.isObject(data);
+      assert.equal(data.name, 'test');
       done();
     });
   });
