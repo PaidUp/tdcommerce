@@ -602,3 +602,48 @@ function mapOrder(magentoOrder) {
   return orderDetails;
 }
 
+
+// Implementation new feature bighippo.
+// bighippo_product
+
+exports.listSimpleProducts = function(params, cb){
+  login(function(err) {
+    if(err) return res(err);
+    magento.bighippoProducts.listSimpleProducts(params, function (err, data) {
+      if(err) return cb(err);
+      return cb(null,camelize(data));
+    });
+  });
+};
+
+exports.listGroupedProducts = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia, cb){
+  login(function(err) {
+    if(err) return res(err);
+    var param = {argumentsGroupedProducts:argumentsGroupedProducts,
+      argumentsSimpleProducts:argumentsSimpleProducts,
+      includeMedia:includeMedia}
+    magento.bighippoProducts.listGroupedProducts(
+      param,
+      function (err, data) {
+        if(err) return cb(err);
+        return cb(null,camelize(data));
+      });
+  });
+};
+
+exports.listGroupedProductsByCategories = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia,
+                                                   categoryIds, cb){
+  login(function(err) {
+    if(err) return res(err);
+    magento.bighippoProducts.listGroupedProductsByCategories(
+      {argumentsGroupedProducts:argumentsGroupedProducts,//{filters:{entity_id:0}}
+        argumentsSimpleProducts:argumentsSimpleProducts,//{filters:{entity_id:0}}
+        includeMedia:includeMedia,
+        categoryIds: categoryIds },
+     function (err, data) {
+      if(err) return cb(err);
+
+      return cb(null,camelize(data));
+    });
+  });
+};

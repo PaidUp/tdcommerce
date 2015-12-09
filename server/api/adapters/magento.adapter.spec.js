@@ -17,7 +17,7 @@ modelSpec.orderId;
 var MagentoAPI = require('magento');
 var magento = new MagentoAPI(config.commerce.magento);
 
-describe("Commerce methods", function() {
+describe("Commerce methods (adapter)", function() {
   this.timeout(5000);
 
   it('category tree', function (done) {
@@ -558,6 +558,35 @@ describe("Commerce methods", function() {
       }
     };
     commerceAdapter.catalogCreate(testDataProduct, function(err,data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      done();
+    });
+  });
+
+  it('list Simple Products error missing value for productId', function (done) {
+    this.timeout(25000);
+    commerceAdapter.listSimpleProducts({}, function(err,data){
+      assert.equal('missing value for "productId"', err.message)
+      assert.equal('listSimpleProducts', err.method)
+      done();
+    });
+  });
+
+  it('list Simple Products', function (done) {
+    this.timeout(25000);
+
+    commerceAdapter.listSimpleProducts({productId:105, arguments: [], includeMedia :true}, function(err,data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      done();
+    });
+  });
+
+  it.skip('list grouped Products', function (done) {
+    this.timeout(25000);
+
+    commerceAdapter.listGroupedProducts({}, function(err,data){
       if(err) return done(err);
       assert.isNotNull(data);
       done();

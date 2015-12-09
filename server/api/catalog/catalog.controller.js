@@ -8,6 +8,20 @@ exports.categoryProducts = function(req, res) {
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });
+};
+
+exports.categoryProductsV2 = function(req, res) {
+  if(!req.params && !req.params.categoryId) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "Category Id is required"
+    });
+  }
+
+  catalogService.listGroupedProductsByCategories([], [], true, [req.params.categoryId], function(err, dataService){
+    if(err) return handleError(res, err);
+    res.status(200).json(dataService);
+  });
 }
 
 exports.productView = function(req, res) {
@@ -18,6 +32,24 @@ exports.productView = function(req, res) {
     });
   }
   catalogService.catalogProductInfo(req.params.productId, function(err, dataService){
+    if(err) return handleError(res, err);
+    res.status(200).json(dataService);
+  });
+}
+
+exports.productViewV2 = function(req, res) {
+  if(!req.params && !req.params.productId) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "Product Id is required"
+    });
+  }
+  var filter = {
+    filters : {
+      entity_id : req.params.productId
+    }
+  };
+  catalogService.listGroupedProducts(filter, [], true, function(err, dataService){
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });
@@ -94,6 +126,33 @@ exports.create = function(req, res) {
     res.status(200).json(productId);
   });
 }
+
+exports.productView = function(req, res) {
+  if(!req.params && !req.params.productId) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "Product Id is required"
+    });
+  }
+  catalogService.catalogProductInfo(req.params.productId, function(err, dataService){
+    if(err) return handleError(res, err);
+    res.status(200).json(dataService);
+  });
+}
+
+exports.productView = function(req, res) {
+  if(!req.params && !req.params.productId) {
+    return res.status(400).json({
+      "code": "ValidationError",
+      "message": "Product Id is required"
+    });
+  }
+  catalogService.catalogProductInfo(req.params.productId, function(err, dataService){
+    if(err) return handleError(res, err);
+    res.status(200).json(dataService);
+  });
+}
+
 
 function handleError(res, err) {
   var httpErrorCode = 500;
