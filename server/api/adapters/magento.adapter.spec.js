@@ -9,7 +9,7 @@ var logger = require('../../config/logger');
 var commerceAdapter = require(config.commerce.adapter);
 var modelSpec = require('./commerce.model.spec.js');
 var faker = require('faker');
-let resultCoupon = {}
+var resultCoupon = {}
 
 // Testing vars
 modelSpec.quoteId;
