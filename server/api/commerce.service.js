@@ -228,17 +228,20 @@ function getOrdersToComplete(ordersLoad){
       var schedulePeriods = ele.schedulePeriods;
       var transactions = ele.transactions;
 
-      schedulePeriods.forEach(function(period, idxPeriod, arrPeriod){
-        transactions.forEach(function(transaction, idxTrans, arrTrans){
-          if(transaction.details.rawDetailsInfo.scheduleId == period.id &&
-            transaction.details.rawDetailsInfo.status == 'succeeded'){
-            obj[period.id] = true;
-            return;
-          }
+      if(schedulePeriods){
+        schedulePeriods.forEach(function(period, idxPeriod, arrPeriod){
+          transactions.forEach(function(transaction, idxTrans, arrTrans){
+            if(transaction.details.rawDetailsInfo.scheduleId == period.id &&
+              transaction.details.rawDetailsInfo.status == 'succeeded'){
+              obj[period.id] = true;
+              return;
+            }
+          });
         });
-      });
+      }
 
-      if(schedulePeriods.length === Object.keys(obj).length){
+
+      if(schedulePeriods && schedulePeriods.length === Object.keys(obj).length){
         ordersList.push(ele);
       };
       if(arr.length == (indx+1)){
