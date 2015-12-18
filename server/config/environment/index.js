@@ -55,6 +55,7 @@ var all = {
 
   commerce: {
     adapter: path.normalize(__dirname + '/../../..') + '/server/api/adapters/magento.adapter',
+    adapterSchedule: path.normalize(__dirname + '/../../..') + '/server/api/adapters/magentoSchedule.adapter',
     magento: {
       host: 'virtual',
       //port: 80,
