@@ -9,6 +9,7 @@ var logger = require('../../config/logger');
 var commerceAdapter = require(config.commerce.adapter);
 var modelSpec = require('./commerce.model.spec.js');
 var faker = require('faker');
+var resultCoupon = {}
 
 // Testing vars
 modelSpec.quoteId;
@@ -18,10 +19,9 @@ var MagentoAPI = require('magento');
 var magento = new MagentoAPI(config.commerce.magento);
 
 describe("Commerce methods (adapter)", function() {
-  this.timeout(5000);
+  this.timeout(30000);
 
   it('category tree', function (done) {
-    this.timeout(5000);
     magento.login(function (err, sessId) {
       if (err) {
         logger.info(err, err);
@@ -38,7 +38,6 @@ describe("Commerce methods (adapter)", function() {
   });
 
   it('category product list', function (done) {
-    this.timeout(5000);
     magento.login(function (err, sessId) {
       if (err) {
         logger.info(err, err);
@@ -77,7 +76,6 @@ describe("Commerce methods (adapter)", function() {
   });
 
   it('product view images', function (done) {
-    this.timeout(5000);
       magento.login(function (err, sessId) {
         if (err) {
           logger.info(err, err);
@@ -95,7 +93,6 @@ describe("Commerce methods (adapter)", function() {
   });
 
   it.skip('product view attributes required', function (done) {
-    this.timeout(5000);
     magento.login(function (err, sessId) {
       if (err) {
         logger.info(err, err);
@@ -115,7 +112,6 @@ describe("Commerce methods (adapter)", function() {
   });
 
   it.skip('product view attribute options', function (done) {
-    this.timeout(5000);
     magento.login(function (err, sessId) {
       if (err) {
         logger.info(err, err);
@@ -135,7 +131,6 @@ describe("Commerce methods (adapter)", function() {
   });
 
   it('category product related list link', function (done) {
-    this.timeout(5000);
     magento.login(function (err, sessId) {
       if (err) {
         logger.info(err, err);
@@ -475,7 +470,6 @@ describe("Commerce methods (adapter)", function() {
   });
 
   it('order list commerce', function (done) {
-    this.timeout(5000);
     commerceAdapter.orderList({status: "pending"}, function(err, data){
       assert.isNull(err);
       assert.isNotNull(data);
@@ -524,8 +518,6 @@ describe("Commerce methods (adapter)", function() {
   })
 
   it('list order transactions', function (done) {
-    this.timeout(25000);
-
     commerceAdapter.transactionList(19, function(err,data){
       if(err) return done(err);
       assert.equal(0, data.length)
@@ -535,7 +527,6 @@ describe("Commerce methods (adapter)", function() {
   });
 
   it('create (catalog) group product', function (done) {
-    this.timeout(25000);
     var testDataProduct = {
       type:'grouped',//
       set:'9',// should be 9 for Team attibute set.
@@ -589,6 +580,28 @@ describe("Commerce methods (adapter)", function() {
     commerceAdapter.listGroupedProducts({}, function(err,data){
       if(err) return done(err);
       assert.isNotNull(data);
+      done();
+    });
+  });
+
+  it('list Coupon', function (done) {
+    this.timeout(25000);
+    commerceAdapter.couponList(function(err,data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      assert.isArray(data);
+      resultCoupon.ruleId = data[0].ruleId;
+      done();
+    });
+  });
+
+  it('info Coupon', function (done) {
+    this.timeout(25000);
+    commerceAdapter.couponInfo({salesRuleId:resultCoupon.ruleId} ,function(err,data){
+      if(err) return done(err);
+      assert.isNotNull(data);
+      assert.isObject(data);
+      assert.equal(data.name, 'test');
       done();
     });
   });
