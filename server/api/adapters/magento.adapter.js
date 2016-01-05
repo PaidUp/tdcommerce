@@ -1,3 +1,4 @@
+'use strict'
 var config = require('../../config/environment');
 var MagentoAPI = require('magento');
 var magento = new MagentoAPI(config.commerce.magento);
@@ -634,7 +635,7 @@ exports.listGroupedProducts = function(argumentsGroupedProducts, argumentsSimple
 exports.listGroupedProductsByCategories = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia,
                                                    categoryIds, cb){
   login(function(err) {
-    if(err) return res(err);
+    if(err) return cb(err);
     magento.bighippoProducts.listGroupedProductsByCategories(
       {argumentsGroupedProducts:argumentsGroupedProducts,//{filters:{entity_id:0}}
         argumentsSimpleProducts:argumentsSimpleProducts,//{filters:{entity_id:0}}
