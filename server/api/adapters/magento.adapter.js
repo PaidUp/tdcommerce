@@ -352,7 +352,7 @@ exports.orderCancel = function(orderId, res){
 }
 
 exports.mapMagentoAddresses = function (address){
-  arrAddress = [];
+  let arrAddress = [];
   for(var i=0;i<address.length;i++){
     arrAddress.push(mapMagentoAddress(address[i]));
   }
