@@ -1,3 +1,4 @@
+'use strict'
 var config = require('../../config/environment');
 var MagentoAPI = require('magento');
 var magento = new MagentoAPI(config.commerce.magento);
@@ -215,7 +216,7 @@ exports.cartCustomer = function(cartId, customer, res){
   });
 }
 
-createCustomer = exports.createCustomer = function(user, cb) {
+let createCustomer = exports.createCustomer = function(user, cb) {
   // Map to magento
   var gender = 1;
   if(user.gender === 'female') {
@@ -232,7 +233,7 @@ createCustomer = exports.createCustomer = function(user, cb) {
   });
 };
 
-createCustomerAddress = exports.createCustomerAddress = function(TDCommerceId, address, cb) {
+let createCustomerAddress = exports.createCustomerAddress = function(TDCommerceId, address, cb) {
   var mageAddress = mapMagentoAddress(address);
   login(function(err) {
     if(err) return res(err);
@@ -351,14 +352,14 @@ exports.orderCancel = function(orderId, res){
 }
 
 exports.mapMagentoAddresses = function (address){
-  arrAddress = [];
+  let arrAddress = [];
   for(var i=0;i<address.length;i++){
     arrAddress.push(mapMagentoAddress(address[i]));
   }
   return arrAddress;
 }
 
-mapMagentoAddress = exports.mapMagentoAddress = function (address) {
+let mapMagentoAddress = exports.mapMagentoAddress = function (address) {
   var addressObj = {};
   addressObj.mode = address.mode;
   if(address.mode == "billing") {
@@ -634,7 +635,7 @@ exports.listGroupedProducts = function(argumentsGroupedProducts, argumentsSimple
 exports.listGroupedProductsByCategories = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia,
                                                    categoryIds, cb){
   login(function(err) {
-    if(err) return res(err);
+    if(err) return cb(err);
     magento.bighippoProducts.listGroupedProductsByCategories(
       {argumentsGroupedProducts:argumentsGroupedProducts,//{filters:{entity_id:0}}
         argumentsSimpleProducts:argumentsSimpleProducts,//{filters:{entity_id:0}}
