@@ -7,7 +7,6 @@ var logger = require('../../config/logger');
 var moment = require('moment');
 
 exports.generate = function(req, res) {
-  console.log('req.body', req.body)
   if(!req.body.price){
     return res.status(400).json({name:'ValidationError', message:'price is required', errors:''});
   }
