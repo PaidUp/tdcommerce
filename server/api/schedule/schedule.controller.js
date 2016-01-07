@@ -7,6 +7,7 @@ var logger = require('../../config/logger');
 var moment = require('moment');
 
 exports.generate = function(req, res) {
+  console.log('req.body', req.body)
   if(!req.body.price){
     throw new Error('price is required');
   }
