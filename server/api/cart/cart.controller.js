@@ -106,6 +106,7 @@ exports.view = function(req, res) {
 }
 
 exports.totals = function(req, res) {
+  console.log('req.params',req.params);
   if(!req.params && !req.params.id) {
     return res.status(400).json({
       "code": "ValidationError",
@@ -113,7 +114,12 @@ exports.totals = function(req, res) {
     });
   }
   cartService.cartTotals(req.params.id,function(err, cartTotals){
-    if(err) return handleError(res, err);
+    console.log('cartTotals', cartTotals);
+    if(err){
+      console.log('err', err);
+      return handleError(res, err);
+    }
+
     res.status(200).json(cartTotals);
   });
 }

@@ -252,7 +252,8 @@ exports.cartView = function(quoteId,res){
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCart.info({
-      quoteId: quoteId
+      quoteId: quoteId,
+      storeView: '1'
     }, function (err, resChkCartView) {
       if(err) return res(err);
       return res(null,camelize(resChkCartView));
@@ -264,8 +265,10 @@ exports.cartTotals = function(quoteId,res){
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCart.totals({
-      quoteId: quoteId
+      quoteId: quoteId,
+      storeView: '1'
     }, function (err, resChkCartTotals) {
+      console.log('resChkCartTotals', resChkCartTotals)
       //console.log('cartTotals: resChkCartTotals',resChkCartTotals);
       if(err) return res(err);
       return res(null,camelize(resChkCartTotals));
