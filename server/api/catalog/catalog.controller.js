@@ -5,7 +5,6 @@ var catalogService = require('./catalog.service.js');
 
 exports.categoryProducts = function(req, res) {
   catalogService.catalogList(req.params.categoryId, function(err, dataService){
-    console.log('dataService V1' , dataService);
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });
@@ -20,8 +19,6 @@ exports.categoryProductsV2 = function(req, res) {
   }
 
   catalogService.listGroupedProductsByCategories([], [], true, [req.params.categoryId], function(err, dataService){
-    console.log('dataService V2' , dataService);
-
     if(err) return handleError(res, err);
     res.status(200).json(dataService);
   });
