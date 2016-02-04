@@ -109,6 +109,13 @@ exports.createOrderCreditMemo = function(req, res) {
   });
 }
 
+exports.createShipment = function(req, res) {
+  var outputPromise = commerceService.createShipment(req.body.orderList)
+      .then(function (value) {
+        return res.status(200).json(value);
+      });
+}
+
 function handleError(res, err) {
   var httpErrorCode = 500;
 

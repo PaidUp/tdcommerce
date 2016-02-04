@@ -58,7 +58,7 @@ var all = {
     adapterSchedule: path.normalize(__dirname + '/../../..') + '/server/api/adapters/magentoSchedule.adapter',
     magento: {
       host: 'virtual',
-      //port: 80,
+      port: 8888,
       path: '/api/xmlrpc/',
       login: 'magento',
       //pass: 'Sv38SJVR'

@@ -218,7 +218,6 @@ function retryPayment(cb){
 
 function getOrdersToComplete(ordersLoad){
   var deferred = Q.defer();
-
   if(ordersLoad.length === 0){
     deferred.resolve(ordersLoad);
   }else{
@@ -227,7 +226,6 @@ function getOrdersToComplete(ordersLoad){
       var obj = {};
       var schedulePeriods = ele.schedulePeriods;
       var transactions = ele.transactions;
-
       if(schedulePeriods){
         schedulePeriods.forEach(function(period, idxPeriod, arrPeriod){
           transactions.forEach(function(transaction, idxTrans, arrTrans){
@@ -239,8 +237,6 @@ function getOrdersToComplete(ordersLoad){
           });
         });
       }
-
-
       if(schedulePeriods && schedulePeriods.length === Object.keys(obj).length){
         ordersList.push(ele);
       };
@@ -359,5 +355,6 @@ exports.retryPayment = retryPayment;
 exports.completeOrders = completeOrders;
 exports.createOrderInvoice = createOrderInvoice;
 exports.createCreditMemo = createCreditMemo;
+exports.createShipment = createShipment;
 
 
