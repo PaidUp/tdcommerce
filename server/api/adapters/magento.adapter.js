@@ -1,3 +1,4 @@
+'use strict'
 var config = require('../../config/environment');
 var MagentoAPI = require('magento');
 var magento = new MagentoAPI(config.commerce.magento);
@@ -215,7 +216,7 @@ exports.cartCustomer = function(cartId, customer, res){
   });
 }
 
-createCustomer = exports.createCustomer = function(user, cb) {
+let createCustomer = exports.createCustomer = function(user, cb) {
   // Map to magento
   var gender = 1;
   if(user.gender === 'female') {
@@ -232,7 +233,7 @@ createCustomer = exports.createCustomer = function(user, cb) {
   });
 };
 
-createCustomerAddress = exports.createCustomerAddress = function(TDCommerceId, address, cb) {
+let createCustomerAddress = exports.createCustomerAddress = function(TDCommerceId, address, cb) {
   var mageAddress = mapMagentoAddress(address);
   login(function(err) {
     if(err) return res(err);
@@ -251,7 +252,8 @@ exports.cartView = function(quoteId,res){
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCart.info({
-      quoteId: quoteId
+      quoteId: quoteId,
+      storeView: '1'
     }, function (err, resChkCartView) {
       if(err) return res(err);
       return res(null,camelize(resChkCartView));
@@ -263,8 +265,10 @@ exports.cartTotals = function(quoteId,res){
   login(function(err) {
     if(err) return res(err);
     magento.checkoutCart.totals({
-      quoteId: quoteId
+      quoteId: quoteId,
+      storeView: '1'
     }, function (err, resChkCartTotals) {
+      console.log('resChkCartTotals', resChkCartTotals)
       //console.log('cartTotals: resChkCartTotals',resChkCartTotals);
       if(err) return res(err);
       return res(null,camelize(resChkCartTotals));
@@ -351,14 +355,14 @@ exports.orderCancel = function(orderId, res){
 }
 
 exports.mapMagentoAddresses = function (address){
-  arrAddress = [];
+  let arrAddress = [];
   for(var i=0;i<address.length;i++){
     arrAddress.push(mapMagentoAddress(address[i]));
   }
   return arrAddress;
 }
 
-mapMagentoAddress = exports.mapMagentoAddress = function (address) {
+let mapMagentoAddress = exports.mapMagentoAddress = function (address) {
   var addressObj = {};
   addressObj.mode = address.mode;
   if(address.mode == "billing") {
@@ -602,3 +606,82 @@ function mapOrder(magentoOrder) {
   return orderDetails;
 }
 
+
+// Implementation new feature bighippo.
+// bighippo_product
+
+exports.listSimpleProducts = function(params, cb){
+  login(function(err) {
+    if(err) return res(err);
+    magento.bighippoProducts.listSimpleProducts(params, function (err, data) {
+      if(err) return cb(err);
+      return cb(null,camelize(data));
+    });
+  });
+};
+
+exports.listGroupedProducts = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia, cb){
+  login(function(err) {
+    if(err) return res(err);
+    var param = {argumentsGroupedProducts:argumentsGroupedProducts,
+      argumentsSimpleProducts:argumentsSimpleProducts,
+      includeMedia:includeMedia}
+    magento.bighippoProducts.listGroupedProducts(
+      param,
+      function (err, data) {
+        if(err) return cb(err);
+        return cb(null,camelize(data));
+      });
+  });
+};
+
+exports.listGroupedProductsByCategories = function(argumentsGroupedProducts, argumentsSimpleProducts, includeMedia,
+                                                   categoryIds, cb){
+  login(function(err) {
+    if(err) return cb(err);
+    magento.bighippoProducts.listGroupedProductsByCategories(
+      {argumentsGroupedProducts:argumentsGroupedProducts,//{filters:{entity_id:0}}
+        argumentsSimpleProducts:argumentsSimpleProducts,//{filters:{entity_id:0}}
+        includeMedia:includeMedia,
+        categoryIds: categoryIds },
+     function (err, data) {
+      if(err) return cb(err);
+
+      return cb(null,camelize(data));
+    });
+  });
+};
+
+// coupon (Move to TDCOmmerce)
+/* list
+*/
+exports.couponList = function(res){
+  login(function(err) {
+    if (err) {
+      return res(err);
+    }
+    magento.bighippoCoupon.list(function (err, resPaymentPLanMetadata) {
+      if(err) return res(err);
+      return res(null,camelize(resPaymentPLanMetadata));
+    });
+  });
+}
+
+/* info
+  param =
+  {
+    salesRuleId:'String'
+  }
+*/
+exports.couponInfo = function(param, res){
+  login(function(err) {
+    if (err) {
+      return res(err);
+    }
+    magento.bighippoCoupon.info(param, function (err, resPaymentPLanMetadata) {
+      if(err) return res(err);
+      return res(null,camelize(resPaymentPLanMetadata));
+    });
+  });
+}
+// coupon (Move to TDCOmmerce)
