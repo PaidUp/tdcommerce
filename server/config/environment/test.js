@@ -9,7 +9,7 @@ module.exports = {
     },
     commerce: {
         magento: {
-            host: 'develop.convenienceselect.com',
+            host: 'https://develop.convenienceselect.com',
             port: 8888,
             path: '/api/xmlrpc/',
             login: 'magento',
