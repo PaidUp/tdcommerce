@@ -3,9 +3,30 @@
 var _ = require('lodash');
 var commerceService = require('../commerce.service.js');
 var logger = require('../../config/logger');
+let orderModel = require('./order.model').orderModel
+//TODO machine validations orders
 
 exports.create = function(req, res){
-  return res.status(200).json({'jesse':'cogollo'})
+  console.log('req.body', req.body)
+  orderModel.create(req.body, function(err, order){
+    if (err) return res.status(400).json({err:err})
+    return res.status(200).json({order:order})
+  })
+}
+
+exports.listV2 = function(req, res){
+  orderModel.find(req.body, function(err, orders){
+    if (err) return res.status(400).json({err:err})
+    return res.status(200).json({orders:orders})
+  })
+}
+
+exports.update = function(req, res){
+  //TODO see address.controller.
+  orderModel.update(req.body.filter, {'$set':req.body.data}, function(err, orders){
+    if (err) return res.status(400).json({err:err})
+    return res.status(200).json({orders:orders})
+  })
 }
 
 exports.load = function(req, res) {

@@ -14,6 +14,5 @@ router.get('/complete', controller.complete);
 router.get('/:orderId/create/invoice', controller.createOrderInvoice);
 router.post('/:orderId/create/creditmemo', controller.createOrderCreditMemo);
 router.post('/createShipment', controller.createShipment);
-router.post('/create', controller.create);
 
 module.exports = router;
