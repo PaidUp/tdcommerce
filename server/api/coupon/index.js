@@ -8,5 +8,6 @@ let router = express.Router();
 router.post('/create', controller.create);
 router.post('/list', controller.list);
 router.put('/update', controller.update);
+router.post('/redeem', controller.redeem);
 
 module.exports = router;

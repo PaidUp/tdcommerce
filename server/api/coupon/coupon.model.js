@@ -5,12 +5,12 @@ var config = require('../../config/environment/index.js');
 
 //TODO order machine with structure.
 var couponObject = {
-	code: String,
+	code: {type:String, unique:true},
 	startDate: Date,
 	endDate: Date,
 	percent: Number,
 	quantity: Number,
-	ProductsId: [String]
+	productsId: String
 }
 
 let couponSchema =  new mongoose.Schema(couponObject)
