@@ -27,11 +27,12 @@ exports.update = function(req, res){
 exports.redeem = function(req, res){
   //filter = coupon exista - idPorduct= idproct - rango de fechas. y que quantity >0
   //query = desc -1 quantity
+  console.log('req.body', req.body);
   let filter = {
     code : req.body.coupon,
     productsId: req.body.productId
   };
-
+  console.log('filter', filter)
   couponModel.update(filter, {'$inc':{quantity:-1}}, function(err, couponUpd){
     if (err) return res.status(400).json({err:err})
     console.log('couponUpd', couponUpd)

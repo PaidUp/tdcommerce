@@ -10,7 +10,7 @@ var couponObject = {
 	endDate: Date,
 	percent: Number,
 	quantity: Number,
-	productsId: String
+	productsId: [String]
 }
 
 let couponSchema =  new mongoose.Schema(couponObject)
