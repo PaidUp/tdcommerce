@@ -28,7 +28,6 @@ var couponObject = {
 	quantity: {type: Number, min:1, required: true, validate:
 		{
 			validator: function(qtyValue){
-				console.log('qtyValue', qtyValue)
 				return qtyValue > 0
 			},
 			message: '{VALUE} is not a valid quantity!'
