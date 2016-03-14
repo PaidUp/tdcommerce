@@ -18,29 +18,29 @@ exports.list = function(req, res){
 
 exports.update = function(req, res){
   //TODO see address.controller.
-  couponModel.update(req.body.filter, {'$set':req.body.data}, function(err, coupon){
+  couponModel.update(req.body.filter, {'$set':req.body.data}, {runValidators: true}, function(err, coupon){
     if (err) return res.status(400).json({err:err})
     return res.status(200).json(coupon)
   })
 }
 
 exports.redeem = function(req, res){
-  //filter = coupon exista - idPorduct= idproct - rango de fechas. y que quantity >0
-  //query = desc -1 quantity
-  console.log('req.body', req.body);
+  let now = new Date()
   let filter = {
     code : req.body.coupon,
-    productsId: req.body.productId
+    productsId: req.body.productId,
+    startDate : {'$lte': now},
+    endDate : {'$gte': now}
   };
-  console.log('filter', filter)
-  couponModel.update(filter, {'$inc':{quantity:-1}}, function(err, couponUpd){
+
+  couponModel.findOne(filter, function(err, coupon){
     if (err) return res.status(400).json({err:err})
-    console.log('couponUpd', couponUpd)
-    couponModel.findOne(filter, function(err, coupon){
+    if(!coupon || coupon.quantity <= 0){
+      return res.status(400).json({statusCode:'notAvailable', message:'this coupon is not available'})
+    }
+    couponModel.update(filter, {'$inc':{quantity:-1}}, {runValidators: true}, function(err, couponUpd){
       if (err) return res.status(400).json({err:err})
-      console.log('err', err)
-      console.log('coupon', coupon)
-      return res.status(200).json(coupon)
+      return res.status(200).json({_id: coupon._id, percent: coupon.percent})
     })
   })
 }
