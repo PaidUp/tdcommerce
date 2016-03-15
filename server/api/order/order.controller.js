@@ -28,6 +28,14 @@ exports.update = function(req, res){
   })
 }
 
+exports.addPayments = function(req, res){
+  return res.status(200).json({'add':'payments'})
+  /*orderModel.create(req.body, function(err, order){
+    if (err) return res.status(400).json({err:err})
+    return res.status(200).json({_id:order._id, status: order.status, paymentsPlan: order.paymentsPlan})
+  })*/
+}
+
 exports.load = function(req, res) {
   if(!req.params && !req.params.orderId) {
     return res.status(400).json({

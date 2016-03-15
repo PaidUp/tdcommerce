@@ -8,12 +8,15 @@ let orderObject = {
   status: {
 	type:String,
 	default:'pending',
-	enum: ['pending', 'complete'],
+	enum: ['pending', 'complete', 'cancel', 'processing'],
 	lowercase: true
   },
   paymentsPlan: {
 	type:[paymentPlan],
 	default:[]
+  },
+  userId: {
+	type: String
   }
 }
 
