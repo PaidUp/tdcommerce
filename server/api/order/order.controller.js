@@ -7,10 +7,9 @@ let orderModel = require('./order.model').orderModel
 //TODO machine validations orders
 
 exports.create = function(req, res){
-  console.log('req.body', req.body)
   orderModel.create(req.body, function(err, order){
     if (err) return res.status(400).json({err:err})
-    return res.status(200).json({order:order})
+    return res.status(200).json({_id:order._id, status: order.status, paymentsPlan: order.paymentsPlan})
   })
 }
 

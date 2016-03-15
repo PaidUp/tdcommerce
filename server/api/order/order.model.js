@@ -5,8 +5,16 @@ let paymentPlan = require('./paymentPlan/paymentPlan.model').paymentPlanSchema
 
 //TODO order machine with structure.
 let orderObject = {
-  status: {type:String, default:'pending', enum: ['pending', 'complete'], lowercase: true},
-  paymentsPlan: [paymentPlan]
+  status: {
+	type:String,
+	default:'pending',
+	enum: ['pending', 'complete'],
+	lowercase: true
+  },
+  paymentsPlan: {
+	type:[paymentPlan],
+	default:[]
+  }
 }
 
 let orderSchema =  new mongoose.Schema(orderObject)
