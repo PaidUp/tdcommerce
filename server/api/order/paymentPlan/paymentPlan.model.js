@@ -13,12 +13,12 @@ let paymentPlanObject = {
   discountCode: {type:String, default: ''},
   wasProcessed: {type:Boolean, default: false},
   status: {type:String, default:'pending', enum: ['pending', 'complete', 'cancel', 'processing'], lowercase: true},
-  attempts: [
-    {
-      status: {type:String},
-      dateAttemp: {type:Date}
-    }
-  ],
+  attempts: {type:[
+      {
+        status: {type:String},
+        dateAttemp: {type:Date}
+      }
+    ], default:[]},
   processingFees: {
     cardFee: {type:Number, required:true},
     cardFeeActual: {type:Number, required:true},
@@ -48,7 +48,9 @@ let paymentPlanObject = {
   beneficiaryInfo: {
     beneficiaryId: {type:String, required:true},
     beneficiaryName: {type:String, required:true}
-  }
+  },
+  createAt: {type: Date, default: new Date()},
+  updateAt: {type: Date, default: new Date()}
 }
 
 let paymentPlanSchema =  new mongoose.Schema(paymentPlanObject)

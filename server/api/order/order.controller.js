@@ -4,9 +4,12 @@ var _ = require('lodash');
 var commerceService = require('../commerce.service.js');
 var logger = require('../../config/logger');
 let orderModel = require('./order.model').orderModel
-//TODO machine validations orders
+let orderService = require('./order.service')
 
 exports.create = function(req, res){
+  if(req.body.paymentsPlan && req.body.paymentsPlan.length > 0){
+    req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
+  }
   orderModel.create(req.body, function(err, order){
     if (err) return res.status(400).json({err:err})
     return res.status(200).json({_id:order._id, status: order.status, paymentsPlan: order.paymentsPlan})
@@ -29,11 +32,11 @@ exports.update = function(req, res){
 }
 
 exports.addPayments = function(req, res){
-  return res.status(200).json({'add':'payments'})
-  /*orderModel.create(req.body, function(err, order){
+  req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
+  orderModel.update({_id:req.body.orderId}, {'$push':{paymentsPlan:{ $each:req.body.paymentsPlan}}}, function(err, order){
     if (err) return res.status(400).json({err:err})
-    return res.status(200).json({_id:order._id, status: order.status, paymentsPlan: order.paymentsPlan})
-  })*/
+    return res.status(200).json(order)
+  })
 }
 
 exports.load = function(req, res) {
