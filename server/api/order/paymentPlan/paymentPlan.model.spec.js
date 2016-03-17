@@ -3,7 +3,7 @@
 let faker = require('faker')
 const uuid = require('uuid')
 
-module.exports = function PyamentPlan () {
+module.exports = function PaymentPlan () {
   let randomDate = faker.date.between(faker.date.past(), faker.date.future())
   let wp = false
   let st = 'pending'
