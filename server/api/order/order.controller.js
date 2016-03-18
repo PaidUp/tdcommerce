@@ -51,8 +51,6 @@ exports.updatePayments = function (req, res) {
       'paymentsPlan.$.wasProcessed': req.body.paymentPlan.wasProcessed,
       'paymentsPlan.$.status': req.body.paymentPlan.status // TODO add all fields
   }}, function (err, order) {
-    console.log('err', err)
-    console.log('order', order)
     if (err) return res.status(400).json({err: err})
     return res.status(200).json(order)
   })
