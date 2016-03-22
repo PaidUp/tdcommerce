@@ -9,6 +9,7 @@ let paymentPlanObject = {
   price: {type: Number, required: true},
   typeAccount: {type: String, required: true},
   account: {type: String, required: true},
+  description: {type: String, required: true},
   discount: {type: Number, default: 0},
   discountCode: {type: String, default: ''},
   wasProcessed: {type: Boolean, default: false},
