@@ -10,6 +10,7 @@ exports.create = function (req, res) {
   if (req.body.paymentsPlan && req.body.paymentsPlan.length > 0) {
     req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
   }
+
   orderModel.create(req.body, function (err, order) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json({_id: order._id, status: order.status, paymentsPlan: order.paymentsPlan})
