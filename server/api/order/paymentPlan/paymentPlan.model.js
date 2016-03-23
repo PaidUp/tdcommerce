@@ -7,6 +7,7 @@ let paymentPlanObject = {
   destinationId: {type: String, required: true},
   dateCharge: {type: Date, required: true},
   price: {type: Number, required: true},
+  paymentId: {type: String, required: true},
   typeAccount: {type: String, required: true},
   account: {type: String, required: true},
   description: {type: String, required: true},
