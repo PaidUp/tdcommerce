@@ -18,7 +18,7 @@ exports.create = function (req, res) {
 }
 
 exports.listV2 = function (req, res) {
-  orderModel.find(req.body, function (err, orders) {
+  orderModel.find(req.body, 'paymentsPlan' , function (err, orders) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json({orders: orders})
   })
