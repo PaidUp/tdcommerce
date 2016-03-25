@@ -1,3 +1,4 @@
+/*
 'use strict'
 let proxyquire = require('proxyquire')
 let test = require('tape')
@@ -38,7 +39,7 @@ test('order.service createPayments one ok, one fail', function (t) {
   t.equal(pp.length, 1)
   t.end()
 })
-
+*/
 // test('test demo', function (t) {
 // const createPaymentsStub = function (input, cb) {
 // return [{status:'pending'}]
