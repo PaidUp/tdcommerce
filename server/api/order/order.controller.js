@@ -48,7 +48,7 @@ exports.addPayments = function (req, res) {
 }
 
 exports.updatePayments = function (req, res) {
-  let filter = {_id: req.body.orderId, 'paymentsPlan._id': req.body.paymentPlanId}
+  let filter = {_id: req.body.orderId, 'paymentsPlan._id': req.body.paymentPlanId, 'paymentsPlan.status': 'pending'}
   orderModel.findOneAndUpdate(filter, {'$set': {
       'paymentsPlan.$.destinationId': req.body.paymentPlan.destinationId,
       'paymentsPlan.$.dateCharge': req.body.paymentPlan.dateCharge,
