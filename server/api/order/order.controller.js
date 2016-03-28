@@ -58,7 +58,8 @@ exports.updatePayments = function (req, res) {
       'paymentsPlan.$.discount': req.body.paymentPlan.discount,
       'paymentsPlan.$.discountCode': req.body.paymentPlan.discountCode,
       'paymentsPlan.$.wasProcessed': req.body.paymentPlan.wasProcessed,
-      'paymentsPlan.$.status': req.body.paymentPlan.status // TODO add all fields
+      'paymentsPlan.$.status': req.body.paymentPlan.status, // TODO add all fields
+      'paymentsPlan.$.attempts': req.body.paymentPlan.attempts
   }}, function (err, order) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json(order)
