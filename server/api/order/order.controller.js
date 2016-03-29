@@ -68,8 +68,6 @@ exports.updatePayments = function (req, res) {
 
 exports.completev3 = function (req, res) {
   orderModel.update({status: 'pending', $where: function () { return this.paymentsPlan.every(function (sObj) { return sObj.status === 'succeeded' }) }}, {$set: {'status': 'complete'}}, {multi: true}, function (err, data) {
-    console.log('err', err)
-    console.log('data', data)
     if (err) return handleError(res, err)
     return res.status(200).json(data)
   })
