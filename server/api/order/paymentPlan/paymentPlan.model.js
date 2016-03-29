@@ -8,14 +8,17 @@ let paymentPlanObject = {
   email: {type: String, required: true},
   dateCharge: {type: Date, required: true},
   price: {type: Number, required: true},
+  originalPrice: {type: Number, required: true},
+  totalFee: {type: Number, required: true},
   paymentId: {type: String, required: true},
   typeAccount: {type: String, required: true},
   account: {type: String, required: true},
+  last4: {type: String, required: true},
   description: {type: String, required: true},
   discount: {type: Number, default: 0},
   discountCode: {type: String, default: ''},
   wasProcessed: {type: Boolean, default: false},
-  status: {type: String, default: 'pending', enum: ['pending', 'complete', 'cancel', 'processing'], lowercase: true},
+  status: {type: String, default: 'pending', enum: ['pending', 'complete', 'cancel', 'processing', 'succeeded', 'failed'], lowercase: true},
   attempts: {type: [
       {
         status: {type: String},
