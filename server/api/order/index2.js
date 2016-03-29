@@ -12,5 +12,6 @@ router.post('/cronjob', authServer.isAuthenticated(), controller.listCronjob)
 router.put('/update', authServer.isAuthenticated(), controller.update)
 router.post('/add-payments', authServer.isAuthenticated(), controller.addPayments)
 router.post('/update-payments', authServer.isAuthenticated(), controller.updatePayments)
+router.get('/complete', authServer.isAuthenticated(), controller.completev3)
 
 module.exports = router
