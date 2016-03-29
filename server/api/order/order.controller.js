@@ -55,6 +55,7 @@ exports.updatePayments = function (req, res) {
       'paymentsPlan.$.price': req.body.paymentPlan.price,
       'paymentsPlan.$.typeAccount': req.body.paymentPlan.typeAccount,
       'paymentsPlan.$.account': req.body.paymentPlan.account,
+      'paymentsPlan.$.accountBrand': req.body.paymentPlan.accountBrand,
       'paymentsPlan.$.discount': req.body.paymentPlan.discount,
       'paymentsPlan.$.discountCode': req.body.paymentPlan.discountCode,
       'paymentsPlan.$.wasProcessed': req.body.paymentPlan.wasProcessed,
