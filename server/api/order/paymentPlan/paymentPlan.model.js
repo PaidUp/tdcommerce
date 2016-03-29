@@ -13,6 +13,7 @@ let paymentPlanObject = {
   paymentId: {type: String, required: true},
   typeAccount: {type: String, required: true},
   account: {type: String, required: true},
+  accountBrand: {type: String, required: true},
   last4: {type: String, required: true},
   description: {type: String, required: true},
   discount: {type: Number, default: 0},
