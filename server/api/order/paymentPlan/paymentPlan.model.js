@@ -23,6 +23,7 @@ let paymentPlanObject = {
   attempts: {type: [
       {
         status: {type: String},
+        message: {type: String},
         dateAttemp: {type: Date}
       }
   ], default: []},
