@@ -24,7 +24,9 @@ let paymentPlanObject = {
       {
         status: {type: String},
         message: {type: String},
-        dateAttemp: {type: Date}
+        dateAttemp: {type: Date},
+        last4: {type: String},
+        accountBrand: {type: String}
       }
   ], default: []},
   processingFees: {type: {
