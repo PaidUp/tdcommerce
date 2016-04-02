@@ -47,7 +47,12 @@ let paymentPlanObject = {
   }, required: true},
   productInfo: {type: {
       productId: {type: String, required: true},
-      productName: {type: String, required: true}
+      productName: {type: String, required: true},
+      productImage: {type: String, required: true},
+      organizationId: {type: String, required: true},
+      organizationName: {type: String, required: true},
+      organizationLocation: {type: String, required: true},
+      organizationImage: {type: String, required: true},
   }, required: true},
   userInfo: {type: {
       userId: {type: String, required: true},
