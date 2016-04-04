@@ -10,6 +10,8 @@ let paymentPlanObject = {
   price: {type: Number, required: true},
   originalPrice: {type: Number, required: true},
   totalFee: {type: Number, required: true},
+  feePaidUp: {type: Number, required: true},
+  feeStripe: {type: Number, required: true},
   paymentId: {type: String, required: true},
   typeAccount: {type: String, required: true},
   account: {type: String, required: true},
