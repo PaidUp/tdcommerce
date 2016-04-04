@@ -7,8 +7,8 @@ let paymentPlan = require('./paymentPlan/paymentPlan.model').paymentPlanSchema
 let orderObject = {
   status: {
     type: String,
-    default: 'pending',
-    enum: ['pending', 'complete', 'cancel', 'processing'],
+    default: 'active',
+    enum: ['pending', 'complete', 'cancel', 'processing', 'active'],
     lowercase: true
   },
   paymentsPlan: {
