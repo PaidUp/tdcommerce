@@ -25,7 +25,7 @@ exports.listV2 = function (req, res) {
 }
 
 exports.listCronjob = function (req, res) {
-  let filter = {'paymentsPlan': { '$elemMatch': {'status': 'pending','wasProcessed': false,'dateCharge': {'$lte': new Date()}}},'status': 'pending'}
+  let filter = {'paymentsPlan': { '$elemMatch': {'status': 'pending','wasProcessed': false,'dateCharge': {'$lte': new Date()}}},'status': 'active'}
   orderModel.find(filter, 'paymentsPlan.$ userId' , function (err, orders) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json({orders: orders})
@@ -69,7 +69,7 @@ exports.updatePayments = function (req, res) {
 }
 
 exports.completev3 = function (req, res) {
-  orderModel.update({status: 'pending', $where: function () { return this.paymentsPlan.every(function (sObj) { return sObj.status === 'succeeded' }) }}, {$set: {'status': 'complete'}}, {multi: true}, function (err, data) {
+  orderModel.update({status: 'active', $where: function () { return this.paymentsPlan.every(function (sObj) { return sObj.status === 'succeeded' }) }}, {$set: {'status': 'complete'}}, {multi: true}, function (err, data) {
     if (err) return handleError(res, err)
     return res.status(200).json(data)
   })
