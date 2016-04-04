@@ -41,7 +41,12 @@ module.exports = function PaymentPlan () {
     },
     productInfo: {
       productId: 'productId',
-      productName: faker.company.companyName() // etc..
+      productName: faker.company.companyName(), // etc..
+      productImage: 'someUrl',
+      organizationId: 'organizationId',
+      organizationName: 'organization name',
+      organizationLocation: 'Austin, TX',
+      organizationImage: 'someUrl'
     },
     userInfo: { // user - corporation
       userId: 'userId',

@@ -55,11 +55,13 @@ exports.updatePayments = function (req, res) {
       'paymentsPlan.$.price': req.body.paymentPlan.price,
       'paymentsPlan.$.typeAccount': req.body.paymentPlan.typeAccount,
       'paymentsPlan.$.account': req.body.paymentPlan.account,
+      'paymentsPlan.$.accountBrand': req.body.paymentPlan.accountBrand,
       'paymentsPlan.$.discount': req.body.paymentPlan.discount,
       'paymentsPlan.$.discountCode': req.body.paymentPlan.discountCode,
       'paymentsPlan.$.wasProcessed': req.body.paymentPlan.wasProcessed,
-      'paymentsPlan.$.status': req.body.paymentPlan.status, // TODO add all fields
-      'paymentsPlan.$.attempts': req.body.paymentPlan.attempts
+      'paymentsPlan.$.status': req.body.paymentPlan.status,
+      'paymentsPlan.$.attempts': req.body.paymentPlan.attempts,
+      'paymentsPlan.$.updateAt': new Date()
   }}, function (err, order) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json(order)
