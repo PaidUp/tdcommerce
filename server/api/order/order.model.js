@@ -9,8 +9,8 @@ let orderObject = {
   //orderNumber: {type: String, default: seq},
   status: {
     type: String,
-    default: 'pending',
-    enum: ['pending', 'complete', 'cancel', 'processing'],
+    default: 'active',
+    enum: ['pending', 'complete', 'cancel', 'processing', 'active'],
     lowercase: true
   },
   paymentsPlan: {
