@@ -16,7 +16,7 @@ exports.create = function (req, res) {
     req.body.orderId = result;
     orderModel.create(req.body, function (err, order) {
       if (err) return res.status(400).json({err: err})
-      return res.status(200).json({_id: order._id, status: order.status, paymentsPlan: order.paymentsPlan})
+      return res.status(200).json({_id: order._id, status: order.status, orderId: order.orderId,git  paymentsPlan: order.paymentsPlan})
     })
   });
 
