@@ -5,6 +5,10 @@ let paymentPlan = require('./paymentPlan/paymentPlan.model').paymentPlanSchema
 
 // TODO order machine with structure.
 let orderObject = {
+  orderId: {
+    type: String,
+    required: true
+  },
   status: {
     type: String,
     default: 'active',
@@ -25,6 +29,7 @@ let orderObject = {
 let orderSchema = new mongoose.Schema(orderObject)
 orderSchema.set('toObject', { virtuals: true})
 orderSchema.set('toJSON', { virtuals: true})
+
 
 module.exports = orderObject // change for machine
 module.exports.orderSchema = orderSchema

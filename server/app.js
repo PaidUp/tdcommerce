@@ -21,7 +21,10 @@ var mongoose = require('mongoose');
 var config = require('./config/environment');
 
 // Connect to database
-mongoose.connect(config.mongo.uri, config.mongo.options);
+mongoose.connect(config.mongo.uri, config.mongo.options, function(){
+  mongoose.connection.db.eval("db.loadServerScripts()");
+});
+
 
 // Populate DB with sample data
 if(config.seedDB) { require('./config/seed'); }
