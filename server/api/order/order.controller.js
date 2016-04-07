@@ -32,7 +32,7 @@ exports.listV2 = function (req, res) {
 
 exports.listCronjob = function (req, res) {
   let filter = {'paymentsPlan': { '$elemMatch': {'status': 'pending','wasProcessed': false,'dateCharge': {'$lte': new Date()}}},'status': 'active'}
-  orderModel.find(filter, 'paymentsPlan.$ userId' , function (err, orders) {
+  orderModel.find(filter, 'paymentsPlan.$ userId orderId status' , function (err, orders) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json({orders: orders})
   })
