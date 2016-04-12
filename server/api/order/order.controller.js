@@ -192,6 +192,15 @@ exports.createShipment = function (req, res) {
     })
 }
 
+exports.searchOrder = function (req, res) {
+  orderService.searchOrder(req.body.params, function(err, orders){
+    if(err){
+      return res.status(400).json({err: err})
+    }
+    return res.status(200).json({orders: orders})
+  });
+}
+
 function handleError (res, err) {
   var httpErrorCode = 500
 

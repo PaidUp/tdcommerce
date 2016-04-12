@@ -1,6 +1,7 @@
 'use strict'
 
 var paymentPlanModel = require('./paymentPlan/paymentPlan.model').paymentPlanModel
+var orderModel = require('./order.model').orderModel;
 
 function createPayments (paymentsList) {
   if (!paymentsList.length) {
@@ -13,4 +14,19 @@ function createPayments (paymentsList) {
   })
 }
 
-exports.createPayments = createPayments
+function searchOrder(param, cb) {
+
+  orderModel.find(
+      {$text: {$search: param}},
+      {score: {$meta: "textScore"}}
+    ).sort({score: {$meta: 'textScore'}}).exec(function (err, results) {
+    if (err) {
+      return cb(err);
+    }
+    cb(null, results);
+  });
+
+}
+
+exports.createPayments = createPayments;
+exports.searchOrder = searchOrder;

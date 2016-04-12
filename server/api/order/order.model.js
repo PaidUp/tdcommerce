@@ -27,6 +27,17 @@ let orderObject = {
 }
 
 let orderSchema = new mongoose.Schema(orderObject)
+
+orderSchema.index({
+  orderId : 'text',
+  "paymentsPlan.beneficiaryInfo.beneficiaryName": 'text',
+  "paymentsPlan.email": 'text',
+  "paymentsPlan.productInfo.productName": 'text',
+  "paymentsPlan.userInfo.userName": 'text'
+},{
+  name: "order_text_index",
+});
+
 orderSchema.set('toObject', { virtuals: true})
 orderSchema.set('toJSON', { virtuals: true})
 
