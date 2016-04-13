@@ -12,21 +12,26 @@ exports.create = function (req, res) {
     req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
   }
 
-  mongoose.connection.db.eval('getNextSequence("orderIds")', function(err, result) {
-    req.body.orderId = result;
+  mongoose.connection.db.eval('getNextSequence("orderIds")', function (err, result) {
+    req.body.orderId = result
     orderModel.create(req.body, function (err, order) {
       if (err) return res.status(400).json({err: err})
       return res.status(200).json({_id: order._id, status: order.status, orderId: order.orderId, paymentsPlan: order.paymentsPlan})
     })
-  });
-
-
+  })
 }
 
 exports.listV2 = function (req, res) {
-  orderModel.find(req.body, function (err, orders) {
+  // http://mongoosejs.com/docs/api.html#query_Query-lean
+  orderModel.find(req.body).lean().exec(function (err, orders) {
     if (err) return res.status(400).json({err: err})
-    return res.status(200).json({orders: orders})
+    let newOrders = orders.map(function (order) {
+      order.totalPrice = order.paymentsPlan.reduce(function (prev, current) {
+        return prev + current.price
+      }, 0)
+      return order
+    })
+    return res.status(200).json({orders: newOrders})
   })
 }
 
@@ -193,12 +198,12 @@ exports.createShipment = function (req, res) {
 }
 
 exports.searchOrder = function (req, res) {
-  orderService.searchOrder(req.body.params, function(err, orders){
-    if(err){
+  orderService.searchOrder(req.body.params, function (err, orders) {
+    if (err) {
       return res.status(400).json({err: err})
     }
     return res.status(200).json({orders: orders})
-  });
+  })
 }
 
 function handleError (res, err) {
