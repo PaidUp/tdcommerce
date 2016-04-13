@@ -28,7 +28,8 @@ let paymentPlanObject = {
         message: {type: String},
         dateAttemp: {type: Date},
         last4: {type: String},
-        accountBrand: {type: String}
+        accountBrand: {type: String},
+        transferId: {type: String}
       }
   ], default: []},
   processingFees: {type: {
