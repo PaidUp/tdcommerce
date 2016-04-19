@@ -33,13 +33,13 @@ let paymentPlanObject = {
       }
   ], default: []},
   processingFees: {type: {
-      cardFee: {type: Number, required: true},
+      cardFeeActual: {type: Number, required: true},
       cardFeeDisplay: {type: Number, required: true},
-      cardFeeFlat: {type: Number, required: true},
+      cardFeeFlatActual: {type: Number, required: true},
       cardFeeFlatDisplay: {type: Number, required: true},
-      achFee: {type: Number, required: true},
+      achFeeActual: {type: Number, required: true},
       achFeeDisplay: {type: Number, required: true},
-      achFeeFlat: {type: Number, required: true},
+      achFeeFlatActual: {type: Number, required: true},
       achFeeFlatDisplay: {type: Number, required: true}
   }, required: true},
   collectionsFee: {type: {
