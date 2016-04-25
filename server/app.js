@@ -7,12 +7,24 @@
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+var pmx = require('pmx').init({
+  http          : true, // HTTP routes logging (default: true)
+  ignore_routes : [/socket\.io/, /notFound/], // Ignore http routes with this pattern (Default: [])
+  errors        : true, // Exceptions loggin (default: true)
+  custom_probes : true, // Auto expose JS Loop Latency and HTTP req/s as custom metrics
+  network       : true, // Network monitoring at the application level
+  ports         : true  // Shows which ports your app is listening on (default: false)
+});
+
 var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
 
 // Connect to database
-mongoose.connect(config.mongo.uri, config.mongo.options);
+mongoose.connect(config.mongo.uri, config.mongo.options, function(){
+  mongoose.connection.db.eval("db.loadServerScripts()");
+});
+
 
 // Populate DB with sample data
 if(config.seedDB) { require('./config/seed'); }

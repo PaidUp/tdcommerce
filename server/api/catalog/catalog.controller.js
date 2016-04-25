@@ -127,39 +127,11 @@ exports.create = function(req, res) {
   });
 }
 
-exports.productView = function(req, res) {
-  if(!req.params && !req.params.productId) {
-    return res.status(400).json({
-      "code": "ValidationError",
-      "message": "Product Id is required"
-    });
-  }
-  catalogService.catalogProductInfo(req.params.productId, function(err, dataService){
-    if(err) return handleError(res, err);
-    res.status(200).json(dataService);
-  });
-}
-
-exports.productView = function(req, res) {
-  if(!req.params && !req.params.productId) {
-    return res.status(400).json({
-      "code": "ValidationError",
-      "message": "Product Id is required"
-    });
-  }
-  catalogService.catalogProductInfo(req.params.productId, function(err, dataService){
-    if(err) return handleError(res, err);
-    res.status(200).json(dataService);
-  });
-}
-
 
 function handleError(res, err) {
   var httpErrorCode = 500;
-
   if(err.name === "ValidationError") {
     httpErrorCode = 400;
   }
-
   return res.status(httpErrorCode).json({code : err.name, message : err.message, errors : err.errors});
 }
