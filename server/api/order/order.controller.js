@@ -59,11 +59,14 @@ exports.addPayments = function (req, res) {
 }
 
 exports.updatePayments = function (req, res) {
-  let filter = {_id: req.body.orderId, 'paymentsPlan._id': req.body.paymentPlanId, 'paymentsPlan.status': 'pending'}
+  let filter = {
+    paymentsPlan: {$elemMatch: { _id : req.body.paymentPlanId }  }
+  }
   orderModel.findOneAndUpdate(filter, {'$set': {
       'paymentsPlan.$.destinationId': req.body.paymentPlan.destinationId,
       'paymentsPlan.$.dateCharge': req.body.paymentPlan.dateCharge,
       'paymentsPlan.$.price': req.body.paymentPlan.price,
+      'paymentsPlan.$.originalPrice': req.body.paymentPlan.originalPrice,
       'paymentsPlan.$.typeAccount': req.body.paymentPlan.typeAccount,
       'paymentsPlan.$.account': req.body.paymentPlan.account,
       'paymentsPlan.$.accountBrand': req.body.paymentPlan.accountBrand,
@@ -73,7 +76,9 @@ exports.updatePayments = function (req, res) {
       'paymentsPlan.$.status': req.body.paymentPlan.status,
       'paymentsPlan.$.attempts': req.body.paymentPlan.attempts,
       'paymentsPlan.$.updateAt': new Date()
-  }}, function (err, order) {
+  }, },
+    {new: true}
+    , function (err, order) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json(order)
   })
