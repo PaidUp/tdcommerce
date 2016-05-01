@@ -64,6 +64,7 @@ exports.updatePayments = function (req, res) {
   }
   orderModel.findOneAndUpdate(filter, {'$set': {
       'paymentsPlan.$.destinationId': req.body.paymentPlan.destinationId,
+      'paymentsPlan.$.description': req.body.paymentPlan.description,
       'paymentsPlan.$.dateCharge': req.body.paymentPlan.dateCharge,
       'paymentsPlan.$.price': req.body.paymentPlan.price,
       'paymentsPlan.$.originalPrice': req.body.paymentPlan.originalPrice,
