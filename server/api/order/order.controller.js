@@ -70,6 +70,7 @@ exports.updatePayments = function (req, res) {
       'paymentsPlan.$.originalPrice': req.body.paymentPlan.originalPrice,
       'paymentsPlan.$.typeAccount': req.body.paymentPlan.typeAccount,
       'paymentsPlan.$.account': req.body.paymentPlan.account,
+      'paymentsPlan.$.last4': req.body.paymentPlan.last4,
       'paymentsPlan.$.accountBrand': req.body.paymentPlan.accountBrand,
       'paymentsPlan.$.discount': req.body.paymentPlan.discount,
       'paymentsPlan.$.discountCode': req.body.paymentPlan.discountCode,
