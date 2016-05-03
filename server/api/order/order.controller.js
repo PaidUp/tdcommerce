@@ -52,7 +52,7 @@ exports.update = function (req, res) {
 
 exports.addPayments = function (req, res) {
   req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
-  orderModel.findOneAndUpdate({_id: req.body.orderId}, {'$push': {paymentsPlan: { $each: req.body.paymentsPlan}}}, function (err, order) {
+  orderModel.findOneAndUpdate({_id: req.body.orderId}, {'$push': {paymentsPlan: { $each: req.body.paymentsPlan}}},{new: true}, function (err, order) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json(order)
   })
