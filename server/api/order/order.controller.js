@@ -52,7 +52,7 @@ exports.update = function (req, res) {
 
 exports.addPayments = function (req, res) {
   req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
-  orderModel.findOneAndUpdate({_id: req.body.orderId}, {'$push': {paymentsPlan: { $each: req.body.paymentsPlan}}}, function (err, order) {
+  orderModel.findOneAndUpdate({_id: req.body.orderId}, {'$push': {paymentsPlan: { $each: req.body.paymentsPlan}}},{new: true}, function (err, order) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json(order)
   })
@@ -70,6 +70,7 @@ exports.updatePayments = function (req, res) {
       'paymentsPlan.$.originalPrice': req.body.paymentPlan.originalPrice,
       'paymentsPlan.$.typeAccount': req.body.paymentPlan.typeAccount,
       'paymentsPlan.$.account': req.body.paymentPlan.account,
+      'paymentsPlan.$.last4': req.body.paymentPlan.last4,
       'paymentsPlan.$.accountBrand': req.body.paymentPlan.accountBrand,
       'paymentsPlan.$.discount': req.body.paymentPlan.discount,
       'paymentsPlan.$.discountCode': req.body.paymentPlan.discountCode,
