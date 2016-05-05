@@ -13,7 +13,7 @@ exports.create = function (req, res) {
   }
 
   mongoose.connection.db.eval('getNextSequence("orderIds")', function (err, result) {
-    req.body.orderId = result
+    req.body.orderId = result.toUpperCase();
     orderModel.create(req.body, function (err, order) {
       if (err) return res.status(400).json({err: err})
       return res.status(200).json({_id: order._id, status: order.status, orderId: order.orderId, paymentsPlan: order.paymentsPlan})

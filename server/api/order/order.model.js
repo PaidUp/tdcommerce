@@ -22,8 +22,8 @@ let orderObject = {
   userId: {
     type: String
   },
-  createAt: {type: Date, default: new Date()},
-  updateAt: {type: Date, default: new Date()}
+  createAt: {type: Date, default: Date.now},
+  updateAt: {type: Date, default: Date.now}
 }
 
 let orderSchema = new mongoose.Schema(orderObject)
