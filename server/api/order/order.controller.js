@@ -227,6 +227,13 @@ exports.next = function (req, res) {
   })
 }
 
+exports.active = function (req, res) {
+  orderService.active(req.params, function (err, result) {
+    if (err) return res.status(400).json(err)
+    return res.status(200).json(result)
+  })
+}
+
 function handleError (res, err) {
   var httpErrorCode = 500
 
