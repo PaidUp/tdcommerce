@@ -22,25 +22,24 @@ let orderObject = {
   userId: {
     type: String
   },
-  createAt: {type: Date, default: new Date()},
-  updateAt: {type: Date, default: new Date()}
+  createAt: {type: Date, default: Date.now},
+  updateAt: {type: Date, default: Date.now}
 }
 
 let orderSchema = new mongoose.Schema(orderObject)
 
 orderSchema.index({
-  orderId : 'text',
-  "paymentsPlan.beneficiaryInfo.beneficiaryName": 'text',
-  "paymentsPlan.email": 'text',
-  "paymentsPlan.productInfo.productName": 'text',
-  "paymentsPlan.userInfo.userName": 'text'
-},{
-  name: "order_text_index",
-});
+  orderId: 'text',
+  'paymentsPlan.beneficiaryInfo.beneficiaryName': 'text',
+  'paymentsPlan.email': 'text',
+  'paymentsPlan.productInfo.productName': 'text',
+  'paymentsPlan.userInfo.userName': 'text'
+}, {
+  name: 'order_text_index',
+})
 
 orderSchema.set('toObject', { virtuals: true})
 orderSchema.set('toJSON', { virtuals: true})
-
 
 module.exports = orderObject // change for machine
 module.exports.orderSchema = orderSchema

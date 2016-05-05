@@ -52,7 +52,7 @@ exports.update = function (req, res) {
 
 exports.addPayments = function (req, res) {
   req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
-  orderModel.findOneAndUpdate({_id: req.body.orderId}, {'$push': {paymentsPlan: { $each: req.body.paymentsPlan}}},{new: true}, function (err, order) {
+  orderModel.findOneAndUpdate({_id: req.body.orderId}, {'$push': {paymentsPlan: { $each: req.body.paymentsPlan}}}, {new: true}, function (err, order) {
     if (err) return res.status(400).json({err: err})
     return res.status(200).json(order)
   })
@@ -60,7 +60,7 @@ exports.addPayments = function (req, res) {
 
 exports.updatePayments = function (req, res) {
   let filter = {
-    paymentsPlan: {$elemMatch: { _id : req.body.paymentPlanId }  }
+    paymentsPlan: {$elemMatch: { _id: req.body.paymentPlanId }  }
   }
   orderModel.findOneAndUpdate(filter, {'$set': {
       'paymentsPlan.$.destinationId': req.body.paymentPlan.destinationId,
@@ -81,9 +81,9 @@ exports.updatePayments = function (req, res) {
   }, },
     {new: true}
     , function (err, order) {
-    if (err) return res.status(400).json({err: err})
-    return res.status(200).json(order)
-  })
+      if (err) return res.status(400).json({err: err})
+      return res.status(200).json(order)
+    })
 }
 
 exports.completev3 = function (req, res) {
@@ -210,6 +210,13 @@ exports.searchOrder = function (req, res) {
       return res.status(400).json({err: err})
     }
     return res.status(200).json({orders: orders})
+  })
+}
+
+exports.recent = function (req, res) {
+  orderService.recent(req.params, function (err, result) {
+    if (err) return res.status(400).json(err)
+    return res.status(200).json(result)
   })
 }
 
