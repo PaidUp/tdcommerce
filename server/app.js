@@ -21,7 +21,9 @@ var mongoose = require('mongoose');
 var config = require('./config/environment');
 
 // Connect to database
-mongoose.connect(config.mongo.uri, config.mongo.options, function(){
+mongoose.connect(config.mongo.uri, config.mongo.options);
+
+mongoose.connection.on('connected', function() {
   mongoose.connection.db.eval("db.loadServerScripts()");
 });
 

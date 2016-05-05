@@ -19,7 +19,7 @@
     "magento": "https://github.com/talosdigital/magentoapi/tarball/master",
     "method-override": "2.3.5",
     "moment": "2.10.6",
-    "mongoose": "4.1.8",
+    "mongoose": "4.4.14",
     "morgan": "1.6.1",
     "pmx": "^0.6.1",
     "q": "1.4.1",

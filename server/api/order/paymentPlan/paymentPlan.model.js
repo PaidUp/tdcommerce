@@ -67,8 +67,8 @@ let paymentPlanObject = {
       beneficiaryId: {type: String, required: true},
       beneficiaryName: {type: String, required: true}
   }, required: true},
-  createAt: {type: Date, default: new Date()},
-  updateAt: {type: Date, default: new Date()}
+  createAt: {type: Date, default: Date.now},
+  updateAt: {type: Date, default: Date.now}
 }
 
 let paymentPlanSchema = new mongoose.Schema(paymentPlanObject)

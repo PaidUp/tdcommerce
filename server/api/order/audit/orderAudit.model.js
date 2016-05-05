@@ -10,7 +10,7 @@ let orderAuditObject = {
       {
         userId: {type: String},
         order: {type: Order},
-        createAt: {type: Date, default: new Date()},
+        createAt: {type: Date, default: Date.now},
       }
   ], default: []}
 }
