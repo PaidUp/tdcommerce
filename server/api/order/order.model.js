@@ -41,6 +41,12 @@ orderSchema.index({
 orderSchema.set('toObject', { virtuals: true})
 orderSchema.set('toJSON', { virtuals: true})
 
+orderSchema.post('save', function(){
+
+});
+
+
+
 module.exports = orderObject // change for machine
 module.exports.orderSchema = orderSchema
 module.exports.orderModel = mongoose.model('order', orderSchema, 'orders')
