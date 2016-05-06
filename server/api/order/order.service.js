@@ -18,7 +18,7 @@ function searchOrder (param, cb) {
   orderModel.find(
     {$text: {$search: param}},
     {score: {$meta: 'textScore'}}
-  ).sort({score: {$meta: 'textScore'}}).exec(function (err, results) {
+  ).sort({createAt: -1}).exec(function (err, results) {
     if (err) {
       return cb(err)
     }
