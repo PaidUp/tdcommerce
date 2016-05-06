@@ -4,9 +4,11 @@ var _ = require('lodash')
 var commerceService = require('../commerce.service.js')
 var logger = require('../../config/logger')
 let orderModel = require('./order.model').orderModel
+let orderAuditModel = require('./audit/orderAudit.model').orderAuditModel;
 let orderService = require('./order.service')
 let mongoose = require('mongoose')
 let ObjectId = require('mongoose').Types.ObjectId;
+var pmx = require('pmx');
 
 exports.create = function (req, res) {
   if (req.body.paymentsPlan && req.body.paymentsPlan.length > 0) {
@@ -34,6 +36,11 @@ exports.listV2 = function (req, res) {
   let qry = orderModel.find(filter);
   if(req.body.limit){
     qry.limit(req.body.limit)
+  }
+  if(req.body.sort){
+    qry.sort({createAt: req.body.sort})
+  }else{
+    qry.sort({createAt: -1})
   }
 
   qry.lean().exec(function (err, orders) {
@@ -67,6 +74,13 @@ exports.addPayments = function (req, res) {
   req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
   orderModel.findOneAndUpdate({_id: req.body.orderId}, {'$push': {paymentsPlan: { $each: req.body.paymentsPlan}}}, {new: true}, function (err, order) {
     if (err) return res.status(400).json({err: err})
+
+    createOrderAudit({
+      _orderId: order._id,
+      userId: req.body.userSysId,
+      order: order
+    });
+
     return res.status(200).json(order)
   })
 }
@@ -75,8 +89,6 @@ exports.updatePayments = function (req, res) {
   let filter = {
     paymentsPlan: {$elemMatch: { _id: req.body.paymentPlanId }  }
   }
-
-  console.log('FILER', filter);
 
   orderModel.findOneAndUpdate(filter, {'$set': {
       'paymentsPlan.$.destinationId': req.body.paymentPlan.destinationId,
@@ -98,8 +110,25 @@ exports.updatePayments = function (req, res) {
     {new: true}
     , function (err, order) {
       if (err) return res.status(400).json({err: err})
+
+      createOrderAudit({
+        _orderId: order._id,
+        userId: req.body.userSysId,
+        order: order
+      });
+
       return res.status(200).json(order)
     })
+}
+
+function createOrderAudit(orderAudit){
+  console.log("ORDERAUDIT" , orderAudit)
+  orderAuditModel.create(orderAudit, function (err, order) {
+    if(err)
+      pmx.notify(new Error('AUDIT order error: '+JSON.stringify(err)));
+    console.log("ORDERAUDIT err" , err)
+    console.log("ORDERAUDIT ff" , order)
+  });
 }
 
 exports.completev3 = function (req, res) {

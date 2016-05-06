@@ -1,7 +1,9 @@
 'use strict'
 
 const mongoose = require('mongoose')
-let paymentPlan = require('./paymentPlan/paymentPlan.model').paymentPlanSchema
+let paymentPlan = require('./paymentPlan/paymentPlan.model').paymentPlanSchema;
+let orderAuditModel = require('./audit/orderAudit.model').orderAuditModel;
+let pmx = require('pmx');
 
 // TODO order machine with structure.
 let orderObject = {
@@ -43,8 +45,18 @@ orderSchema.set('toJSON', { virtuals: true})
 
 orderSchema.post('save', function(){
 
-});
+  let orderAudit = {
+    _orderId: this._id,
+    userId: this.userId,
+    order: this
+  };
 
+  orderAuditModel.create(orderAudit, function (err, order) {
+    if(err)
+      pmx.notify(new Error('AUDIT orderSchema.post.save error: '+JSON.stringify(err)));
+  });
+
+});
 
 
 module.exports = orderObject // change for machine

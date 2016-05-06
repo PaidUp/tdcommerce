@@ -1,18 +1,13 @@
 'use strict'
 
 const mongoose = require('mongoose');
-let Order = require('../order.model').orderSchema;
 var config = require('../../../config/environment/index.js');
 
 let orderAuditObject = {
   _orderId: {type: String, required: true},
-  orders: {type: [
-      {
-        userId: {type: String},
-        order: {type: Order},
-        createAt: {type: Date, default: Date.now},
-      }
-  ], default: []}
+  userId: {type: String, required: true},
+  order: {type: {}, required: true},
+  createAt: {type: Date, default: Date.now}
 }
 
 let orderAuditSchema = new mongoose.Schema(orderAuditObject);
