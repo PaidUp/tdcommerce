@@ -33,17 +33,10 @@ exports.listV2 = function (req, res) {
   if(req.body.userId){
     filter.userId = req.body.userId;
   }
-  let qry = orderModel.find(filter);
-  if(req.body.limit){
-    qry.limit(req.body.limit)
-  }
-  if(req.body.sort){
-    qry.sort({createAt: req.body.sort})
-  }else{
-    qry.sort({createAt: -1})
-  }
+  let limit = req.body.limit || 100;
+  let sort = req.body.sort || -1;
 
-  qry.lean().exec(function (err, orders) {
+  orderModel.find(filter).limit(limit).sort({ createAt: sort }).lean().exec(function (err, orders) {
     if (err) return res.status(400).json({err: err})
     let newOrders = orders.map(function (order) {
       order.totalPrice = order.paymentsPlan.reduce(function (prev, current) {
