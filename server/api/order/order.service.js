@@ -28,7 +28,7 @@ function searchOrder (param, cb) {
 // db.getCollection('orders').aggregate({ $match: { userId:'5644f60936c2f71c22b69267'} },{ $limit : 5 }, {$unwind:{path: "$paymentsPlan"}},{ $sort : {"paymentsPlan.dateCharge":-1} },{ $match: {"paymentsPlan.status":'succeeded'} })
 function recent (params, cb) {
   orderModel
-    .aggregate([{ $match: { userId: params.userId} }, { $limit: (typeof params.limit === 'number') ? params.limit : parseInt(params.limit, 10) }, {$unwind: {path: '$paymentsPlan'}}, { $sort: {'paymentsPlan.dateCharge': -1} }, { $match: {'paymentsPlan.status': 'succeeded'} }])
+    .aggregate([{ $match: { userId: params.userId} }, { $limit: (typeof params.limit === 'number') ? params.limit : parseInt(params.limit, 10) }, {$unwind: {path: '$paymentsPlan'}}, { $sort: {'paymentsPlan.dateCharge': -1} }, { $match: {'paymentsPlan.status': {$ne: 'pending'} } }])
     .exec(function (err, results) {
       if (err) {
         return cb(err)
