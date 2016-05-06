@@ -6,6 +6,7 @@ var logger = require('../../config/logger')
 let orderModel = require('./order.model').orderModel
 let orderService = require('./order.service')
 let mongoose = require('mongoose')
+let ObjectId = require('mongoose').Types.ObjectId;
 
 exports.create = function (req, res) {
   if (req.body.paymentsPlan && req.body.paymentsPlan.length > 0) {
@@ -23,7 +24,19 @@ exports.create = function (req, res) {
 
 exports.listV2 = function (req, res) {
   // http://mongoosejs.com/docs/api.html#query_Query-lean
-  orderModel.find(req.body).lean().exec(function (err, orders) {
+  let filter = {}
+  if(req.body.orderId){
+    filter._id = new ObjectId(req.body.orderId);
+  }
+  if(req.body.userId){
+    filter.userId = req.body.userId;
+  }
+  let qry = orderModel.find(filter);
+  if(req.body.limit){
+    qry.limit(req.body.limit)
+  }
+
+  qry.lean().exec(function (err, orders) {
     if (err) return res.status(400).json({err: err})
     let newOrders = orders.map(function (order) {
       order.totalPrice = order.paymentsPlan.reduce(function (prev, current) {
@@ -62,6 +75,9 @@ exports.updatePayments = function (req, res) {
   let filter = {
     paymentsPlan: {$elemMatch: { _id: req.body.paymentPlanId }  }
   }
+
+  console.log('FILER', filter);
+
   orderModel.findOneAndUpdate(filter, {'$set': {
       'paymentsPlan.$.destinationId': req.body.paymentPlan.destinationId,
       'paymentsPlan.$.description': req.body.paymentPlan.description,
