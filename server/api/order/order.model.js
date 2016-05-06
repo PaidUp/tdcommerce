@@ -1,7 +1,9 @@
 'use strict'
 
 const mongoose = require('mongoose')
-let paymentPlan = require('./paymentPlan/paymentPlan.model').paymentPlanSchema
+let paymentPlan = require('./paymentPlan/paymentPlan.model').paymentPlanSchema;
+let orderAuditModel = require('./audit/orderAudit.model').orderAuditModel;
+let pmx = require('pmx');
 
 // TODO order machine with structure.
 let orderObject = {
@@ -22,24 +24,39 @@ let orderObject = {
   userId: {
     type: String
   },
-  createAt: {type: Date, default: new Date()},
-  updateAt: {type: Date, default: new Date()}
+  createAt: {type: Date, default: Date.now},
+  updateAt: {type: Date, default: Date.now}
 }
 
 let orderSchema = new mongoose.Schema(orderObject)
 
 orderSchema.index({
-  orderId : 'text',
-  "paymentsPlan.beneficiaryInfo.beneficiaryName": 'text',
-  "paymentsPlan.email": 'text',
-  "paymentsPlan.productInfo.productName": 'text',
-  "paymentsPlan.userInfo.userName": 'text'
-},{
-  name: "order_text_index",
-});
+  orderId: 'text',
+  'paymentsPlan.beneficiaryInfo.beneficiaryName': 'text',
+  'paymentsPlan.email': 'text',
+  'paymentsPlan.productInfo.productName': 'text',
+  'paymentsPlan.userInfo.userName': 'text'
+}, {
+  name: 'order_text_index',
+})
 
 orderSchema.set('toObject', { virtuals: true})
 orderSchema.set('toJSON', { virtuals: true})
+
+orderSchema.post('save', function(){
+
+  let orderAudit = {
+    _orderId: this._id,
+    userId: this.userId,
+    order: this
+  };
+
+  orderAuditModel.create(orderAudit, function (err, order) {
+    if(err)
+      pmx.notify(new Error('AUDIT orderSchema.post.save error: '+JSON.stringify(err)));
+  });
+
+});
 
 
 module.exports = orderObject // change for machine
