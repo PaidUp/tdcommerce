@@ -4,11 +4,11 @@ var _ = require('lodash')
 var commerceService = require('../commerce.service.js')
 var logger = require('../../config/logger')
 let orderModel = require('./order.model').orderModel
-let orderAuditModel = require('./audit/orderAudit.model').orderAuditModel;
+let orderAuditModel = require('./audit/orderAudit.model').orderAuditModel
 let orderService = require('./order.service')
 let mongoose = require('mongoose')
-let ObjectId = require('mongoose').Types.ObjectId;
-var pmx = require('pmx');
+let ObjectId = require('mongoose').Types.ObjectId
+var pmx = require('pmx')
 
 exports.create = function (req, res) {
   if (req.body.paymentsPlan && req.body.paymentsPlan.length > 0) {
@@ -16,7 +16,7 @@ exports.create = function (req, res) {
   }
 
   mongoose.connection.db.eval('getNextSequence("orderIds")', function (err, result) {
-    req.body.orderId = result.toUpperCase();
+    req.body.orderId = result.toUpperCase()
     orderModel.create(req.body, function (err, order) {
       if (err) return res.status(400).json({err: err})
       return res.status(200).json({_id: order._id, status: order.status, orderId: order.orderId, paymentsPlan: order.paymentsPlan})
@@ -27,14 +27,14 @@ exports.create = function (req, res) {
 exports.listV2 = function (req, res) {
   // http://mongoosejs.com/docs/api.html#query_Query-lean
   let filter = {}
-  if(req.body.orderId){
-    filter._id = new ObjectId(req.body.orderId);
+  if (req.body.orderId) {
+    filter._id = new ObjectId(req.body.orderId)
   }
-  if(req.body.userId){
-    filter.userId = req.body.userId;
+  if (req.body.userId) {
+    filter.userId = req.body.userId
   }
-  let limit = req.body.limit || 100;
-  let sort = req.body.sort || -1;
+  let limit = req.body.limit || 100
+  let sort = req.body.sort || -1
 
   orderModel.find(filter).limit(limit).sort({ createAt: sort }).lean().exec(function (err, orders) {
     if (err) return res.status(400).json({err: err})
@@ -72,7 +72,7 @@ exports.addPayments = function (req, res) {
       _orderId: order._id,
       userId: req.body.userSysId,
       order: order
-    });
+    })
 
     return res.status(200).json(order)
   })
@@ -108,20 +108,20 @@ exports.updatePayments = function (req, res) {
         _orderId: order._id,
         userId: req.body.userSysId,
         order: order
-      });
+      })
 
       return res.status(200).json(order)
     })
 }
 
-function createOrderAudit(orderAudit){
-  console.log("ORDERAUDIT" , orderAudit)
+function createOrderAudit (orderAudit) {
+  console.log('ORDERAUDIT' , orderAudit)
   orderAuditModel.create(orderAudit, function (err, order) {
-    if(err)
-      pmx.notify(new Error('AUDIT order error: '+JSON.stringify(err)));
-    console.log("ORDERAUDIT err" , err)
-    console.log("ORDERAUDIT ff" , order)
-  });
+    if (err)
+      pmx.notify(new Error('AUDIT order error: ' + JSON.stringify(err)))
+    console.log('ORDERAUDIT err' , err)
+    console.log('ORDERAUDIT ff' , order)
+  })
 }
 
 exports.completev3 = function (req, res) {
@@ -267,6 +267,13 @@ exports.next = function (req, res) {
 
 exports.active = function (req, res) {
   orderService.active(req.params, function (err, result) {
+    if (err) return res.status(400).json(err)
+    return res.status(200).json(result)
+  })
+}
+
+exports.getOrderOrganization = function (req, res) {
+  orderService.getOrderOrganization(req.params, function (err, result) {
     if (err) return res.status(400).json(err)
     return res.status(200).json(result)
   })
