@@ -11,4 +11,6 @@ router.get('/recent/:userId/:limit', authServer.isAuthenticated(), controller.re
 router.get('/next/:userId/:limit', authServer.isAuthenticated(), controller.next)
 router.get('/active/:userId/:limit', authServer.isAuthenticated(), controller.active)
 
+router.get('/organization/:organizationId/:limit/:sort', authServer.isAuthenticated(), controller.getOrderOrganization)
+
 module.exports = router
