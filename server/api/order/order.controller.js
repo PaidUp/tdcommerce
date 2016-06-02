@@ -14,7 +14,28 @@ exports.create = function (req, res) {
   if (req.body.paymentsPlan && req.body.paymentsPlan.length > 0) {
     req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
   }
-
+  /* run in mongdb the first time
+  db.system.js.save({
+    _id: 'getNextSequence',
+    value: function (name) {
+      var defaultSeq = '10000'
+      var cursor = db.counters.findOne({ _id: name }) || { seq: defaultSeq }
+      db.counters.update(
+        { _id: name },
+        { $set: { seq: ((parseInt(cursor.seq, 36) + 1).toString(36)).replace(/0/g, '0') } },
+        { upsert: true }
+      )
+      return cursor.seq
+    }
+  })
+  ---
+  db.orders.createIndex( {
+    orderId:"text",
+    "paymentsPlan.beneficiaryInfo.beneficiaryName": "text",
+    "paymentsPlan.email": "text" ,
+    "paymentsPlan.productInfo.productName": "text" ,
+    "paymentsPlan.userInfo.userName": "text"  } ,{name: "orders_text_index"})
+  */
   mongoose.connection.db.eval('getNextSequence("orderIds")', function (err, result) {
     req.body.orderId = result.toUpperCase()
     orderModel.create(req.body, function (err, order) {
@@ -80,7 +101,7 @@ exports.addPayments = function (req, res) {
 
 exports.updatePayments = function (req, res) {
   let filter = {
-    paymentsPlan: {$elemMatch: { _id: req.body.paymentPlanId }  }
+    paymentsPlan: {$elemMatch: { _id: req.body.paymentPlanId }}
   }
 
   orderModel.findOneAndUpdate(filter, {'$set': {
@@ -99,7 +120,7 @@ exports.updatePayments = function (req, res) {
       'paymentsPlan.$.status': req.body.paymentPlan.status,
       'paymentsPlan.$.attempts': req.body.paymentPlan.attempts,
       'paymentsPlan.$.updateAt': new Date()
-  }, },
+  } },
     {new: true}
     , function (err, order) {
       if (err) return res.status(400).json({err: err})
