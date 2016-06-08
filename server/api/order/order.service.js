@@ -59,7 +59,7 @@ function active (params, cb) {
     })
 }
 
-// db.getCollection('orders').aggregate({ $match: {"paymentsPlan.productInfo.organizationId":'xxx'} },{ $limit : 1 }, {$project:{ sumoriginalPrice:{$sum: '$paymentsPlan.originalPrice'}, alloriginalPrice:'$paymentsPlan.originalPrice', allDiscount:'$paymentsPlan.discount',sumDiscount:{$sum: '$paymentsPlan.discount'}, sumPrice:{$sum: '$paymentsPlan.price'}, allPrice:'$paymentsPlan.price', allProductName:'$paymentsPlan.productInfo.productName', allBeneficiaryName:'$paymentsPlan.beneficiaryInfo.beneficiaryName', status:true, paymentsPlan:true, userId:true, orderId:true, updateAt:true, createAt:true}})
+// db.getCollection('orders').aggregate({ $match: {"paymentsPlan.destinationId":'xxx'} },{ $limit : 1 }, {$project:{ sumoriginalPrice:{$sum: '$paymentsPlan.originalPrice'}, alloriginalPrice:'$paymentsPlan.originalPrice', allDiscount:'$paymentsPlan.discount',sumDiscount:{$sum: '$paymentsPlan.discount'}, sumPrice:{$sum: '$paymentsPlan.price'}, allPrice:'$paymentsPlan.price', allProductName:'$paymentsPlan.productInfo.productName', allBeneficiaryName:'$paymentsPlan.beneficiaryInfo.beneficiaryName', status:true, paymentsPlan:true, userId:true, orderId:true, updateAt:true, createAt:true}})
 function getOrderOrganization (params, cb) {
   let sort = params.sort || -1
   let limit = params.limit || 1000
