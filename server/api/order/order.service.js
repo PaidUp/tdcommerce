@@ -65,7 +65,7 @@ function getOrderOrganization (params, cb) {
   let limit = params.limit || 1000
   let organizationId = params.organizationId || ''
   orderModel
-    .aggregate([{ $match: {'paymentsPlan.productInfo.organizationId': organizationId} }, { $sort: {'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10)} }, { $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, {$project: { sumoriginalPrice: {$sum: '$paymentsPlan.originalPrice'}, alloriginalPrice: '$paymentsPlan.originalPrice', allDiscount: '$paymentsPlan.discount',sumDiscount: {$sum: '$paymentsPlan.discount'}, sumPrice: {$sum: '$paymentsPlan.price'}, allPrice: '$paymentsPlan.price', allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true, userId: true, orderId: true, updateAt: true, createAt: true}}])
+    .aggregate([{ $match: {'paymentsPlan.destinationId': organizationId} }, { $sort: {'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10)} }, { $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, {$project: { sumoriginalPrice: {$sum: '$paymentsPlan.originalPrice'}, alloriginalPrice: '$paymentsPlan.originalPrice', allDiscount: '$paymentsPlan.discount',sumDiscount: {$sum: '$paymentsPlan.discount'}, sumPrice: {$sum: '$paymentsPlan.price'}, allPrice: '$paymentsPlan.price', allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true, userId: true, orderId: true, updateAt: true, createAt: true}}])
     .exec(function (err, results) {
       if (err) {
         return cb(err)
