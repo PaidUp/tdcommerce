@@ -63,8 +63,7 @@ var all = {
       port: 8888,
       path: '/api/xmlrpc/',
       login: 'magento',
-      pass: 'Sv38SJVR'
-      // pass: 'test4echo'
+      pass: 'Sv38SJVR' // pass: 'test4echo'
     },
     category: {
       teams: 3,
