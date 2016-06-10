@@ -4,10 +4,12 @@ const mongoose = require('mongoose')
 
 let paymentPlanObject = {
   // discount
+  version: {type: String, required: true},
   destinationId: {type: String, required: true},
   email: {type: String, required: true},
   dateCharge: {type: Date, required: true},
   price: {type: Number, required: true},
+  basePrice: {type: Number, required: true},
   originalPrice: {type: Number, required: true},
   totalFee: {type: Number, required: true},
   feePaidUp: {type: Number, required: true},
