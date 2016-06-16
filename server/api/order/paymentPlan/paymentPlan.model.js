@@ -65,9 +65,9 @@ let paymentPlanObject = {
       userId: {type: String, required: true},
       userName: {type: String, required: true}
   }, required: true},
-  beneficiaryInfo: {type: {
-      beneficiaryId: {type: String, required: true},
-      beneficiaryName: {type: String, required: true}
+  customInfo: {type: {
+    formData: {},
+    formTemplate: []
   }, required: true},
   createAt: {type: Date, default: Date.now},
   updateAt: {type: Date, default: Date.now}
