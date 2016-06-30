@@ -10,5 +10,6 @@ router.use('/order', require('./order/index'));
 router.use('/transaction', require('./transaction/index'));
 router.use('/customer', require('./customer/index'));
 router.use('/schedule', require('./schedule/index'));
+router.use('/coupon', require('./coupon/index'));
 
 module.exports = router;

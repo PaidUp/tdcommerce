@@ -34,10 +34,12 @@ var all = {
 
   // MongoDB connection options
   mongo: {
+    uri: 'mongodb://localhost/convenience-dev',
     options: {
       db: {
         safe: true
-      }
+      },
+      prefix: 'tdcommerce_'
     }
   },
 
@@ -57,12 +59,11 @@ var all = {
     adapter: path.normalize(__dirname + '/../../..') + '/server/api/adapters/magento.adapter',
     adapterSchedule: path.normalize(__dirname + '/../../..') + '/server/api/adapters/magentoSchedule.adapter',
     magento: {
-      host: 'virtual',
-      //port: 80,
+      host: 'develop.getpaidup.com',
+      port: 8888,
       path: '/api/xmlrpc/',
       login: 'magento',
-      //pass: 'Sv38SJVR'
-      pass: 'test4echo'
+      pass: 'Sv38SJVR' // pass: 'test4echo'
     },
     category: {
       teams: 3,

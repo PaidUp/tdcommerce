@@ -1,12 +1,12 @@
-'use strict';
+'use strict'
 
 // Development specific configuration
 // ==================================
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/tdcommerce-dev'
+    uri: 'mongodb://localhost/convenience-dev'
   },
 
   seedDB: true
-};
+}
