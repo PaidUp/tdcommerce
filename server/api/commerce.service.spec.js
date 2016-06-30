@@ -5,7 +5,7 @@ var service = require('./commerce.service');
 var assert = require('chai').assert;
 
 describe('commerce service', function(){
-  this.timeout(100000);
+  this.timeout(10000);
   it('retry payment' , function(done){
     service.retryPayment(function(err, data){
       assert(data);
