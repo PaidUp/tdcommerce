@@ -113,6 +113,10 @@ exports.addPayments = function (req, res) {
 }
 
 exports.updatePayments = function (req, res) {
+  if(!req.body.userSysId){
+    return res.status (400).json ({err: "param userSysId is required"})
+  }
+
   let filter = {
     paymentsPlan: {$elemMatch: {_id: req.body.paymentPlanId}}
   }
@@ -141,6 +145,47 @@ exports.updatePayments = function (req, res) {
       }
     },
     {new: true}
+    , function (err, order) {
+      if (err) return res.status (400).json ({err: err})
+
+      createOrderAudit ({
+        _orderId: order._id,
+        userId: req.body.userSysId,
+        order: order
+      })
+
+      return res.status (200).json (order)
+    })
+}
+
+exports.updateAllPayments = function (req, res) {
+  if(!req.body.userSysId){
+    return res.status (400).json ({err: "param userSysId is required"})
+  }
+  if(!req.body._id){
+    return res.status (400).json ({err: "param _id order is required"})
+  }
+  if(!req.body.paymentsPlan){
+    return res.status (400).json ({err: "param paymentsPlan is required"})
+  }
+
+  let pps = {};
+  try{
+    pps = JSON.parse(req.body.paymentsPlan).pps
+  }catch(e){
+    return res.status (500).json ({err: e})
+  }
+
+  let filter = {
+  _id: req.body.orderId
+  }
+
+  orderModel.findOneAndUpdate (filter, {
+      '$set': {
+        'paymentsPlan': pps
+      }
+    },
+    {new: false}
     , function (err, order) {
       if (err) return res.status (400).json ({err: err})
 
