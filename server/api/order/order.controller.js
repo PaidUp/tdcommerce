@@ -372,7 +372,6 @@ exports.getOrderOrganization = function (req, res) {
 
 exports.updateWebhook = function (req, res) {
   console.log('req.body', req.body)
-  console.log('req.body.data', req.body.data)
   // orderModel.findOneAndUpdate (req.body.filter, {'$set': req.body.data}, function (err, orders) {
     // if (err) return res.status (400).json ({err: err})
   return res.status(200).json({webhook: true})
