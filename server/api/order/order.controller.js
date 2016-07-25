@@ -379,7 +379,7 @@ exports.updateWebhook = function (req, res) {
   // orderModel.findOneAndUpdate({"paymentsPlan.attempts.transferId": req.body.object.transfer}, {'$set': req.body.data}, function (err, orders) {
     // console.log('err', err)
     if (err) return res.status(400).json({err: err})
-    console.log('order', order)
+    // .log('order', order)
     order.paymentsPlan = order.paymentsPlan.map(function (pp) {
       // console.log('pp', pp.id)
       // console.log('pp', pp._id)
@@ -401,7 +401,7 @@ exports.updateWebhook = function (req, res) {
     order.save(order, function (err, orderSave) {
       // console.log('err', err)
       if (err) return res.status(400).json({err: err})
-      console.log('orderSave', orderSave)
+      // console.log('orderSave', orderSave)
       return res.status(200).json({webhook: true})
     })
   })
