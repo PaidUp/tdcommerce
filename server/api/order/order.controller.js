@@ -371,11 +371,40 @@ exports.getOrderOrganization = function (req, res) {
 }
 
 exports.updateWebhook = function (req, res) {
-  console.log('req.body', req.body)
-  // orderModel.findOneAndUpdate (req.body.filter, {'$set': req.body.data}, function (err, orders) {
-    // if (err) return res.status (400).json ({err: err})
-  return res.status(200).json({webhook: true})
-  // })
+  // console.log('req.body.object.transfer', req.body.object.transfer)
+  // console.log('req.body.object.status', req.body.object.status)
+  // console.log('req.body.object.metadata.orderId', req.body.object.metadata.scheduleId)
+  // console.log('req.body.object.id', req.body.object.id)
+  orderModel.findOne({'paymentsPlan.attempts.transferId': req.body.object.transfer, orderId: req.body.object.metadata.orderId}, function (err, order) {
+  // orderModel.findOneAndUpdate({"paymentsPlan.attempts.transferId": req.body.object.transfer}, {'$set': req.body.data}, function (err, orders) {
+    // console.log('err', err)
+    if (err) return res.status(400).json({err: err})
+    console.log('order', order)
+    order.paymentsPlan = order.paymentsPlan.map(function (pp) {
+      // console.log('pp', pp.id)
+      // console.log('pp', pp._id)
+      if(req.body.object.metadata.scheduleId === pp.id) {
+        pp.status = req.body.object.status
+      }
+      // console.log('pp', pp)
+      pp.attempts = pp.attempts.map(function (at) {
+        if (at.transferId === req.body.object.transfer) {
+          at.status = req.body.object.status
+          at.message = req.body.object.id
+          // console.log('at', at)
+        }
+        return at
+      })
+      return pp
+    })
+    // console.log('order1', order)
+    order.save(order, function (err, orderSave) {
+      // console.log('err', err)
+      if (err) return res.status(400).json({err: err})
+      console.log('orderSave', orderSave)
+      return res.status(200).json({webhook: true})
+    })
+  })
 }
 
 function handleError (res, err) {
