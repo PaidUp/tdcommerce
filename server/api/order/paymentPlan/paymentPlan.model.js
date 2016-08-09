@@ -34,6 +34,7 @@ let paymentPlanObject = {
         transferId: {type: String}
       }
   ], default: []},
+  paymentMethods: {type: [], default: []},
   processingFees: {type: {
       cardFeeActual: {type: Number, required: true},
       cardFeeDisplay: {type: Number, required: true},
