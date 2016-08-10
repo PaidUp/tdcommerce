@@ -200,12 +200,9 @@ exports.updateAllPayments = function (req, res) {
 }
 
 function createOrderAudit (orderAudit) {
-  console.log ('ORDERAUDIT', orderAudit)
   orderAuditModel.create (orderAudit, function (err, order) {
     if (err)
       pmx.notify (new Error ('AUDIT order error: ' + JSON.stringify (err)))
-    console.log ('ORDERAUDIT err', err)
-    console.log ('ORDERAUDIT ff', order)
   })
 }
 
