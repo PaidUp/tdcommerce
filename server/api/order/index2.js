@@ -8,6 +8,7 @@ let router = express.Router()
 
 router.post('/create', authServer.isAuthenticated(), controller.create)
 router.post('/list', authServer.isAuthenticated(), controller.listV2)
+router.post('/history', authServer.isAuthenticated(), controller.orderHistory)
 router.post('/cronjob', authServer.isAuthenticated(), controller.listCronjob)
 router.put('/update', authServer.isAuthenticated(), controller.update)
 router.post('/add-payments', authServer.isAuthenticated(), controller.addPayments)

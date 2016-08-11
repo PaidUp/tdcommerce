@@ -74,6 +74,25 @@ exports.listV2 = function (req, res) {
   })
 }
 
+exports.orderHistory = function (req, res) {
+  // http://mongoosejs.com/docs/api.html#query_Query-lean
+  
+  if (!req.body.orderId) {
+    return res.status (400).json ({err: 'orderId is required'});
+  }
+  let filter = {
+    _orderId: req.body.orderId
+  }
+  let limit = req.body.limit || 100
+  let sort = req.body.sort || -1
+
+  orderAuditModel.find (filter).limit (limit).sort ({createAt: sort}).lean ().exec (function (err, orders) {
+    console.log('Orders: ', orders);
+    if (err) return res.status (400).json ({err: err})
+    return res.status (200).json ({orders: orders})
+  })
+}
+
 exports.listCronjob = function (req, res) {
   let filter = {
     'paymentsPlan': {
