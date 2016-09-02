@@ -31,7 +31,6 @@ function calculateNextPaymentDue(nextPayment){
   if(resp === 'Invalid date'){
     logger.error('invalid date: '+nextPayment );
     throw new Error('invalid date');
-    return null;
   }
   return resp;
 };
