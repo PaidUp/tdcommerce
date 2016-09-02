@@ -2,10 +2,10 @@
 
 let orderModel = require('../order/order.model').orderModel
 
-exports.projections = function (req, res) {
+function aggregate(match, cb) {
     orderModel.aggregate([
         { $unwind: "$paymentsPlan" },
-        { $match: { $or: [{ 'paymentsPlan.status': "failed" }, { 'paymentsPlan.status': "pending" }, { 'paymentsPlan.status': "processing" }] } },
+        { $match: { $or: match } },
         {
             $group: {
                 _id: {
@@ -28,8 +28,28 @@ exports.projections = function (req, res) {
 
     ], function (err, result) {
         if (err) {
+            cb(err);
+        }
+        cb(null, { data: result });
+    });
+}
+
+exports.projections = function (req, res) {
+    let match = [{ 'paymentsPlan.status': "failed" }, { 'paymentsPlan.status': "pending" }, { 'paymentsPlan.status': "processing" }];
+    aggregate(match, function (err, data) {
+        if (err) {
             return res.status(500).json(err);
         }
-        res.status(200).json({data: result});
+        res.status(200).json(data);
+    });
+}
+
+exports.retrieve = function (req, res) {
+    let match = [{ 'paymentsPlan.status': "succeeded" }];
+    aggregate(match, function (err, data) {
+        if (err) {
+            return res.status(500).json(err);
+        }
+        res.status(200).json(data);
     });
 }
