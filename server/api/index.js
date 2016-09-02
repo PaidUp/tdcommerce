@@ -11,5 +11,6 @@ router.use('/transaction', require('./transaction/index'));
 router.use('/customer', require('./customer/index'));
 router.use('/schedule', require('./schedule/index'));
 router.use('/coupon', require('./coupon/index'));
+router.use('/reports', require('./reports/index'));
 
 module.exports = router;
