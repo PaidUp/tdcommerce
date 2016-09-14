@@ -82,7 +82,7 @@ function transactionDetails(params, cb) {
       {
         path: "$paymentsPlan",
         //includeArrayIndex: <string>,
-        preserveNullAndEmptyArrays: true
+        //preserveNullAndEmptyArrays: true
       }
     },
     {
@@ -90,14 +90,14 @@ function transactionDetails(params, cb) {
       {
         path: "$paymentsPlan.attempts",
         //includeArrayIndex: <string>,
-        preserveNullAndEmptyArrays: true
+        //preserveNullAndEmptyArrays: true
       }
     }
   ]
   if(params.organizationId){
     cond.push({ $match : { "paymentsPlan.productInfo.organizationId" : params.organizationId } })
   }
-  cond.push({ $sort: { "paymentsPlan.attempts.attempts": -1} });
+  cond.push({ $sort: { "paymentsPlan.attempts.dateAttemp": 1} });
 
   orderModel
     .aggregate(cond)
@@ -105,6 +105,9 @@ function transactionDetails(params, cb) {
       if (err) {
         return cb(err)
       }
+
+console.log(results)
+
       return cb(null, results)
     })
 }
