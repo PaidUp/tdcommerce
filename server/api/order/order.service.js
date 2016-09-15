@@ -84,19 +84,20 @@ function transactionDetails(params, cb) {
         //includeArrayIndex: <string>,
         //preserveNullAndEmptyArrays: true
       }
-    },
-    {
+    }
+  ]
+  if(params.organizationId){
+    cond.push({ $match : { "paymentsPlan.paymentId" : params.organizationId } })
+  }
+  cond.push({
       $unwind:
       {
         path: "$paymentsPlan.attempts",
         //includeArrayIndex: <string>,
         //preserveNullAndEmptyArrays: true
       }
-    }
-  ]
-  if(params.organizationId){
-    cond.push({ $match : { "paymentsPlan.productInfo.organizationId" : params.organizationId } })
-  }
+    });
+
   cond.push({ $sort: { "paymentsPlan.attempts.dateAttemp": 1} });
 
   orderModel
@@ -105,9 +106,6 @@ function transactionDetails(params, cb) {
       if (err) {
         return cb(err)
       }
-
-console.log(results)
-
       return cb(null, results)
     })
 }
