@@ -386,6 +386,13 @@ exports.getOrderOrganization = function (req, res) {
   })
 }
 
+exports.transactionDetails = function (req, res) {
+  orderService.transactionDetails (req.params, function (err, result) {
+    if (err) return res.status (400).json (err)
+    return res.status (200).json (result)
+  })
+}
+
 exports.updateWebhook = function (req, res) {
   // console.log('req.body.object.transfer', req.body.object.transfer)
   // console.log('req.body.object.status', req.body.object.status)
