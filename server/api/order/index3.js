@@ -13,4 +13,8 @@ router.get('/active/:userId/:limit', authServer.isAuthenticated(), controller.ac
 
 router.get('/organization/:organizationId/:limit/:sort', authServer.isAuthenticated(), controller.getOrderOrganization)
 
+router.get('/transactions', authServer.isAuthenticated(), controller.transactionDetails)
+router.get('/transactions/organization/:organizationId', authServer.isAuthenticated(), controller.transactionDetails)
+
+
 module.exports = router
