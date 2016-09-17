@@ -87,7 +87,7 @@ function transactionDetails(params, cb) {
     }
   ]
   if(params.organizationId){
-    cond.push({ $match : { "paymentsPlan.paymentId" : params.organizationId } })
+    cond.push({ $match : { "paymentsPlan.destinationId" : params.organizationId } })
   }
   cond.push({
       $unwind:
