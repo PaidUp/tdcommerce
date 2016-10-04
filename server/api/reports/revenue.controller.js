@@ -65,7 +65,7 @@ console.log('into revenue')
     var o = {};
     o.map = function () {
         this.paymentsPlan.map(function (data) {
-            if (data.status === 'succeeded' || data.status === 'refund') {
+            if (data.status === 'succeeded' || data.status === 'refunded') {
                 data.attempts.map(function (attemp) {
                     var _id = {
                         year: '' + attemp.dateAttemp.getFullYear(),                        
