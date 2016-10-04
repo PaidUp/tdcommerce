@@ -6,6 +6,6 @@ var authServer = require('../auth/auth.service');
 var router = express.Router();
 
 router.post('/revenue/projections',  authServer.isAuthenticated(), controller.projections);
-router.post('/revenue',  authServer.isAuthenticated(), controller.retrieve);
+router.post('/revenue',  authServer.isAuthenticated(), controller.revenue);
 
 module.exports = router;
