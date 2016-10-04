@@ -60,8 +60,6 @@ exports.projections = function (req, res) {
 
 exports.revenue = function (req, res) {
 
-console.log('into revenue')
-
     var o = {};
     o.map = function () {
         this.paymentsPlan.map(function (data) {
@@ -69,7 +67,7 @@ console.log('into revenue')
                 data.attempts.map(function (attemp) {
                     var _id = {
                         year: '' + attemp.dateAttemp.getFullYear(),                        
-                        month: '' + attemp.dateAttemp.getMonth(),
+                        month: '' + attemp.dateAttemp.getMonth() + 1,
                         organizationId: data.productInfo.organizationId,
                         organizationName: data.productInfo.organizationName,
                         organizationLocation: data.productInfo.organizationLocation
