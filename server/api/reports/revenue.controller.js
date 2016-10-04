@@ -66,8 +66,8 @@ exports.revenue = function (req, res) {
             if (data.status === 'succeeded' || data.status === 'refunded') {
                 data.attempts.map(function (attemp) {
                     var _id = {
-                        year: '' + attemp.dateAttemp.getFullYear(),                        
-                        month: '' + attemp.dateAttemp.getMonth() + 1,
+                        year: attemp.dateAttemp.getFullYear(),                        
+                        month: attemp.dateAttemp.getMonth() + 1,
                         organizationId: data.productInfo.organizationId,
                         organizationName: data.productInfo.organizationName,
                         organizationLocation: data.productInfo.organizationLocation
