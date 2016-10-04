@@ -68,11 +68,11 @@ console.log('into revenue')
             if (data.status === 'succeeded' || data.status === 'refund') {
                 data.attempts.map(function (attemp) {
                     var _id = {
+                        year: '' + attemp.dateAttemp.getFullYear(),                        
+                        month: '' + attemp.dateAttemp.getMonth(),
                         organizationId: data.productInfo.organizationId,
                         organizationName: data.productInfo.organizationName,
-                        organizationLocation: data.productInfo.organizationLocation,
-                        month: '' + attemp.dateAttemp.getMonth(),
-                        year: '' + attemp.dateAttemp.getFullYear()
+                        organizationLocation: data.productInfo.organizationLocation
                     }
 
                     var res = {
