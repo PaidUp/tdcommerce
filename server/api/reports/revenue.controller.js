@@ -24,14 +24,28 @@ function aggregate(match, cb) {
             }
         },
 
-        { $sort: { '_id.year': 1, '_id.month': 1 } }
+        {
+            $project: {
+                _id: 1,
+                value: {
+                    paidupFee: '$paidupFee',
+                    stripeFee: '$stripeFee',
+                    totalFee: '$totalFee',
+                    price: '$price'
+                }
+            }
+        },
+
+        { $sort: { '_id.year': 1, '_id.month': 1, '_id.organizationName': 1 } }
+
+
 
     ], function (err, result) {
-        if (err) {
-            cb(err);
-        }
-        cb(null, { data: result });
-    });
+            if (err) {
+                cb(err);
+            }
+            cb(null, { data: result });
+        });
 }
 
 exports.projections = function (req, res) {
@@ -44,12 +58,58 @@ exports.projections = function (req, res) {
     });
 }
 
-exports.retrieve = function (req, res) {
-    let match = [{ 'paymentsPlan.status': "succeeded" }];
-    aggregate(match, function (err, data) {
+exports.revenue = function (req, res) {
+
+console.log('into revenue')
+
+    var o = {};
+    o.map = function () {
+        this.paymentsPlan.map(function (data) {
+            if (data.status === 'succeeded' || data.status === 'refund') {
+                data.attempts.map(function (attemp) {
+                    var _id = {
+                        year: '' + attemp.dateAttemp.getFullYear(),                        
+                        month: '' + attemp.dateAttemp.getMonth(),
+                        organizationId: data.productInfo.organizationId,
+                        organizationName: data.productInfo.organizationName,
+                        organizationLocation: data.productInfo.organizationLocation
+                    }
+
+                    var res = {
+                        price: data.status === 'succeeded' ? data.price : data.price * -1,
+                        stripeFee: data.status === 'succeeded' ? data.feeStripe : data.feeStripe * -1,
+                        paidupFee: data.status === 'succeeded' ? data.feePaidUp : data.feePaidUp * -1,
+                        totalFee: data.status === 'succeeded' ? data.totalFee : data.totalFee * -1,
+                    };
+                    emit(_id, res);
+                });
+            }
+        })
+    };
+
+
+
+    o.reduce = function (id, data) {
+        var reduceVal = {
+            price: 0,
+            stripeFee: 0,
+            paidupFee: 0,
+            totalFee: 0,
+        }
+        for (var idx = 0; idx < data.length; idx++) {
+            reduceVal.price = reduceVal.price + data[idx].price
+            reduceVal.stripeFee = reduceVal.stripeFee + data[idx].stripeFee
+            reduceVal.paidupFee = reduceVal.paidupFee + data[idx].paidupFee
+            reduceVal.totalFee = reduceVal.totalFee + data[idx].totalFee
+        }
+        return reduceVal;
+    };
+
+    orderModel.mapReduce(o, function (err, data) {
+        console.log(data)
         if (err) {
             return res.status(500).json(err);
         }
-        res.status(200).json(data);
-    });
+        res.status(200).json({ data: data });
+    })
 }
