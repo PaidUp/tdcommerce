@@ -50,7 +50,7 @@ function next(params, cb) {
 // db.getCollection('orders').aggregate({ $match: { userId:'xxx', status:'active'} },{ $limit : 1 }, {$project:{ allProductName:'$paymentsPlan.productInfo.productName', allBeneficiaryName:'$paymentsPlan.beneficiaryInfo.beneficiaryName', status:true, paymentsPlan:true}})
 function active(params, cb) {
   orderModel
-    .aggregate([{ $match: { userId: params.userId, status: 'active' } }, { $limit: (typeof params.limit === 'number') ? params.limit : parseInt(params.limit, 10) }, { $project: { allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true } }])
+    .aggregate([{ $match: { userId: params.userId, status: 'active' } }, { $limit: (typeof params.limit === 'number') ? params.limit : parseInt(params.limit, 10) }, { $project: { allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true, orderId: true, description: true, userId: true } }])
     .exec(function (err, results) {
       if (err) {
         return cb(err)
