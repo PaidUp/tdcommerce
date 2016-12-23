@@ -65,8 +65,17 @@ function getOrderOrganization(params, cb) {
   let sort = params.sort || -1
   let limit = params.limit || 1000
   let organizationId = params.organizationId || ''
+  let from = params.from
+  let to = params.to
   orderModel
-    .aggregate([{ $match: { 'paymentsPlan.destinationId': organizationId } }, { $sort: { 'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10) } }, { $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, { $project: { sumbasePrice: { $sum: '$paymentsPlan.basePrice' }, sumoriginalPrice: { $sum: '$paymentsPlan.originalPrice' }, allbasePrice: '$paymentsPlan.basePrice', alloriginalPrice: '$paymentsPlan.originalPrice', allDiscount: '$paymentsPlan.discount', sumDiscount: { $sum: '$paymentsPlan.discount' }, sumPrice: { $sum: '$paymentsPlan.price' }, allPrice: '$paymentsPlan.price', allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true, userId: true, orderId: true, updateAt: true, createAt: true } }])
+    .aggregate([{
+      $match: {
+        'paymentsPlan.destinationId': organizationId,
+        'createAt': { $gte: new Date(from), $lt: new Date(to) }
+      }
+    }, { $sort: { 'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10) } }, 
+    //{ $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, 
+    { $project: { sumbasePrice: { $sum: '$paymentsPlan.basePrice' }, sumoriginalPrice: { $sum: '$paymentsPlan.originalPrice' }, allbasePrice: '$paymentsPlan.basePrice', alloriginalPrice: '$paymentsPlan.originalPrice', allDiscount: '$paymentsPlan.discount', sumDiscount: { $sum: '$paymentsPlan.discount' }, sumPrice: { $sum: '$paymentsPlan.price' }, allPrice: '$paymentsPlan.price', allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true, userId: true, orderId: true, updateAt: true, createAt: true } }])
     .exec(function (err, results) {
       if (err) {
         return cb(err)
@@ -86,19 +95,19 @@ function transactionDetails(params, cb) {
       }
     }
   ]
-  if(params.organizationId){
-    cond.push({ $match : { "paymentsPlan.destinationId" : params.organizationId } })
+  if (params.organizationId) {
+    cond.push({ $match: { "paymentsPlan.destinationId": params.organizationId } })
   }
   cond.push({
-      $unwind:
-      {
-        path: "$paymentsPlan.attempts",
-        //includeArrayIndex: <string>,
-        //preserveNullAndEmptyArrays: true
-      }
-    });
+    $unwind:
+    {
+      path: "$paymentsPlan.attempts",
+      //includeArrayIndex: <string>,
+      //preserveNullAndEmptyArrays: true
+    }
+  });
 
-  cond.push({ $sort: { "paymentsPlan.attempts.dateAttemp": 1} });
+  cond.push({ $sort: { "paymentsPlan.attempts.dateAttemp": 1 } });
 
   orderModel
     .aggregate(cond)
