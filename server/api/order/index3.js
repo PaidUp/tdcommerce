@@ -11,7 +11,7 @@ router.get('/recent/:userId/:limit', authServer.isAuthenticated(), controller.re
 router.get('/next/:userId/:limit', authServer.isAuthenticated(), controller.next)
 router.get('/active/:userId/:limit', authServer.isAuthenticated(), controller.active)
 
-router.get('/organization/:organizationId/:limit/:sort', authServer.isAuthenticated(), controller.getOrderOrganization)
+router.get('/organization/:organizationId/:limit/:sort/:from/:to', authServer.isAuthenticated(), controller.getOrderOrganization)
 
 router.get('/transactions', authServer.isAuthenticated(), controller.transactionDetails)
 router.get('/transactions/organization/:organizationId', authServer.isAuthenticated(), controller.transactionDetails)
