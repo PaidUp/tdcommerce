@@ -119,6 +119,24 @@ function transactionDetails(params, cb) {
     })
 }
 
+function cancelOrder(orderId, cb){
+  orderModel.findOne({ 'orderId': orderId }, function (err, order) {
+  if (err) return cb(err);
+  order.status = 'canceled'
+   order.paymentsPlan.forEach(function(pp, idx, arr){
+     if(pp.status === 'pending'){
+      pp.status = 'canceled'   
+     }
+
+   });
+   order.save(function (err, updatedOrder) {
+    if (err) return cb(err);
+    cb(null, updatedOrder);
+  });
+})
+
+}
+
 exports.createPayments = createPayments
 exports.searchOrder = searchOrder
 exports.recent = recent
@@ -126,3 +144,4 @@ exports.next = next
 exports.active = active
 exports.getOrderOrganization = getOrderOrganization
 exports.transactionDetails = transactionDetails
+exports.cancelOrder = cancelOrder;

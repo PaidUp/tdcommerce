@@ -18,7 +18,7 @@ let orderObject = {
   status: {
     type: String,
     default: 'active',
-    enum: ['pending', 'complete', 'cancel', 'processing', 'active'],
+    enum: ['pending', 'complete', 'canceled', 'processing', 'active'],
     lowercase: true
   },
   paymentsPlan: {
