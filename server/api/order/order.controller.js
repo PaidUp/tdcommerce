@@ -394,7 +394,19 @@ exports.transactionDetails = function (req, res) {
 }
 
 exports.cancelOrder = function (req, res) {
-  orderService.cancelOrder (req.params.orderId, function (err, result) {
+  if (!req.body && !req.body.orderId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'Order Id is required'
+    })
+  }
+  if (!req.body && !req.body.userSysId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'userSysId is required'
+    })
+  }
+  orderService.cancelOrder (req.body.userSysId, req.body.orderId, function (err, result) {
     if (err) return res.status (400).json (err)
     return res.status (200).json (result)
   })
