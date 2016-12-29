@@ -2,6 +2,7 @@
 
 var paymentPlanModel = require('./paymentPlan/paymentPlan.model').paymentPlanModel
 var orderModel = require('./order.model').orderModel
+var setUserAudit = require('./order.model').setUserAudit
 
 function createPayments(paymentsList) {
   if (!paymentsList.length) {
@@ -119,7 +120,8 @@ function transactionDetails(params, cb) {
     })
 }
 
-function cancelOrder(orderId, cb){
+function cancelOrder(userSysId, orderId, cb){
+  setUserAudit(userSysId);
   orderModel.findOne({ 'orderId': orderId }, function (err, order) {
   if (err) return cb(err);
   order.status = 'canceled'
