@@ -66,13 +66,12 @@ function getOrderOrganization(params, cb) {
   let sort = params.sort || -1
   let limit = params.limit || 1000
   let organizationId = params.organizationId || ''
-  let from = params.from
-  let to = params.to
+  let createAt = { $gte: new Date(params.from), $lte: new Date(params.to) }
   orderModel
     .aggregate([{
       $match: {
         'paymentsPlan.destinationId': organizationId,
-        'createAt': { $gte: new Date(from), $lt: new Date(to) }
+        'createAt': createAt
       }
     }, { $sort: { 'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10) } }, 
     //{ $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, 
