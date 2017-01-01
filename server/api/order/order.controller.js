@@ -393,6 +393,25 @@ exports.transactionDetails = function (req, res) {
   })
 }
 
+exports.cancelOrder = function (req, res) {
+  if (!req.body && !req.body.orderId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'Order Id is required'
+    })
+  }
+  if (!req.body && !req.body.userSysId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'userSysId is required'
+    })
+  }
+  orderService.cancelOrder (req.body.userSysId, req.body.orderId, function (err, result) {
+    if (err) return res.status (400).json (err)
+    return res.status (200).json (result)
+  })
+}
+
 exports.updateWebhook = function (req, res) {
   // console.log('req.body.object.transfer', req.body.object.transfer)
   // console.log('req.body.object.status', req.body.object.status)
