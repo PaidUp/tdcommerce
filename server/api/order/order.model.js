@@ -18,7 +18,7 @@ let orderObject = {
   status: {
     type: String,
     default: 'active',
-    enum: ['pending', 'complete', 'cancel', 'processing', 'active'],
+    enum: ['pending', 'complete', 'canceled', 'processing', 'active'],
     lowercase: true
   },
   paymentsPlan: {
@@ -47,10 +47,16 @@ orderSchema.index({
 orderSchema.set('toObject', { virtuals: true})
 orderSchema.set('toJSON', { virtuals: true})
 
+var userAudit = undefined;
+
+function setUserAudit(userId){
+  userAudit = userId;
+}
+
 orderSchema.post('save', function () {
   let orderAudit = {
     _orderId: this._id,
-    userId: this.userId,
+    userId: userAudit || this.userId,
     order: this
   }
 
@@ -63,3 +69,4 @@ orderSchema.post('save', function () {
 module.exports = orderObject // change for machine
 module.exports.orderSchema = orderSchema
 module.exports.orderModel = mongoose.model('order', orderSchema, 'orders')
+module.exports.setUserAudit = setUserAudit;
