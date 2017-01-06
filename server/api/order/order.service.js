@@ -73,7 +73,7 @@ function getOrderOrganization(params, cb) {
         'paymentsPlan.destinationId': organizationId,
         'createAt': createAt
       }
-    }, { $sort: { 'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10) } }, 
+    }, { $sort: { 'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10) } },
     //{ $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, 
     { $project: { sumbasePrice: { $sum: '$paymentsPlan.basePrice' }, sumoriginalPrice: { $sum: '$paymentsPlan.originalPrice' }, allbasePrice: '$paymentsPlan.basePrice', alloriginalPrice: '$paymentsPlan.originalPrice', allDiscount: '$paymentsPlan.discount', sumDiscount: { $sum: '$paymentsPlan.discount' }, sumPrice: { $sum: '$paymentsPlan.price' }, allPrice: '$paymentsPlan.price', allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true, userId: true, orderId: true, updateAt: true, createAt: true } }])
     .exec(function (err, results) {
@@ -119,23 +119,38 @@ function transactionDetails(params, cb) {
     })
 }
 
-function cancelOrder(userSysId, orderId, cb){
+function cancelOrder(userSysId, orderId, cb) {
   setUserAudit(userSysId);
   orderModel.findOne({ 'orderId': orderId }, function (err, order) {
-  if (err) return cb(err);
-  order.status = 'canceled'
-   order.paymentsPlan.forEach(function(pp, idx, arr){
-     if(pp.status === 'pending'){
-      pp.status = 'canceled'   
-     }
-
-   });
-   order.save(function (err, updatedOrder) {
     if (err) return cb(err);
-    cb(null, updatedOrder);
-  });
-})
+    order.status = 'canceled'
+    order.paymentsPlan.forEach(function (pp, idx, arr) {
+      if (pp.status === 'pending') {
+        pp.status = 'canceled'
+      }
 
+    });
+    order.save(function (err, updatedOrder) {
+      if (err) return cb(err);
+      cb(null, updatedOrder);
+    });
+  })
+}
+
+function removePaymentPlan(userSysId, orderId, paymentPlanId, cb) {
+  setUserAudit(userSysId);
+  orderModel.findOne({ 'orderId': orderId }, function (err, order) {
+    if (err) return cb(err);
+    if (!order || !order._id) return cb('order not found')
+    let ppFilter = order.paymentsPlan.filter(function (pp) {
+      return pp._id.toString() !== paymentPlanId
+    });
+    order.paymentsPlan = ppFilter;
+    order.save(function (err, updatedOrder) {
+      if (err) return cb(err);
+      cb(null, updatedOrder);
+    });
+  })
 }
 
 exports.createPayments = createPayments
@@ -146,3 +161,4 @@ exports.active = active
 exports.getOrderOrganization = getOrderOrganization
 exports.transactionDetails = transactionDetails
 exports.cancelOrder = cancelOrder;
+exports.removePaymentPlan = removePaymentPlan;
