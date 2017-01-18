@@ -62,7 +62,7 @@ let paymentPlanObject = {
       organizationName: {type: String, required: true},
       organizationLocation: {type: String, required: true},
       organizationImage: {type: String, required: true},
-      transactionDescription: {type: String, required: false},
+      statementDescriptor: {type: String, required: false},
   }, required: true},
   userInfo: {type: {
       userId: {type: String, required: true},
