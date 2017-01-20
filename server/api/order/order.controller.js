@@ -412,6 +412,33 @@ exports.cancelOrder = function (req, res) {
   })
 }
 
+exports.removePaymentPlan = function (req, res) {
+  if (!req.body && !req.body.orderId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'Order Id is required'
+    })
+  }
+
+  if (!req.body && !req.body.paymentPlanId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'Payment Plan Id is required'
+    })
+  }
+
+  if (!req.body && !req.body.userSysId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'userSysId is required'
+    })
+  }
+  orderService.removePaymentPlan (req.body.userSysId, req.body.orderId, req.body.paymentPlanId, function (err, result) {
+    if (err) return res.status (400).json (err)
+    return res.status (200).json (result)
+  })
+}
+
 exports.updateWebhook = function (req, res) {
   // console.log('req.body.object.transfer', req.body.object.transfer)
   // console.log('req.body.object.status', req.body.object.status)
