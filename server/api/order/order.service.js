@@ -75,7 +75,7 @@ function getOrderOrganization(params, cb) {
       }
     }, { $sort: { 'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10) } },
     //{ $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, 
-    { $project: { sumbasePrice: { $sum: '$paymentsPlan.basePrice' }, sumoriginalPrice: { $sum: '$paymentsPlan.originalPrice' }, allbasePrice: '$paymentsPlan.basePrice', alloriginalPrice: '$paymentsPlan.originalPrice', allDiscount: '$paymentsPlan.discount', sumDiscount: { $sum: '$paymentsPlan.discount' }, sumPrice: { $sum: '$paymentsPlan.price' }, allPrice: '$paymentsPlan.price', allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true, userId: true, orderId: true, updateAt: true, createAt: true } }])
+    { $project: { sumbasePrice: { $sum: '$paymentsPlan.basePrice' }, sumoriginalPrice: { $sum: '$paymentsPlan.originalPrice' }, allbasePrice: '$paymentsPlan.basePrice', alloriginalPrice: '$paymentsPlan.originalPrice', allDiscount: '$paymentsPlan.discount', sumDiscount: { $sum: '$paymentsPlan.discount' }, sumPrice: { $sum: '$paymentsPlan.price' }, allPrice: '$paymentsPlan.price', allProductName: '$paymentsPlan.productInfo.productName', allBeneficiaryName: '$paymentsPlan.beneficiaryInfo.beneficiaryName', status: true, paymentsPlan: true, userId: true, orderId: true, updateAt: true, createAt: true, description: true } }])
     .exec(function (err, results) {
       if (err) {
         return cb(err)
