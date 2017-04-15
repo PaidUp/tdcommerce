@@ -363,7 +363,8 @@ exports.getOrdersForChargeNotification = function (req, res) {
     if (err) {
       return res.status (400).json ({err: err})
     }
-    return res.status (200).json ({orders: orders})
+    
+    return res.status (200).json (orders)
   })
 }
 
