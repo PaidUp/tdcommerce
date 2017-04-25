@@ -29,7 +29,7 @@ function searchOrder(param, cb) {
 
 function getOrdersForChargeNotification(isoDate, cb) {
   orderModel.find(
-    {"paymentsPlan.dateCharge" : {$lte : new Date(isoDate)} }
+    {"paymentsPlan": {$elemMatch: { $and : [{ dateCharge: {$lte: new Date(isoDate) } }, {status: "pending" }]} } }
   ).exec(function (err, results) {
     if (err) {
       return cb(err)
