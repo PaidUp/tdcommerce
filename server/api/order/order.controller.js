@@ -358,6 +358,16 @@ exports.searchOrder = function (req, res) {
   })
 }
 
+exports.getOrdersForChargeNotification = function (req, res) {
+  orderService.getOrdersForChargeNotification (req.params.isoDate, function (err, orders) {
+    if (err) {
+      return res.status (400).json ({err: err})
+    }
+    
+    return res.status (200).json (orders)
+  })
+}
+
 exports.recent = function (req, res) {
   orderService.recent (req.params, function (err, result) {
     if (err) return res.status (400).json (err)

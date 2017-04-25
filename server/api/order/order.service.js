@@ -26,6 +26,18 @@ function searchOrder(param, cb) {
     cb(null, results)
   })
 }
+
+function getOrdersForChargeNotification(isoDate, cb) {
+  orderModel.find(
+    {"paymentsPlan": {$elemMatch: { $and : [{ dateCharge: {$lte: new Date(isoDate) } }, {status: "pending" }]} } }
+  ).exec(function (err, results) {
+    if (err) {
+      return cb(err)
+    }
+    cb(null, results)
+  })
+}
+
 // db.getCollection('orders').aggregate({ $match: { userId:'xxx'} },{ $limit : 5 }, {$unwind:{path: "$paymentsPlan"}},{ $sort : {"paymentsPlan.dateCharge":-1} },{ $match: {"paymentsPlan.status":'succeeded'} })
 function recent(params, cb) {
   orderModel
@@ -162,3 +174,4 @@ exports.getOrderOrganization = getOrderOrganization
 exports.transactionDetails = transactionDetails
 exports.cancelOrder = cancelOrder;
 exports.removePaymentPlan = removePaymentPlan;
+exports.getOrdersForChargeNotification = getOrdersForChargeNotification;
