@@ -359,7 +359,7 @@ exports.searchOrder = function (req, res) {
 }
 
 exports.getOrdersForChargeNotification = function (req, res) {
-  orderService.getOrdersForChargeNotification (req.params.isoDate, function (err, orders) {
+  orderService.getOrdersForChargeNotification (req.params.gtIsoDate, req.params.ltIsoDate, function (err, orders) {
     if (err) {
       return res.status (400).json ({err: err})
     }
