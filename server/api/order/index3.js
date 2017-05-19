@@ -7,7 +7,7 @@ let authServer = require('../auth/auth.service')
 let router = express.Router()
 
 router.post('/search', authServer.isAuthenticated(), controller.searchOrder)
-router.get('/charge/notification/:isoDate', authServer.isAuthenticated(), controller.getOrdersForChargeNotification)
+router.get('/charge/notification/gt/:gtIsoDate/lt/:ltIsoDate', authServer.isAuthenticated(), controller.getOrdersForChargeNotification)
 router.get('/recent/:userId/:limit', authServer.isAuthenticated(), controller.recent)
 router.post('/cancel', authServer.isAuthenticated(), controller.cancelOrder)
 router.post('/payments/remove', authServer.isAuthenticated(), controller.removePaymentPlan)
