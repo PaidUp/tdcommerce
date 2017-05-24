@@ -149,6 +149,18 @@ function cancelOrder(userSysId, orderId, cb) {
   })
 }
 
+function activateOrder(userSysId, orderId, cb) {
+  setUserAudit(userSysId);
+  orderModel.findOne({ 'orderId': orderId }, function (err, order) {
+    if (err) return cb(err);
+    order.status = 'active'
+    order.save(function (err, updatedOrder) {
+      if (err) return cb(err);
+      cb(null, updatedOrder);
+    });
+  })
+}
+
 function removePaymentPlan(userSysId, orderId, paymentPlanId, cb) {
   setUserAudit(userSysId);
   orderModel.findOne({ 'orderId': orderId }, function (err, order) {
@@ -175,3 +187,4 @@ exports.transactionDetails = transactionDetails
 exports.cancelOrder = cancelOrder;
 exports.removePaymentPlan = removePaymentPlan;
 exports.getOrdersForChargeNotification = getOrdersForChargeNotification;
+exports.activateOrder = activateOrder;

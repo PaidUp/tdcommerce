@@ -422,6 +422,25 @@ exports.cancelOrder = function (req, res) {
   })
 }
 
+exports.activateOrder = function (req, res) {
+  if (!req.body && !req.body.orderId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'Order Id is required'
+    })
+  }
+  if (!req.body && !req.body.userSysId) {
+    return res.status (400).json ({
+      'code': 'ValidationError',
+      'message': 'userSysId is required'
+    })
+  }
+  orderService.activateOrder (req.body.userSysId, req.body.orderId, function (err, result) {
+    if (err) return res.status (400).json (err)
+    return res.status (200).json (result)
+  })
+}
+
 exports.removePaymentPlan = function (req, res) {
   if (!req.body && !req.body.orderId) {
     return res.status (400).json ({
