@@ -398,7 +398,7 @@ exports.active = function (req, res) {
 
 exports.getOrderOrganization = function (req, res) {
   if(req.query.productIds){
-    req.params.productIds = req.query.productIds
+    req.params.productIds = req.query.productIds.split(',')
   }
   orderService.getOrderOrganization (req.params, function (err, result) {
     if (err) return res.status (400).json (err)
