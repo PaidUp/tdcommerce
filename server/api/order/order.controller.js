@@ -14,20 +14,27 @@ exports.create = function (req, res) {
   if (req.body.paymentsPlan && req.body.paymentsPlan.length > 0) {
     req.body.paymentsPlan = orderService.createPayments (req.body.paymentsPlan)
   }
-  /* run in mongdb the first time
-   db.system.js.save({
-   _id: 'getNextSequence',
-   value: function (name) {
-   var defaultSeq = '10000'
-   var cursor = db.counters.findOne({ _id: name }) || { seq: defaultSeq }
-   db.counters.update(
-   { _id: name },
-   { $set: { seq: ((parseInt(cursor.seq, 36) + 1).toString(36)).replace(/0/g, '0') } },
-   { upsert: true }
-   )
-   return cursor.seq
-   }
-   })
+  /* run in mongdb the first time  
+  db.system.js.save(
+   {
+     _id : "getNextSequence" ,
+     value : function (name) {
+            var defaultSeq = "100000"
+            var cursor = db.counters.findOne(
+                { _id: name }
+            ) || { seq: defaultSeq };
+
+            db.counters.update(
+                { _id: name },
+                { $set: { seq: ((parseInt(cursor.seq, 36) + 1).toString(36)).replace(/0/g, '0') } },
+                { upsert: true }
+            )
+
+            return cursor.seq;
+        }
+    }
+  );
+
    ---
    db.orders.createIndex( {
    orderId:"text",
@@ -390,6 +397,9 @@ exports.active = function (req, res) {
 }
 
 exports.getOrderOrganization = function (req, res) {
+  if(req.query.productIds){
+    req.params.productIds = req.query.productIds.split(',')
+  }
   orderService.getOrderOrganization (req.params, function (err, result) {
     if (err) return res.status (400).json (err)
     return res.status (200).json (result)

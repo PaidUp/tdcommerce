@@ -29,7 +29,7 @@ function searchOrder(param, cb) {
 
 function getOrdersForChargeNotification(gtIsoDate, ltIsoDate, cb) {
   orderModel.find(
-    {"paymentsPlan": {$elemMatch: { $and : [{ dateCharge: {$gt: new Date(gtIsoDate), $lt: new Date(ltIsoDate)}}, {status: "pending" }]} } }
+    { "paymentsPlan": { $elemMatch: { $and: [{ dateCharge: { $gt: new Date(gtIsoDate), $lt: new Date(ltIsoDate) } }, { status: "pending" }] } } }
   ).exec(function (err, results) {
     if (err) {
       return cb(err)
@@ -79,11 +79,18 @@ function getOrderOrganization(params, cb) {
   let limit = params.limit || 1000
   let organizationId = params.organizationId || ''
   let createAt = { $gte: new Date(params.from), $lte: new Date(params.to) }
+  let match = [
+    {'paymentsPlan.destinationId': organizationId},
+    {'createAt': createAt}
+  ]
+  if(params.productIds && params.productIds.length > 0){
+    match.push({'paymentsPlan.productInfo.productId' : { "$in" : params.productIds} })
+  }
+
   orderModel
     .aggregate([{
       $match: {
-        'paymentsPlan.destinationId': organizationId,
-        'createAt': createAt
+        $and: match
       }
     }, { $sort: { 'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10) } },
     //{ $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, 
