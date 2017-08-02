@@ -165,12 +165,12 @@ function updtPayment(req, cb) {
     'paymentsPlan.$.updateAt': new Date()
   }
   
-  logger.log('set: ', set);
   orderModel.findOneAndUpdate(filter, {
     '$set': set
   },
     { new: true }
     , function (err, order) {
+
       if (err) return cb(err)
 
       createOrderAudit({
