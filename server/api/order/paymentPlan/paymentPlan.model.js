@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 let paymentPlanObject = {
   // discount
-  invoiceId: {type: String, default: '', required: true},
+  invoiceId: {type: String, default: ''},
   version: {type: String, required: true},
   destinationId: {type: String, required: true},
   email: {type: String, required: true},
