@@ -44,7 +44,7 @@ exports.create = function (req, res) {
    "paymentsPlan.userInfo.userName": "text"  } ,{name: "orders_text_index"})
    */
   mongoose.connection.db.eval('getNextSequence("orderIds")', function (err, result) {
-    req.body.orderId = 'ORD-' + result.toUpperCase()
+    req.body.orderId = 'ORD' + result.toUpperCase()
     orderModel.create(req.body, function (err, order) {
       if (err) return res.status(400).json({ err: err })
       return res.status(200).json({
@@ -191,7 +191,7 @@ exports.updatePayments = function (req, res) {
   }
   if (req.body.generateInvoice) {
     mongoose.connection.db.eval('getNextSequence("invoiceIds")', function (err, result) {
-      req.body.invoiceId = 'INV-' + result.toUpperCase()
+      req.body.invoiceId = 'INV' + result.toUpperCase()
       updtPayment(req, function (err, order) {
         if (err) {
           return res.status(400).json({ err: err })
