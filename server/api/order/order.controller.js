@@ -10,11 +10,7 @@ let mongoose = require('mongoose')
 let ObjectId = require('mongoose').Types.ObjectId
 var pmx = require('pmx')
 
-exports.create = function (req, res) {
-  if (req.body.paymentsPlan && req.body.paymentsPlan.length > 0) {
-    req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
-  }
-  /* run in mongdb the first time  
+/* run in mongdb the first time  
   db.system.js.save(
    {
      _id : "getNextSequence" ,
@@ -43,18 +39,29 @@ exports.create = function (req, res) {
    "paymentsPlan.productInfo.productName": "text" ,
    "paymentsPlan.userInfo.userName": "text"  } ,{name: "orders_text_index"})
    */
-  mongoose.connection.db.eval('getNextSequence("orderIds")', function (err, result) {
-    req.body.orderId = 'ORD' + result.toUpperCase()
-    orderModel.create(req.body, function (err, order) {
-      if (err) return res.status(400).json({ err: err })
-      return res.status(200).json({
-        _id: order._id,
-        status: order.status,
-        orderId: order.orderId,
-        paymentsPlan: order.paymentsPlan
+
+exports.create = function (req, res) {
+  if (req.body.paymentsPlan && req.body.paymentsPlan.length > 0) {
+    orderService.createPayments(req.body.paymentsPlan).then((paymentsPlan) => {
+      req.body.paymentsPlan = paymentsPlan;
+      mongoose.connection.db.eval('getNextSequence("orderIds")', function (err, result) {
+        req.body.orderId = 'ORD' + result.toUpperCase()
+        orderModel.create(req.body, function (err, order) {
+          if (err) return res.status(400).json({ err: err })
+          return res.status(200).json({
+            _id: order._id,
+            status: order.status,
+            orderId: order.orderId,
+            paymentsPlan: order.paymentsPlan
+          })
+        })
       })
+    }).catch((reason) => {
+      return res.status(400).json({ err: reason })
     })
-  })
+  }
+
+
 }
 
 exports.listV2 = function (req, res) {
@@ -94,7 +101,6 @@ exports.orderHistory = function (req, res) {
   let sort = req.body.sort || -1
 
   orderAuditModel.find(filter).limit(limit).sort({ createAt: sort }).lean().exec(function (err, orders) {
-    console.log('Orders: ', orders);
     if (err) return res.status(400).json({ err: err })
     return res.status(200).json({ orders: orders })
   })
@@ -124,18 +130,22 @@ exports.update = function (req, res) {
 }
 
 exports.addPayments = function (req, res) {
-  req.body.paymentsPlan = orderService.createPayments(req.body.paymentsPlan)
-  orderModel.findOneAndUpdate({ _id: req.body.orderId }, { '$push': { paymentsPlan: { $each: req.body.paymentsPlan } } }, { new: true }, function (err, order) {
-    if (err) return res.status(400).json({ err: err })
-
-    createOrderAudit({
-      _orderId: order._id,
-      userId: req.body.userSysId,
-      order: order
+  orderService.createPayments(req.body.paymentsPlan).then((paymentsPlan) => {
+    req.body.paymentsPlan = paymentsPlan;
+    orderModel.findOneAndUpdate({ _id: req.body.orderId }, { '$push': { paymentsPlan: { $each: req.body.paymentsPlan } } }, { new: true }, function (err, order) {
+      if (err) return res.status(400).json({ err: err })
+      createOrderAudit({
+        _orderId: order._id,
+        userId: req.body.userSysId,
+        order: order
+      })
+      return res.status(200).json(order)
     })
-
-    return res.status(200).json(order)
+  }).catch((reason) => {
+    return res.status(400).json({ err: reason })
   })
+
+  
 }
 
 function updtPayment(req, cb) {
@@ -164,7 +174,7 @@ function updtPayment(req, cb) {
     'paymentsPlan.$.feePaidUp': req.body.paymentPlan.feePaidUp,
     'paymentsPlan.$.updateAt': new Date()
   }
-  
+
   orderModel.findOneAndUpdate(filter, {
     '$set': set
   },

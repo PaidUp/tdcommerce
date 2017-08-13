@@ -11,10 +11,6 @@ let orderObject = {
     type: String,
     required: true
   },
-  season: {
-    type: String,
-    required: true
-  },
   description: {
     type: String,
     default: ''
