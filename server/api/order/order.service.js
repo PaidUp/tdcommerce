@@ -3,15 +3,39 @@
 var paymentPlanModel = require('./paymentPlan/paymentPlan.model').paymentPlanModel
 var orderModel = require('./order.model').orderModel
 var setUserAudit = require('./order.model').setUserAudit
+let mongoose = require('mongoose')
+
+function generateInvoiceId() {
+  return new Promise((resolve, reject) => {
+    mongoose.connection.db.eval('getNextSequence("invoiceIds")', function (err, result) {
+      if (err) return reject(err)
+      resolve('INV' + result.toUpperCase())
+    })
+  })
+}
 
 function createPayments(paymentsList) {
-  if (!paymentsList.length) {
-    return []
-  }
-  return paymentsList.map(function (paymentPlan) {
-    return new paymentPlanModel(paymentPlan)
-  }).filter(function (paymentPlan) {
-    return paymentPlan.price && paymentPlan.dateCharge
+  return new Promise((resolve, reject) => {
+    if (!paymentsList.length) {
+      return resolve([]);
+    }
+    let promises = paymentsList.map(function (paymentPlan) {
+      return generateInvoiceId().then((invoiceId) => {
+        paymentPlan.invoiceId = invoiceId;
+        return paymentPlan;
+      });
+    })
+    Promise.all(promises)
+      .then(results => {
+        resolve(results.filter((paymentPlan) => {
+          return paymentPlan.price && paymentPlan.dateCharge
+        }))
+      })
+      .catch(e => {
+        console.error('error:: ', e);
+        reject(e)
+      })
+
   })
 }
 
@@ -80,11 +104,11 @@ function getOrderOrganization(params, cb) {
   let organizationId = params.organizationId || ''
   let createAt = { $gte: new Date(params.from), $lte: new Date(params.to) }
   let match = [
-    {'paymentsPlan.destinationId': organizationId},
-    {'createAt': createAt}
+    { 'paymentsPlan.destinationId': organizationId },
+    { 'createAt': createAt }
   ]
-  if(params.productIds && params.productIds.length > 0){
-    match.push({'paymentsPlan.productInfo.productId' : { "$in" : params.productIds} })
+  if (params.productIds && params.productIds.length > 0) {
+    match.push({ 'paymentsPlan.productInfo.productId': { "$in": params.productIds } })
   }
 
   orderModel
