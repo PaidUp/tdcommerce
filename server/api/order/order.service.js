@@ -25,18 +25,26 @@ function createPayments(paymentsList) {
         return paymentPlan;
       });
     })
-    Promise.all(promises)
-      .then(results => {
-        resolve(results.filter((paymentPlan) => {
-          return paymentPlan.price && paymentPlan.dateCharge
-        }))
-      })
-      .catch(e => {
-        console.error('error:: ', e);
-        reject(e)
-      })
+    createPaymentsPromise(promises, function(err, data){
+      if(err) return reject(err);
+      resolve(data);
+    })
 
   })
+}
+
+function createPaymentsPromise(paymentsListPromise, cb) {
+  Promise.all(paymentsListPromise)
+    .then(results => {
+      let resultFilter = results.filter((paymentPlan) => {
+        return paymentPlan.price && paymentPlan.dateCharge
+      })
+      cb(null, resultFilter)
+    })
+    .catch(e => {
+      console.error('error:: ', e);
+      cb(e)
+    })
 }
 
 function searchOrder(param, cb) {
