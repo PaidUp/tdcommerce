@@ -145,7 +145,7 @@ exports.addPayments = function (req, res) {
     return res.status(400).json({ err: reason })
   })
 
-  
+
 }
 
 function updtPayment(req, cb) {
@@ -153,7 +153,6 @@ function updtPayment(req, cb) {
     paymentsPlan: { $elemMatch: { _id: req.body.paymentPlanId } }
   }
   let set = {
-    'paymentsPlan.$.invoiceId': req.body.invoiceId,
     'paymentsPlan.$.destinationId': req.body.paymentPlan.destinationId,
     'paymentsPlan.$.description': req.body.paymentPlan.description,
     'paymentsPlan.$.dateCharge': req.body.paymentPlan.dateCharge,
@@ -195,29 +194,15 @@ function updtPayment(req, cb) {
 }
 
 exports.updatePayments = function (req, res) {
-  logger.log('req.body: ', req.body)
   if (!req.body.userSysId) {
     return res.status(400).json({ err: "param userSysId is required" })
   }
-  if (req.body.generateInvoice) {
-    mongoose.connection.db.eval('getNextSequence("invoiceIds")', function (err, result) {
-      req.body.invoiceId = 'INV' + result.toUpperCase()
-      updtPayment(req, function (err, order) {
-        if (err) {
-          return res.status(400).json({ err: err })
-        }
-        return res.status(200).json(order)
-      })
-
-    })
-  } else {
-    updtPayment(req, function (err, order) {
-      if (err) {
-        return res.status(400).json({ err: err })
-      }
-      return res.status(200).json(order)
-    })
-  }
+  updtPayment(req, function (err, order) {
+    if (err) {
+      return res.status(400).json({ err: err })
+    }
+    return res.status(200).json(order)
+  })
 
 }
 
