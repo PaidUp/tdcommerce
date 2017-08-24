@@ -118,6 +118,9 @@ function getOrderOrganization(params, cb) {
   if (params.productIds && params.productIds.length > 0) {
     match.push({ 'paymentsPlan.productInfo.productId': { "$in": params.productIds } })
   }
+  if (params.seasons && params.seasons.length > 0) {
+    match.push({ 'season': { "$in": params.seasons } })
+  }
 
   orderModel
     .aggregate([{
