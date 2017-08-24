@@ -422,6 +422,9 @@ exports.getOrderOrganization = function (req, res) {
   if (req.query.productIds) {
     req.params.productIds = req.query.productIds.split(',')
   }
+  if (req.query.seasons) {
+    req.params.seasons = req.query.seasons.split(',')
+  }
   orderService.getOrderOrganization(req.params, function (err, result) {
     if (err) return res.status(400).json(err)
     return res.status(200).json(result)
