@@ -3,16 +3,48 @@
 var paymentPlanModel = require('./paymentPlan/paymentPlan.model').paymentPlanModel
 var orderModel = require('./order.model').orderModel
 var setUserAudit = require('./order.model').setUserAudit
+let mongoose = require('mongoose')
+
+function generateInvoiceId() {
+  return new Promise((resolve, reject) => {
+    mongoose.connection.db.eval('getNextSequence("invoiceIds")', function (err, result) {
+      if (err) return reject(err)
+      resolve('INV' + result.toUpperCase())
+    })
+  })
+}
 
 function createPayments(paymentsList) {
-  if (!paymentsList.length) {
-    return []
-  }
-  return paymentsList.map(function (paymentPlan) {
-    return new paymentPlanModel(paymentPlan)
-  }).filter(function (paymentPlan) {
-    return paymentPlan.price && paymentPlan.dateCharge
+  return new Promise((resolve, reject) => {
+    if (!paymentsList.length) {
+      return resolve([]);
+    }
+    let promises = paymentsList.map(function (paymentPlan) {
+      return generateInvoiceId().then((invoiceId) => {
+        paymentPlan.invoiceId = invoiceId;
+        return paymentPlan;
+      });
+    })
+    createPaymentsPromise(promises, function(err, data){
+      if(err) return reject(err);
+      resolve(data);
+    })
+
   })
+}
+
+function createPaymentsPromise(paymentsListPromise, cb) {
+  Promise.all(paymentsListPromise)
+    .then(results => {
+      let resultFilter = results.filter((paymentPlan) => {
+        return paymentPlan.price && paymentPlan.dateCharge
+      })
+      cb(null, resultFilter)
+    })
+    .catch(e => {
+      console.error('error:: ', e);
+      cb(e)
+    })
 }
 
 function searchOrder(param, cb) {
@@ -26,6 +58,18 @@ function searchOrder(param, cb) {
     cb(null, results)
   })
 }
+
+function getOrdersForChargeNotification(gtIsoDate, ltIsoDate, cb) {
+  orderModel.find(
+    { "paymentsPlan": { $elemMatch: { $and: [{ dateCharge: { $gt: new Date(gtIsoDate), $lt: new Date(ltIsoDate) } }, { status: "pending" }] } } }
+  ).exec(function (err, results) {
+    if (err) {
+      return cb(err)
+    }
+    cb(null, results)
+  })
+}
+
 // db.getCollection('orders').aggregate({ $match: { userId:'xxx'} },{ $limit : 5 }, {$unwind:{path: "$paymentsPlan"}},{ $sort : {"paymentsPlan.dateCharge":-1} },{ $match: {"paymentsPlan.status":'succeeded'} })
 function recent(params, cb) {
   orderModel
@@ -67,11 +111,18 @@ function getOrderOrganization(params, cb) {
   let limit = params.limit || 1000
   let organizationId = params.organizationId || ''
   let createAt = { $gte: new Date(params.from), $lte: new Date(params.to) }
+  let match = [
+    { 'paymentsPlan.destinationId': organizationId },
+    { 'createAt': createAt }
+  ]
+  if (params.productIds && params.productIds.length > 0) {
+    match.push({ 'paymentsPlan.productInfo.productId': { "$in": params.productIds } })
+  }
+
   orderModel
     .aggregate([{
       $match: {
-        'paymentsPlan.destinationId': organizationId,
-        'createAt': createAt
+        $and: match
       }
     }, { $sort: { 'paymentsPlan.dateCharge': (typeof sort === 'number') ? sort : parseInt(sort, 10) } },
     //{ $limit: (typeof limit === 'number') ? limit : parseInt(limit, 10) }, 
@@ -137,6 +188,18 @@ function cancelOrder(userSysId, orderId, cb) {
   })
 }
 
+function activateOrder(userSysId, orderId, cb) {
+  setUserAudit(userSysId);
+  orderModel.findOne({ 'orderId': orderId }, function (err, order) {
+    if (err) return cb(err);
+    order.status = 'active'
+    order.save(function (err, updatedOrder) {
+      if (err) return cb(err);
+      cb(null, updatedOrder);
+    });
+  })
+}
+
 function removePaymentPlan(userSysId, orderId, paymentPlanId, cb) {
   setUserAudit(userSysId);
   orderModel.findOne({ 'orderId': orderId }, function (err, order) {
@@ -162,3 +225,5 @@ exports.getOrderOrganization = getOrderOrganization
 exports.transactionDetails = transactionDetails
 exports.cancelOrder = cancelOrder;
 exports.removePaymentPlan = removePaymentPlan;
+exports.getOrdersForChargeNotification = getOrdersForChargeNotification;
+exports.activateOrder = activateOrder;
