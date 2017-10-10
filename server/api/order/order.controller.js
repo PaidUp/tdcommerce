@@ -157,6 +157,7 @@ function updtPayment(req, cb) {
     'paymentsPlan.$.description': req.body.paymentPlan.description,
     'paymentsPlan.$.dateCharge': req.body.paymentPlan.dateCharge,
     'paymentsPlan.$.price': req.body.paymentPlan.price,
+    'paymentsPlan.$.refund': req.body.paymentPlan.refund,
     'paymentsPlan.$.basePrice': req.body.paymentPlan.basePrice,
     'paymentsPlan.$.originalPrice': req.body.paymentPlan.originalPrice,
     'paymentsPlan.$.typeAccount': req.body.paymentPlan.typeAccount,
