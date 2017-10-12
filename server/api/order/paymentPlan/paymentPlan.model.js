@@ -25,7 +25,7 @@ let paymentPlanObject = {
   discount: {type: Number, default: 0},
   discountCode: {type: String, default: ''},
   wasProcessed: {type: Boolean, default: false},
-  status: {type: String, default: 'pending', enum: ['pending', 'complete', 'canceled', 'processing', 'succeeded', 'failed', 'disable', 'refunded','refunded-partial',
+  status: {type: String, default: 'pending', enum: ['pending', 'complete', 'canceled', 'processing', 'succeeded', 'failed', 'disable', 'refunded','refunded-partially',
                                 'disable-pending', 'disable-processing',], lowercase: true},
   attempts: {type: [
       {
