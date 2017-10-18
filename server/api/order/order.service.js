@@ -157,11 +157,11 @@ function transactionDetails(params, cb) {
     {
       path: "$paymentsPlan.attempts",
       //includeArrayIndex: <string>,
-      //preserveNullAndEmptyArrays: true
+      preserveNullAndEmptyArrays: true
     }
   });
 
-  cond.push({ $sort: { "paymentsPlan.attempts.dateAttemp": 1 } });
+  cond.push({ $sort: { "paymentsPlan.dateCharge": 1 } });
 
   orderModel
     .aggregate(cond)
