@@ -31,6 +31,9 @@ let paymentPlanObject = {
       {
         status: {type: String},
         amount: {type: Number, default: 0},
+        totalFee: {type: Number, default: 0},
+        feePaidUp: {type: Number, default: 0},
+        feeStripe: {type: Number, default: 0},
         message: {type: String},
         dateAttemp: {type: Date},
         last4: {type: String},
