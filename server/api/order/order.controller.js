@@ -433,6 +433,7 @@ exports.getOrderOrganization = function (req, res) {
 }
 
 exports.transactionDetails = function (req, res) {
+  req.params["teams"] = req.query.teams; 
   orderService.transactionDetails(req.params, function (err, result) {
     if (err) return res.status(400).json(err)
     return res.status(200).json(result)
