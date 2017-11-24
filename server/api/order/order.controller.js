@@ -141,7 +141,8 @@ exports.findOrdersByPaymentMethod = function (req, res) {
   }
   let status = req.query.status.split(",");
   let filter = { 
-    userId: req.params.userId, 
+    userId: req.params.userId,
+    status: {$in : ['pending', 'processing', 'active']}, 
     paymentsPlan: { 
       $elemMatch: { 
         account: req.params.accountId , status : { $in : status}} } };
