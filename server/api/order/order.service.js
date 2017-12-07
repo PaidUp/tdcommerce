@@ -139,6 +139,7 @@ function getOrderOrganization(params, cb) {
 }
 
 function transactionDetails(params, cb) {
+  let match = {};
   let cond = [
     {
       $unwind:
@@ -150,7 +151,11 @@ function transactionDetails(params, cb) {
     }
   ]
   if (params.organizationId) {
-    cond.push({ $match: { "paymentsPlan.destinationId": params.organizationId } })
+    match["paymentsPlan.destinationId"] = params.organizationId;
+    if(params.teams){
+      match["paymentsPlan.productInfo.productId"] = {$in : params.teams.split(",")}
+    }
+    cond.push({ $match: match })
   }
   cond.push({
     $unwind:

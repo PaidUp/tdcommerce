@@ -129,6 +129,30 @@ exports.update = function (req, res) {
   })
 }
 
+exports.findOrdersByPaymentMethod = function (req, res) {
+  if (!req.params.accountId) {
+    return res.status(400).json({ err: "payment method id is required" })
+  }
+  if (!req.params.userId) {
+    return res.status(400).json({ err: "user id is required" })
+  }
+  if (!req.query.status) {
+    return res.status(400).json({ err: "payment status list is required" })
+  }
+  let status = req.query.status.split(",");
+  let filter = { 
+    userId: req.params.userId,
+    status: {$in : ['pending', 'processing', 'active']}, 
+    paymentsPlan: { 
+      $elemMatch: { 
+        account: req.params.accountId , status : { $in : status}} } };
+
+  orderModel.find(filter, function (err, orders) {
+    if (err) return res.status(400).json({ err: err })
+    return res.status(200).json({ orders: orders })
+  })
+}
+
 exports.addPayments = function (req, res) {
   orderService.createPayments(req.body.paymentsPlan).then((paymentsPlan) => {
     req.body.paymentsPlan = paymentsPlan;
@@ -433,6 +457,7 @@ exports.getOrderOrganization = function (req, res) {
 }
 
 exports.transactionDetails = function (req, res) {
+  req.params["teams"] = req.query.teams; 
   orderService.transactionDetails(req.params, function (err, result) {
     if (err) return res.status(400).json(err)
     return res.status(200).json(result)
