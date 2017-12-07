@@ -20,5 +20,7 @@ router.get('/organization/:organizationId/:limit/:sort/:from/:to', authServer.is
 router.get('/transactions', authServer.isAuthenticated(), controller.transactionDetails)
 router.get('/transactions/organization/:organizationId', authServer.isAuthenticated(), controller.transactionDetails)
 
+router.get("/source/:accountId/user/:userId", authServer.isAuthenticated(), controller.findOrdersByPaymentMethod)
+
 
 module.exports = router
