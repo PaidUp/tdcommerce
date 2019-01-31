@@ -539,6 +539,7 @@ exports.updateWebhook = function (req, res) {
     // console.log('err', err)
     if (err) return res.status(400).json({ err: err })
     // .log('order', order)
+    if (order) return res.status(200).json({ msg: 'this order must exists in new platform' })
     order.paymentsPlan = order.paymentsPlan.map(function (pp) {
       // console.log('pp', pp.id)
       // console.log('pp', pp._id)
