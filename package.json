@@ -15,7 +15,7 @@
     "express": "4.13.3",
     "express-session": "1.11.3",
     "jshint": "2.8.0",
-    "lodash": "3.10.1",
+    "lodash": "4.17.15",
     "magento": "https://github.com/talosdigital/magentoapi/tarball/master",
     "method-override": "2.3.5",
     "moment": "2.10.6",
